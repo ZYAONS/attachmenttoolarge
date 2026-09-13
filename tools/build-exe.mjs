@@ -142,6 +142,12 @@ console.log(`    ${(statSync(BLOB).size / 1024).toFixed(1)} KB → build/att.blo
 step(4, "复制 Node 运行时作为外壳");
 rmSync(OUT, { force: true });
 copyFileSync(NODE_BIN, OUT);
+  // macOS: the copied runtime is code-signed, and injecting a blob invalidates that
+  // signature ? Node's SEA docs require stripping it before postject runs.
+  if (process.platform === "darwin") {
+    const cs = run("codesign", ["--remove-signature", OUT]);
+    if (cs.status !== 0) console.log("    (codesign --remove-signature failed; continuing anyway)");
+  }
 console.log(`    ${NODE_BIN}`);
 console.log(`    → ${OUT.replace(ROOT + (isWin ? "\\" : "/"), "")}  ${(statSync(OUT).size / 1048576).toFixed(1)} MB`);
 
