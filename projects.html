@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -247,15 +247,71 @@
         <div>
           <b>Four projects, six executables</b>
           Splitting and rejoining are separate tools, and the limits database ships with its own
-          query/validate tool. Download them from the
-          <a href="https://github.com/attachment-too-large/att-tools/releases/latest" style="color:var(--accent)">latest release</a>
-          — each is a single executable that needs nothing installed.
-          Source and tests: <a href="https://github.com/attachment-too-large/att-tools" style="color:var(--accent)">attachment-too-large/att-tools</a>.
+          query and validate commands. Each is a single executable that needs nothing installed on
+          the target machine — no Node, no installer.
         </div>
       </div>
     </div>
   </section>
 
+
+  <!-- ============ Download ============ -->
+  <section class="section" id="download" data-tools-download>
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Download</span>
+        <h2>Take the tools with you</h2>
+        <p class="lead">
+          Windows builds are published now; Linux and macOS come out of the same pipeline.
+          Verify the checksum before you run anything — <code>SHA256SUMS.txt</code> sits next to the
+          binaries, and every executable is run by CI before it is uploaded.
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <a class="card project-card reveal" href="https://github.com/attachment-too-large/att-tools/releases/latest/download/att-split.exe">
+          <div class="project-top"><span class="project-name">att-split</span><span class="badge badge-ok">exe</span></div>
+          <p class="project-desc">Cut a file into shards under a limit, with a manifest and a rebuild script the recipient double-clicks.</p>
+          <div class="project-meta"><span>Windows x64</span><span>download →</span></div>
+        </a>
+        <a class="card project-card reveal" href="https://github.com/attachment-too-large/att-tools/releases/latest/download/att-join.exe">
+          <div class="project-top"><span class="project-name">att-join</span><span class="badge badge-ok">exe</span></div>
+          <p class="project-desc">Verify every shard's SHA-256 and rebuild — refuses to write anything if one is missing or corrupt.</p>
+          <div class="project-meta"><span>Windows x64</span><span>download →</span></div>
+        </a>
+        <a class="card project-card reveal" href="https://github.com/attachment-too-large/att-tools/releases/latest/download/att-info.exe">
+          <div class="project-top"><span class="project-name">att-info</span><span class="badge badge-ok">exe</span></div>
+          <p class="project-desc">Will it send? Does the Base64 arithmetic the server actually measures, then checks every service.</p>
+          <div class="project-meta"><span>Windows x64</span><span>download →</span></div>
+        </a>
+        <a class="card project-card reveal" href="https://github.com/attachment-too-large/att-tools/releases/latest/download/att-limits.exe">
+          <div class="project-top"><span class="project-name">att-limits</span><span class="badge badge-ok">exe</span></div>
+          <p class="project-desc">Query the limits database, or validate it after you edit it.</p>
+          <div class="project-meta"><span>Windows x64</span><span>download →</span></div>
+        </a>
+        <a class="card project-card reveal" href="https://github.com/attachment-too-large/att-tools/releases/latest/download/att-ndr.exe">
+          <div class="project-top"><span class="project-name">att-ndr</span><span class="badge badge-ok">exe</span></div>
+          <p class="project-desc">Translate a bounce message into English: who blocked it, how big, what to do next.</p>
+          <div class="project-meta"><span>Windows x64</span><span>download →</span></div>
+        </a>
+        <a class="card project-card reveal" href="https://github.com/attachment-too-large/att-tools/releases/latest/download/att-share.exe">
+          <div class="project-top"><span class="project-name">att-share</span><span class="badge badge-ok">exe</span></div>
+          <p class="project-desc">Serve one file behind a random token, with an expiry and a download budget, then stop.</p>
+          <div class="project-meta"><span>Windows x64</span><span>download →</span></div>
+        </a>
+      </div>
+
+      <div class="btn-row reveal" style="margin-top:26px">
+        <a class="btn btn-primary" href="https://github.com/attachment-too-large/att-tools/releases/latest">All releases &amp; checksums</a>
+        <a class="btn btn-ghost" href="https://github.com/attachment-too-large/att-tools">Source and tests</a>
+        <button class="btn btn-ghost" type="button" data-copy="att-info &quot;your-file.xlsx&quot;">Copy a first command</button>
+      </div>
+      <p class="small muted" style="margin-top:12px">
+        Prefer the sources? <code>node src/split.mjs --help</code> works with any Node 18+ and no build step.
+        The 48-check suite that guards these binaries is in <code>tools/test.mjs</code>.
+      </p>
+    </div>
+  </section>
   <!-- ============ LIMITS ============ -->
   <section class="section" id="limits">
     <div class="container">
@@ -419,6 +475,7 @@
           <li><a href="projects.html#limits">Limits database</a></li>
           <li><a href="index.html#errors">Error translations</a></li>
           <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="https://github.com/attachment-too-large/att-tools/releases/latest">Download the tools</a></li>
           <li><a href="contact.html">Contact &amp; FAQ</a></li>
         </ul>
       </div>

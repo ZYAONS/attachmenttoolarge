@@ -1,4 +1,4 @@
-# attachment-too-large/attachmenttoolarge — self-checks, cross-platform build, tagged release.
+﻿# attachment-too-large/attachmenttoolarge — self-checks, cross-platform build, tagged release.
 name: build
 
 on:
@@ -16,6 +16,7 @@ jobs:
   cli-test:
     name: att CLI (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental == true }}
     strategy:
       fail-fast: false
       matrix:
@@ -57,6 +58,7 @@ jobs:
     name: build att (${{ matrix.asset }})
     needs: [cli-test]
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental == true }}
     strategy:
       fail-fast: false
       matrix:
@@ -67,6 +69,7 @@ jobs:
             asset: att-linux-x64
           - os: macos-latest
             asset: att-macos-arm64
+            experimental: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

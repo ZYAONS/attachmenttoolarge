@@ -96,7 +96,7 @@ html[data-theme="dark"] {
 
 /* ---------- 基础 ---------- */
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }   /* clip 真正限制 scrollWidth，hidden 不会 */
 
 body {
   margin: 0;
@@ -1008,13 +1008,18 @@ html[data-theme="dark"] {
 }
 
 /* ---------- 斜贯全页的蓝杠：就是画在截图上的那一道 ---------- */
+/* inset 保持 0，改用 background-size 放大来制造「斜出画面」的效果：
+   负 inset 会让固定定位层把文档撑宽 —— CI 的横向溢出检查抓到的就是这个。 */
 body::before {
   content: "";
   position: fixed;
-  inset: -25% -12%;
+  inset: 0;
   pointer-events: none;
   z-index: 0;
-  background:
+  background-repeat: no-repeat;
+  background-size: 132% 132%;
+  background-position: -16% -16%;
+  background-image:
     linear-gradient(107deg, transparent 0 25%, var(--streak) 25% 27.9%, transparent 27.9% 100%),
     linear-gradient(107deg, transparent 0 54%, var(--streak-2) 54% 56.4%, transparent 56.4% 100%),
     linear-gradient(107deg, transparent 0 77%, var(--streak-3) 77% 78.6%, transparent 78.6% 100%);
@@ -1023,10 +1028,13 @@ body::before {
 body::after {
   content: "";
   position: fixed;
-  inset: -25% -12%;
+  inset: 0;
   pointer-events: none;
   z-index: 3;
-  background:
+  background-repeat: no-repeat;
+  background-size: 132% 132%;
+  background-position: -16% -16%;
+  background-image:
     linear-gradient(107deg, transparent 0 25.5%, var(--streak-over) 25.5% 26.7%, transparent 26.7% 100%),
     linear-gradient(107deg, transparent 0 54.4%, var(--streak-over) 54.4% 55.4%, transparent 55.4% 100%);
 }
