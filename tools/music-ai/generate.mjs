@@ -27,6 +27,8 @@ const flag = (name, def) => {
 
 const SPACE = String(flag("space", "ace-step-ace-step.hf.space"));
 const BASE = `https://${SPACE}`;
+const HF_TOKEN = String(flag("token", process.env.HF_TOKEN || ""));
+const AUTH = HF_TOKEN ? { Authorization: `Bearer ${HF_TOKEN}` } : {};
 const DURATION = parseFloat(String(flag("duration", "170")));
 const DRY = args.includes("--dry-run");
 const OUTDIR = resolve(ROOT, String(flag("out", "assets/audio")));
@@ -104,7 +106,7 @@ const callUrl = `${BASE}/gradio_api/call/__call__`;
 console.log(`POST ${callUrl}`);
 const submit = await fetch(callUrl, {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: { "Content-Type": "application/json", ...AUTH },
   body: JSON.stringify({ data: DATA })
 });
 
@@ -118,7 +120,7 @@ console.log(`事件 id ${eventId} · 等待生成（远程排队 + 推理，通�
 
 /* ---------- 3. 读 SSE 流，等结果 ---------- */
 const streamRes = await fetch(`${BASE}/gradio_api/call/__call__/${eventId}`, {
-  headers: { Accept: "text/event-stream" }
+  headers: { Accept: "text/event-stream", ...AUTH }
 });
 if (!streamRes.ok || !streamRes.body) {
   console.error(`无法读取结果流：HTTP ${streamRes.status}`);
@@ -147,7 +149,15 @@ for (;;) {
     const payload = line.slice(5).trim();
 
     if (eventName === "error") {
-      console.error("Space 返回错误：", payload.slice(0, 500));
+      console.error("Space 拒绝了这次请求（返回空的 error 事件）。");
+      console.error("最常见的原因：ZeroGPU 空间对匿名用户有配额，或者它正忙。");
+      console.error("三条出路，按推荐顺序：");
+      console.error("  1) 用你自己的免费 Hugging Face 账号令牌重跑：");
+      console.error(`       node tools/music-ai/generate.mjs --token hf_xxxxxxxx --duration ${DURATION}`);
+      console.error("     令牌在 https://huggingface.co/settings/tokens 生成，勾选 Inference 权限即可。");
+      console.error("  2) 换一个同类 Space 试： --space <owner/name 的连字符形式>.hf.space");
+      console.error("  3) 过一段时间再试：匿名配额是按时间段恢复的。");
+      console.error(`\n歌词与参数已经准备好，可以随时重跑；当前 assets/audio/rap.mp3 仍是上一版录音。`);
       process.exit(1);
     }
     if (eventName === "process_status" || eventName === "progress") {

@@ -325,8 +325,8 @@
     if (local === 0) pad(ctx, b, chord.pad, t, STEPS_PER_CHORD * STEP);
     if (local === 0 || local === 8) bass(ctx, b, chord.bass, t, STEP * 7);
     if (local % 2 === 0) arp(ctx, b, chord.arp[(local / 2) % chord.arp.length], t, 0.6 + Math.random() * 0.25);
-    if (local === 0) kick(ctx, b, t);
-    // 刻意不打噪声踩镲：这是背景音乐，不是鼓组。要鼓组请听说唱那条。
+    /* 刻意不放鼓：没有重音、没有噪声打击乐。
+       这是一条可以一直循环下去的背景铺底：和声垫 + 低音 + 琶音。 */
   }
 
   function scheduleRapStep(ctx, b, step, t) {
@@ -892,6 +892,7 @@
       var ch = buf.getChannelData(0);
       var peak = 0, sum = 0;
       var prev = 0, sumDiff = 0;
+      var mid = Math.floor(ch.length / 2), sumA = 0, sumB = 0;
       for (var j = 0; j < ch.length; j++) {
         var a = Math.abs(ch[j]);
         if (a > peak) peak = a;
@@ -899,7 +900,9 @@
         var d = ch[j] - prev;            // 相邻样本差：噪声与嘶声会让它飙高
         sumDiff += d * d;
         prev = ch[j];
+        if (j < mid) sumA += ch[j] * ch[j]; else sumB += ch[j] * ch[j];
       }
+      var rmsA = Math.sqrt(sumA / mid), rmsB = Math.sqrt(sumB / (ch.length - mid));
       return {
         track: which,
         seconds: seconds,
@@ -909,6 +912,10 @@
         /* 高频能量占比（用一阶差分当粗略高通）：纯音色的器乐应当很低，
            噪声踩镲一类的「杂音」会把它明显推上去。 */
         hf: Math.round((sumDiff / Math.max(sum, 1e-9)) * 10000) / 10000,
+        /* 前后半段各自的音量：用来验证「可以一直循环」——
+           如果两段差得离谱，说明循环边界塌了或声音在衰减。 */
+        rmsFirstHalf: Math.round(rmsA * 10000) / 10000,
+        rmsSecondHalf: Math.round(rmsB * 10000) / 10000,
         loopSeconds: Math.round((which === "rap" ? RAP_BAR * RAP_STEP * 4 : LOOP_SECONDS) * 100) / 100
       };
     });

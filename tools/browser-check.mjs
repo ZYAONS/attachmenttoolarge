@@ -156,6 +156,11 @@ const SUITE = `(async () => {
   const rl = await music.renderOffline(6, "lofi");
   ok("器乐合成器有波形", rl.peak > 0.02 && rl.rms > 0.004, "peak=" + rl.peak + " rms=" + rl.rms);
   ok("器乐没有嘶声杂音", rl.hf < 0.25, "hf=" + rl.hf + " (high-frequency energy share)");
+  const twoLoops = await music.renderOffline(Math.ceil(music.loopSeconds() * 2) + 1, "lofi");
+  const ratio = twoLoops.rmsSecondHalf / Math.max(twoLoops.rmsFirstHalf, 1e-9);
+  ok("器乐可以一直循环（不衰减）", ratio > 0.6 && ratio < 1.6,
+     "first half " + twoLoops.rmsFirstHalf + " / second half " + twoLoops.rmsSecondHalf +
+     " · ratio " + ratio.toFixed(2) + " · over " + Math.round(music.loopSeconds() * 2) + "s");
   pill.querySelector("[data-music-toggle]").click(); await wait(450);
   ok("点击后进入播放态", music.isOn() === true);
   ok("控件反映播放状态", pill.classList.contains("is-playing"));
