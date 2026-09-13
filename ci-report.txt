@@ -1,19 +1,23 @@
 
 === attachment-too-large/attachmenttoolarge ===
-  run #16 · d26ae38 · completed/success
-  https://github.com/attachment-too-large/attachmenttoolarge/actions/runs/34771035326
+  run #21 · 70aa286 · completed/failure
+  https://github.com/attachment-too-large/attachmenttoolarge/actions/runs/34771759232
     OK  membership backend  [success]
-    OK  att CLI (macos-latest)  [success]
     OK  att CLI (windows-latest)  [success]
     OK  att CLI (ubuntu-latest)  [success]
     OK  browser checks (CDP + headless Edge)  [success]
-    BAD build att (att-macos-arm64)  [failure]
-    OK  build att (att-win-x64.exe)  [success]
-    OK  build att (att-linux-x64)  [success]
-    OK  publish release  [success]
-  --- failing log: build att (att-macos-arm64) ---
-      FAIL  att.exe --version
-      FAIL  att.exe --help             prints usage
+    BAD build att (att-win-x64.exe)  [failure]
+    BAD build att (att-linux-x64)  [failure]
+    -   publish release  [skipped]
+  --- failing log: build att (att-win-x64.exe) ---
+      FAIL  att.exe --version          v22.23.2
+      FAIL  att.exe limits outlook     —
+      FAIL  att.exe split              失败
+      FAIL  att.exe join 哈希一致          失败
+      FAIL  att.exe ndr                识别 550 5.3.4
+      ##[error]Process completed with exit code 1.
+  --- failing log: build att (att-linux-x64) ---
+      FAIL  att.exe --version          v22.23.2
       FAIL  att.exe limits outlook     —
       FAIL  att.exe split              失败
       FAIL  att.exe join 哈希一致          失败
@@ -21,20 +25,10 @@
       ##[error]Process completed with exit code 1.
 
 === attachment-too-large/att-tools ===
-  run #9 · fdb54ee · completed/success
-  https://github.com/attachment-too-large/att-tools/actions/runs/34771038015
-    OK  test suite (ubuntu-latest)  [success]
+  run #11 · b6671ee · completed/success
+  https://github.com/attachment-too-large/att-tools/actions/runs/34771618500
     OK  test suite (windows-latest)  [success]
-    OK  test suite (macos-latest)  [success]
-    OK  build (ubuntu-latest)  [success]
-    BAD build (macos-latest)  [failure]
+    OK  test suite (ubuntu-latest)  [success]
     OK  build (windows-latest)  [success]
-    OK  publish release  [success]
-  --- failing log: build (macos-latest) ---
-      FAIL
-      FAIL
-      FAIL
-      FAIL
-      FAIL
-      FAIL
-      ##[error]Process completed with exit code 1.
+    OK  build (ubuntu-latest)  [success]
+    -   publish release  [skipped]

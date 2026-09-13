@@ -1240,5 +1240,96 @@ table.data th { box-shadow: inset 0 5px 0 var(--gold-2), inset 0 -1px 0 var(--go
 .rule-orn i { background: var(--gold-2); }
 
 /* 奥德赛层收尾：回纹带内侧压一道金线，像神庙横楣的鎏金边 */
-.site-header::after, .site-footer::before { box-shadow: inset 0 1px 0 var(--gold-2), inset 0 -1px 0 var(--gold-2); }
+.site-header::after { box-shadow: inset 0 1px 0 var(--gold-2), inset 0 -1px 0 var(--gold-2); }
 .section + .section::before { filter: drop-shadow(0 1px 0 rgba(184, 145, 47, 0.25)); }
+/* ==========================================================================
+   史诗层 —— 奥德修斯的航程
+   酒暗色海面（wine-dark sea）、黑绘陶浮雕带、多立克柱式边框、荷马星空、爱琴海光晕。
+   全部内联 SVG，离网可用。内容区一律保持低透明度，不能影响阅读。
+   ========================================================================== */
+:root {
+  --aegean: #1d5c63;
+  --wine-dark: #2a3f4d;
+  --terracotta: #b4553c;
+
+  /* 海浪：三层正弦，横向平铺 */
+  --sea: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='48' viewBox='0 0 240 48'%3E%3Cpath d='M0 26q30-14 60 0t60 0 60 0 60 0v22H0z' fill='%232a6b7c' fill-opacity='.55'/%3E%3Cpath d='M0 34q30-12 60 0t60 0 60 0 60 0v14H0z' fill='%231d5c63' fill-opacity='.75'/%3E%3Cpath d='M0 41q30-9 60 0t60 0 60 0 60 0v7H0z' fill='%2315404a' fill-opacity='.9'/%3E%3C/svg%3E");
+
+  /* 黑绘陶浮雕：重装步兵 · 战马 · 三层桨战船 · 双耳瓶 */
+  --frieze: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='72' viewBox='0 0 360 72'%3E%3Cg fill='%23231c14'%3E%3Ccircle cx='26' cy='20' r='7'/%3E%3Cpath d='M26 27l-9 20h18zM17 33h20v6H17z'/%3E%3Cpath d='M12 22l-8-8 3-3 9 8z'/%3E%3Ccircle cx='15' cy='36' r='9'/%3E%3Cpath d='M26 47l-4 22h5l3-16 3 16h5l-4-22z'/%3E%3Cellipse cx='120' cy='34' rx='26' ry='12'/%3E%3Cpath d='M138 26l14-12 5 5-10 12z'/%3E%3Cpath d='M152 14l8-6 3 4-6 7z'/%3E%3Cpath d='M98 44l-4 24h5l5-22M118 45l-3 23h5l4-22M136 44l4 24h-5l-5-22M150 43l6 25h-5l-7-23'/%3E%3Cpath d='M108 22l-8-14h6l7 13z' stroke='%23231c14' stroke-width='2'/%3E%3Cpath d='M196 50q46-26 92 0-8 8-46 8t-46-8z'/%3E%3Cpath d='M242 44V14h6v30z'/%3E%3Cpath d='M214 20h56v16h-56z' fill='%23b4553c'/%3E%3Cpath d='M212 38l-8 6M272 38l8 6' stroke='%23231c14' stroke-width='3'/%3E%3Cpath d='M206 52l-6 10M222 54l-4 10M318 52l6 10M302 54l4 10' stroke='%23231c14' stroke-width='3'/%3E%3Cpath d='M336 26c8-8 4-18 0-20-4 2-8 12 0 20z'/%3E%3Cpath d='M327 22h18l3 26h-24z'/%3E%3Cpath d='M327 22c-8 2-10 10-6 16M345 22c8 2 10 10 6 16' fill='none' stroke='%23231c14' stroke-width='4'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* 多立克柱：竖向平铺，做页面两侧的柱廊 */
+  --column: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='220' viewBox='0 0 56 220'%3E%3Cg fill='%237a5f1d' fill-opacity='.35'%3E%3Crect x='6' y='0' width='44' height='10'/%3E%3Crect x='10' y='10' width='36' height='8'/%3E%3Crect x='12' y='18' width='32' height='184'/%3E%3Crect x='8' y='202' width='40' height='8'/%3E%3Crect x='4' y='210' width='48' height='10'/%3E%3C/g%3E%3Cg stroke='%23231c14' stroke-opacity='.22' stroke-width='2'%3E%3Cpath d='M18 26v168M24 26v168M32 26v168M38 26v168'/%3E%3C/g%3E%3C/svg%3E");
+}
+html[data-theme="dark"] {
+  --column: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='220' viewBox='0 0 56 220'%3E%3Cg fill='%23d8b45c' fill-opacity='.22'%3E%3Crect x='6' y='0' width='44' height='10'/%3E%3Crect x='10' y='10' width='36' height='8'/%3E%3Crect x='12' y='18' width='32' height='184'/%3E%3Crect x='8' y='202' width='40' height='8'/%3E%3Crect x='4' y='210' width='48' height='10'/%3E%3C/g%3E%3Cg stroke='%23000000' stroke-opacity='.3' stroke-width='2'%3E%3Cpath d='M18 26v168M24 26v168M32 26v168M38 26v168'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* 背景第一层：爱琴海光晕 + 荷马星空 + 石灰岩 */
+body {
+  background-color: var(--stone);
+  background-image:
+    radial-gradient(1400px 720px at 50% -18%, rgba(31, 107, 86, 0.16), transparent 68%),
+    radial-gradient(900px 460px at 88% 4%, rgba(184, 145, 47, 0.10), transparent 70%),
+    radial-gradient(760px 420px at 8% 32%, rgba(42, 63, 77, 0.10), transparent 72%),
+    radial-gradient(circle at 22% 12%, rgba(184, 145, 47, 0.5) 1px, transparent 1.6px),
+    radial-gradient(circle at 68% 7%, rgba(184, 145, 47, 0.42) 1px, transparent 1.6px),
+    radial-gradient(circle at 84% 22%, rgba(184, 145, 47, 0.35) 1px, transparent 1.6px),
+    radial-gradient(circle at 42% 26%, rgba(184, 145, 47, 0.3) 1px, transparent 1.6px),
+    var(--halftone);
+  background-size: auto, auto, auto, 320px 320px, 240px 240px, 400px 400px, 180px 180px, 9px 9px;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat;
+}
+
+/* 背景第二层（固定）：两侧柱廊 + 顶部浮雕带 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: var(--column), var(--column), var(--frieze);
+  background-size: 56px 220px, 56px 220px, 360px 72px;
+  background-position: left top, right top, left 104px;
+  background-repeat: repeat-y, repeat-y, repeat-x;
+  opacity: 0.34;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0 88px, rgba(0, 0, 0, 0.55) 220px, rgba(0, 0, 0, 0.16) 60%, transparent 92%),
+              linear-gradient(90deg, transparent 0, #000 120px, #000 calc(100% - 120px), transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0 88px, rgba(0, 0, 0, 0.55) 220px, rgba(0, 0, 0, 0.16) 60%, transparent 92%),
+              linear-gradient(90deg, transparent 0, #000 120px, #000 calc(100% - 120px), transparent 100%);
+  -webkit-mask-composite: source-in;
+}
+
+/* 背景第三层（固定）：酒暗色海面压在视口下缘 */
+body::after {
+  content: "";
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: 132px;
+  pointer-events: none;
+  z-index: 0;
+  background-image: var(--sea);
+  background-size: 240px 48px;
+  background-repeat: repeat-x;
+  background-position: left bottom;
+  opacity: 0.55;
+  mask-image: linear-gradient(180deg, transparent, #000 46%);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 46%);
+}
+
+/* 浮雕带：页脚顶缘改用黑绘陶（比回纹更史诗），保留一条金线 */
+.site-footer::before {
+  background-image: var(--frieze);
+  background-size: 360px 72px;
+  background-repeat: repeat-x;
+  background-position: left bottom;
+  height: 72px;
+  top: -36px;
+  opacity: 0.75;
+  box-shadow: none;
+}
+
+/* 首屏：给史诗留出呼吸，别被固定层盖住正文 */
+.hero { padding-bottom: 96px; }
+.page-head { padding-bottom: 88px; }
