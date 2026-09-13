@@ -96,7 +96,7 @@
       <div class="lyrics reveal" data-lyrics>
         <div class="lyric-section" data-section="INTRO">
           <div class="lyric-label">INTRO</div>
-          <p class="lyric-line" data-line="0"><span class="mark">01</span>Eleven forty at night, cursor blinking slow</p>
+          <p class="lyric-line" data-line="0"><span class="mark">01</span>Seven fifty-nine at night, cursor blinking slow</p>
           <p class="lyric-line" data-line="1"><span class="mark">02</span>Dragged the file in and the whole thing froze</p>
         </div>
 
@@ -152,7 +152,7 @@
           <div class="lyric-label">OUTRO</div>
           <p class="lyric-line" data-line="34"><span class="mark">35</span>Paperclip pops up: "Need help writing that mail?"</p>
           <p class="lyric-line" data-line="35"><span class="mark">36</span>Yeah, I do — so I went and wrote the tool</p>
-          <p class="lyric-line" data-line="36"><span class="mark">37</span>Eleven forty failed, so zero-four became a repo</p>
+          <p class="lyric-line" data-line="36"><span class="mark">37</span>Nineteen fifty-nine failed, so twenty twenty-three became a repo</p>
           <p class="lyric-line" data-line="37"><span class="mark">38</span>Too large? Then cut it. Piece by piece. Send it. Go.</p>
         </div>
       </div>
@@ -331,14 +331,15 @@ late-night office mood, melancholic but humorous</pre>
     });
   }
 
+  /* The rap is a separate piece of work: it is played by this page's own audio
+     element, not by the site's background-music player. So the karaoke highlight
+     follows the real recording's clock rather than any synthesised narration. */
   function playFrom(i) {
-    if (!window.ATTMusic) return;
-    window.ATTMusic.playFrom(i);
-    if (note) {
-      note.textContent = window.ATTMusic.ttsSupported()
-        ? "Reading line " + (i + 1) + " (system voice)"
-        : "Beat playing · no usable English voice here, lyrics moving on the bar";
-    }
+    var el = document.querySelector("audio");
+    if (!el) return;
+    if (el.duration) el.currentTime = (i / lines.length) * el.duration;
+    el.play();
+    if (note) note.textContent = "Playing from line " + (i + 1);
   }
 
   lines.forEach(function (el) {
@@ -348,32 +349,40 @@ late-night office mood, melancholic but humorous</pre>
     });
   });
 
-  if (window.ATTMusic) {
-    window.ATTMusic.onLine(highlight);
+  // follow the recording: one lyric line per equal slice of its duration
+  var rapAudio = document.querySelector("audio");
+  if (rapAudio) {
+    rapAudio.addEventListener("timeupdate", function () {
+      if (!rapAudio.duration) return;
+      var idx = Math.min(lines.length - 1, Math.floor((rapAudio.currentTime / rapAudio.duration) * lines.length));
+      highlight({ index: idx });
+    });
+    rapAudio.addEventListener("play", function () {
+      if (note) note.textContent = "Playing the AI track (male vocal, ACE-Step)";
+    });
+    rapAudio.addEventListener("pause", function () {
+      if (note) note.textContent = "Paused";
+    });
   }
 
   [playBtn, document.getElementById("play-song-2")].forEach(function (btn) {
     if (!btn) return;
     btn.addEventListener("click", function () {
-      if (!window.ATTMusic) return;
-      window.ATTMusic.selectTrack("rap");
-      window.ATTMusic.start();
-      if (note) {
-        note.textContent = window.ATTMusic.ttsSupported()
-          ? "System voice reading · beat synthesized live"
-          : "Beat playing · no usable English voice here, lyrics moving on the bar";
-      }
+      if (!rapAudio) return;
+      rapAudio.currentTime = 0;
+      rapAudio.play();
     });
   });
 
   var lofi = document.getElementById("play-lofi");
   if (lofi) {
     lofi.addEventListener("click", function () {
+      if (rapAudio) rapAudio.pause();
+      highlight(null);
       if (!window.ATTMusic) return;
       window.ATTMusic.selectTrack("lofi");
       window.ATTMusic.start();
-      highlight(null);
-      if (note) note.textContent = "Instrumental version, “Failed at 19:59” · playing";
+      if (note) note.textContent = "Background music on the site: “Failed at 19:59” · playing";
     });
   }
 })();

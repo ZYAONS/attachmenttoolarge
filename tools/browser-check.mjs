@@ -155,6 +155,7 @@ const SUITE = `(async () => {
   music.selectTrack("lofi"); await wait(150);
   const rl = await music.renderOffline(6, "lofi");
   ok("器乐合成器有波形", rl.peak > 0.02 && rl.rms > 0.004, "peak=" + rl.peak + " rms=" + rl.rms);
+  ok("器乐没有嘶声杂音", rl.hf < 0.25, "hf=" + rl.hf + " (high-frequency energy share)");
   pill.querySelector("[data-music-toggle]").click(); await wait(450);
   ok("点击后进入播放态", music.isOn() === true);
   ok("控件反映播放状态", pill.classList.contains("is-playing"));
@@ -166,50 +167,22 @@ const SUITE = `(async () => {
   ok("暂停后音效恢复静默", window.attSfx("error") === false);
   music.setVolume(0.6);
 
-  /* ---------- 音乐：Rap 曲目 ---------- */
+  /* ---------- 播放器：只有器乐一条曲目 ---------- */
   const lines = music.lyrics();
   ok("歌词已加载", lines.length >= 30, lines.length + " 行");
   const rr = await music.renderOffline(6, "rap");
-  ok("Rap 鼓组有波形", rr.peak > 0.02 && rr.rms > 0.004, "peak=" + rr.peak + " rms=" + rr.rms);
-  ok("人声默认关闭（不朗读）", music.voiceOn() === false, "voiceOn=" + music.voiceOn());
-  const switched = music.selectTrack("rap");
-  await wait(200);
-  ok("可切到 Rap 曲目", switched === "rap" && music.currentTrack().id === "rap", music.currentTrack().name);
-  ok("控件显示 Rap", pill.classList.contains("is-rap") && /Rap/.test(pill.querySelector("[data-music-track]").textContent));
-  ok("有独立的人声开关", !!pill.querySelector("[data-music-voice]"), pill.querySelector("[data-music-voice]").textContent);
+  ok("合成器能渲染说唱鼓组（引擎仍在）", rr.peak > 0.02 && rr.rms > 0.004, "peak=" + rr.peak);
+  ok("播放器不提供说唱切换", !pill.querySelector("[data-music-track]"), "no track switcher");
+  ok("播放器不提供人声朗读开关", !pill.querySelector("[data-music-voice]"), "no voice switch");
+  ok("播放器曲目固定为器乐", music.currentTrack().id === "lofi", music.currentTrack().name);
+  ok("说唱入口改为独立页面链接", /rap\.html/.test(pill.querySelector("[data-music-lyrics]")?.getAttribute("href") || ""), "Rap ↗");
 
   const heard = [];
   const off = music.onLine(p => { if (p) heard.push(p); });
-  await until(() => music.externalReady(), 6000);
-  const ext = music.externalState();
-  ok("检测到 AI 成品歌（rap.mp3）", ext.ready === true && ext.ok === true, JSON.stringify(ext));
-
   music.start();
-  await until(() => heard.length >= 1, 4000);
-  ok("Rap 启动后有声部推进", heard.length >= 1 && music.isOn(), "已推进 " + heard.length + " 行 · ttsBroken=" + music.ttsBroken());
-  if (ext.ok) {
-    await wait(900);
-    const ext2 = music.externalState();
-    ok("成品歌正在播放", ext2.paused === false && ext2.time > 0, "paused=" + ext2.paused + " t=" + ext2.time + "s");
-    ok("成品歌时长约 170 秒", ext2.duration >= 160 && ext2.duration <= 180, ext2.duration + "s");
-    ok("放成品歌时不再叠合成伴奏", music.usingExternal() === true, "external mode");
-  } else {
-    ok("成品歌不可用（退回合成伴奏）", true, "skipped: " + JSON.stringify(ext));
-  }
-  ok("默认不放人声", !pill.querySelector("[data-music-voice]").classList.contains("is-on"), "voice off");
-  await until(() => heard.length >= 2, 9000);
-  ok("声部持续推进", heard.length >= 2, "累计 " + heard.length + " 行");
-  ok("推进内容与歌词一致", heard.length > 0 && lines.some(l => l.text === heard[0].text), heard[0] ? heard[0].text : "无");
-
-  // 显式开启人声：应当允许，并且开关状态正确
-  music.setVoice(true); await wait(300);
-  ok("可以显式开启人声", music.voiceOn() === true && pill.querySelector("[data-music-voice]").classList.contains("is-on"), pill.querySelector("[data-music-voice]").textContent);
-  music.setVoice(false); await wait(200);
-  ok("可以关回人声", music.voiceOn() === false, "voice off");
-
-  const jumped = music.playFrom(12);
-  await wait(300);
-  ok("可从指定行开始", jumped === 12, "跳到第 " + (jumped + 1) + " 行");
+  await wait(1200);
+  ok("器乐播放中", music.isOn() === true, "playing");
+  ok("器乐不朗读歌词", heard.length === 0, "no lyric narration from the background track");
   if (off) off();
 
   // 紧急静音：一键全停，并且之后拒绝播放
@@ -220,7 +193,19 @@ const SUITE = `(async () => {
   music.mute(false); await wait(150);
   ok("可以解除静音", music.isMuted() === false, "unmuted");
   ok("解除后仍保持不自动播放", music.isOn() === false, "still silent until asked");
-  music.selectTrack("lofi"); await wait(150);
+
+  /* ---------- 说唱页：由页面自己的原生播放器播放成品 ---------- */
+  const rapAudio = document.querySelector('audio[src*="rap.mp3"]');
+  if (rapAudio) {
+    if (!rapAudio.duration) {
+      await until(() => rapAudio.duration > 0 || rapAudio.error, 8000, 200);
+    }
+    ok("说唱页有独立播放器", !!rapAudio, "audio[src=rap.mp3]");
+    ok("成品歌已加载", rapAudio.duration > 150 && rapAudio.duration < 200, Math.round(rapAudio.duration) + "s");
+    ok("提供 mp3 下载", !!document.querySelector('a[href$="rap.mp3"][download]'), "download link");
+  } else {
+    ok("说唱页含独立播放器", false, "no audio element on this page");
+  }
 
   /* ---------- 歌词页：HTML 与 lyrics.js 一致性 ---------- */
   const domLines = [...document.querySelectorAll("[data-lyrics] .lyric-line")];

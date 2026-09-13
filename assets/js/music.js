@@ -136,9 +136,9 @@
     var delay = ctx.createDelay(1.2);
     delay.delayTime.value = STEP * 3;
     var fb = ctx.createGain();
-    fb.gain.value = 0.26;
+    fb.gain.value = 0.12;                     // 反馈收小：不再拖出金属味的余响
     var wet = ctx.createGain();
-    wet.gain.value = 0.3;
+    wet.gain.value = 0.16;
 
     delay.connect(fb);
     fb.connect(delay);
@@ -157,21 +157,22 @@
   function pad(ctx, b, freqs, t, dur) {
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.15, t + 0.9);
-    g.gain.setValueAtTime(0.15, t + dur - 1.0);
+    g.gain.linearRampToValueAtTime(0.13, t + 0.9);
+    g.gain.setValueAtTime(0.13, t + dur - 1.0);
     g.gain.linearRampToValueAtTime(0.0001, t + dur);
 
     var f = ctx.createBiquadFilter();
     f.type = "lowpass";
-    f.frequency.value = 1500;
+    f.frequency.value = 1200;                 // 更暗、更靠后：它是背景，不是主体
 
     freqs.forEach(function (fr) {
+      // 只留三角波与正弦。锯齿波会有嗡嗡的毛刺感，那是「杂音」的来源之一。
       [0, 1].forEach(function (k) {
         var o = ctx.createOscillator();
-        o.type = k ? "sawtooth" : "triangle";
-        o.frequency.value = fr * (k ? 1.004 : 1);
+        o.type = k ? "sine" : "triangle";
+        o.frequency.value = fr * (k ? 0.5 : 1);   // 低八度正弦垫底
         var vg = ctx.createGain();
-        vg.gain.value = k ? 0.3 : 0.7;
+        vg.gain.value = k ? 0.45 : 0.75;
         o.connect(vg);
         vg.connect(f);
         o.start(t);
@@ -323,9 +324,9 @@
 
     if (local === 0) pad(ctx, b, chord.pad, t, STEPS_PER_CHORD * STEP);
     if (local === 0 || local === 8) bass(ctx, b, chord.bass, t, STEP * 7);
-    if (local % 2 === 0) arp(ctx, b, chord.arp[(local / 2) % chord.arp.length], t, 0.75 + Math.random() * 0.35);
-    if (local % 2 === 1) hat(ctx, b, t, 0.5 + Math.random() * 0.5);
-    if (local === 0 || local === 10) kick(ctx, b, t);
+    if (local % 2 === 0) arp(ctx, b, chord.arp[(local / 2) % chord.arp.length], t, 0.6 + Math.random() * 0.25);
+    if (local === 0) kick(ctx, b, t);
+    // 刻意不打噪声踩镲：这是背景音乐，不是鼓组。要鼓组请听说唱那条。
   }
 
   function scheduleRapStep(ctx, b, step, t) {
@@ -448,7 +449,9 @@
     next: 0,
     on: false,
     vol: parseFloat(store(STORE_VOL)) || 0.6,
-    track: store(STORE_TRACK) === "rap" ? "rap" : "lofi",
+    /* 本站播放器只放器乐背景音乐。说唱是独立的作品（rap.html / Release），
+       不参与这里的曲目切换，也不再用系统语音朗读任何东西。 */
+    track: "lofi",
     /* 人声默认关闭：只用系统语音朗读的「人声」是很多人不想要的，
        所以它必须由用户显式打开。默认只放伴奏 + 页面上的逐句高亮。 */
     voice: store(STORE_VOICE) === "1",
@@ -792,8 +795,9 @@
     return state.track;
   }
 
+  /* 本站只有器乐一条曲目；说唱是独立作品，不在这里切换。 */
   function nextTrack() {
-    return selectTrack(state.track === "rap" ? "lofi" : "rap");
+    return state.track;
   }
 
   function isOn() { return state.on; }
@@ -887,10 +891,14 @@
     return ctx.startRendering().then(function (buf) {
       var ch = buf.getChannelData(0);
       var peak = 0, sum = 0;
+      var prev = 0, sumDiff = 0;
       for (var j = 0; j < ch.length; j++) {
         var a = Math.abs(ch[j]);
         if (a > peak) peak = a;
         sum += ch[j] * ch[j];
+        var d = ch[j] - prev;            // 相邻样本差：噪声与嘶声会让它飙高
+        sumDiff += d * d;
+        prev = ch[j];
       }
       return {
         track: which,
@@ -898,6 +906,9 @@
         steps: steps,
         peak: Math.round(peak * 10000) / 10000,
         rms: Math.round(Math.sqrt(sum / ch.length) * 10000) / 10000,
+        /* 高频能量占比（用一阶差分当粗略高通）：纯音色的器乐应当很低，
+           噪声踩镲一类的「杂音」会把它明显推上去。 */
+        hf: Math.round((sumDiff / Math.max(sum, 1e-9)) * 10000) / 10000,
         loopSeconds: Math.round((which === "rap" ? RAP_BAR * RAP_STEP * 4 : LOOP_SECONDS) * 100) / 100
       };
     });
@@ -922,9 +933,7 @@
         '<span class="music-title" data-music-title>Failed at 19:59</span>' +
         '<span class="music-sub" data-music-status>Title track · synthesized live</span>' +
       '</span>' +
-      '<button class="music-chip" type="button" data-music-track title="Switch track">Lo-fi</button>' +
-      '<button class="music-chip" type="button" data-music-voice title="System voice: off (click to enable)">Voice off</button>' +
-      '<a class="music-chip" href="rap.html" data-music-lyrics title="Read the lyrics">Lyrics</a>' +
+      '<a class="music-chip" href="rap.html" data-music-lyrics title="The rap is a separate release — read the lyrics">Rap ↗</a>' +
       '<button class="music-chip" type="button" data-music-mute title="Mute everything and keep it muted">✕</button>' +
       '<input class="music-vol" type="range" min="0" max="100" value="' + Math.round(state.vol * 100) +
         '" aria-label="Volume" data-music-vol>';
@@ -936,8 +945,6 @@
       if (hardMuted) { setMuted(false); start(); return; }   // 静音状态下点播放 = 解除静音并播放
       toggle();
     });
-    root.querySelector("[data-music-track]").addEventListener("click", function () { nextTrack(); });
-    root.querySelector("[data-music-voice]").addEventListener("click", function () { setVoice(!state.voice); });
     root.querySelector("[data-music-mute]").addEventListener("click", function () {
       var nowMuted = !hardMuted;
       setMuted(nowMuted);
@@ -1065,7 +1072,7 @@
     if (!(window.AudioContext || window.webkitAudioContext)) return;  // 不支持就完全不显示
     hardMuted = isMuted();
     setupChannel();
-    probeExternal("rap");     // 有 AI 成品歌就优先用它
+    // 说唱不参与本站播放器：成品只在 rap.html 里由原生播放器播放
     buildUI();
 
     // 离开、隐藏或关闭页面时彻底收声：

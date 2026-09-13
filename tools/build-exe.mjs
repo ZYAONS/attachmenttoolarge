@@ -162,6 +162,12 @@ if (inject.status !== 0) {
   console.error("    " + (inject.stderr || inject.stdout || "").trim().split("\n").slice(-6).join("\n    "));
   process.exit(1);
 }
+// macOS, step 3 of the SEA recipe: after injection the binary is unsigned and the
+  // kernel refuses to run it, so it has to be signed ad-hoc.
+  if (process.platform === "darwin") {
+    const sg = run("codesign", ["--sign", "-", "--force", OUT]);
+    if (sg.status !== 0) console.log("    (ad-hoc codesign failed; the binary may not run)");
+  }
 console.log("    完成");
 
 /* ---------- 6. 产物自检 ---------- */

@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    attachmenttoolarge — single: "Attachment Too Large"
    Single source of truth: both the site pages and the music engine read this,
    so the lyrics can never drift apart.
@@ -20,7 +20,7 @@ window.ATTLYRICS = {
     {
       label: "INTRO",
       lines: [
-        "Eleven forty at night, cursor blinking slow",
+        "Seven fifty-nine at night, cursor blinking slow",
         "Dragged the file in and the whole thing froze"
       ]
     },
@@ -83,7 +83,7 @@ window.ATTLYRICS = {
       lines: [
         "Paperclip pops up: \"Need help writing that mail?\"",
         "Yeah, I do — so I went and wrote the tool",
-        "Eleven forty failed, so zero-four became a repo",
+        "Nineteen fifty-nine failed, so twenty twenty-three became a repo",
         "Too large? Then cut it. Piece by piece. Send it. Go."
       ]
     }
