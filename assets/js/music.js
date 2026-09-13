@@ -3,7 +3,7 @@
    浏览器实时合成（Web Audio），不加载任何音频文件、不联网、不上传数据。
 
    两条曲目：
-   1) lofi  《23:40 的发送失败》 — A 小调 84 BPM，Am–F–C–G，柔和 pad + 走低音 + 琶音
+   1) lofi  《19:59 的发送失败》 — A 小调 84 BPM，Am–F–C–G，柔和 pad + 走低音 + 琶音
    2) rap   《附件太大》        — 88 BPM boom-bap 鼓组 + 磁带底噪，
                                   人声由系统语音合成（speechSynthesis）按行朗读，
                                   并逐句高亮歌词（卡拉OK）。
@@ -804,7 +804,7 @@
       id: state.track,
       name: state.track === "rap"
         ? ((data && data.title) || "Attachment Too Large") + " (Rap)"
-        : "Failed at 23:40",
+        : "Failed at 19:59",
       kind: state.track === "rap" ? "rap" : "lofi"
     };
   }
@@ -919,7 +919,7 @@
       '<button class="music-btn" type="button" data-music-toggle aria-pressed="false">' + ICON_PLAY + '</button>' +
       '<span class="music-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>' +
       '<span class="music-meta">' +
-        '<span class="music-title" data-music-title>Failed at 23:40</span>' +
+        '<span class="music-title" data-music-title>Failed at 19:59</span>' +
         '<span class="music-sub" data-music-status>Title track · synthesized live</span>' +
       '</span>' +
       '<button class="music-chip" type="button" data-music-track title="Switch track">Lo-fi</button>' +
