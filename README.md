@@ -58,7 +58,7 @@ blob with postject, then **runs the resulting exe** through `--version`, `--help
 a real split/rejoin with hash comparison, and `ndr`. `att.exe` is ~88 MB because it carries
 the runtime; it needs nothing installed on the target machine.
 
-Tagging `v*` runs `.github/workflows/release.yml`, which builds Windows/Linux/macOS binaries,
+Tagging `v*` runs `.github/workflows/release.yml`, which builds Windows and Linux binaries,
 runs all three test suites and attaches the binaries plus `SHA256SUMS.txt` to a GitHub Release.
 
 ## CI and releases
@@ -77,8 +77,7 @@ scope. Two ways to enable it:
    git commit -m "ci: add release workflow" && git push
    ```
 
-Once in place it runs all three test suites on every push, cross-builds `att` for
-Windows/Linux/macOS, and attaches the binaries plus `SHA256SUMS.txt` to a GitHub Release on
+Once in place it runs all three test suites on every push, builds `att` for Windows and Linux, and attaches the binaries plus `SHA256SUMS.txt` to a GitHub Release on
 every `v*` tag.
 
 ## Membership backend

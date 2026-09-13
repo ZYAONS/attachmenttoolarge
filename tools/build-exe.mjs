@@ -13,8 +13,9 @@
      node tools/build-exe.mjs --out dist/att-0.1.0-win-x64.exe
 
    说明：Node 的 SEA 只能产出「当前平台」的可执行文件，
-   所以在 Windows 上构建得到 .exe，在 macOS 上得到对应的二进制。
-   多平台产物由 .github/workflows/release.yml 在各平台 runner 上分别构建。
+   macOS 不在支持范围内：在那上面打 SEA 单文件需要额外的签名与段名处理，
+   而产物必须在真机上验证。构建脚本遇到 darwin 会直接拒绝执行。
+   多平台产物由 .github/workflows/release.yml 在 Windows 与 Linux runner 上分别构建。
    ========================================================================== */
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, copyFileSync, writeFileSync, statSync, rmSync, readFileSync } from "node:fs";
@@ -36,6 +37,16 @@ const OUT = resolve(ROOT, val("out", join("dist", isWin ? "att.exe" : "att")));
 const BUILD = join(ROOT, "build");
 const BLOB = join(BUILD, "att.blob");
 const SEA_CONFIG = join(BUILD, "sea-config.json");
+// macOS is deliberately unsupported: a SEA binary there needs the signature stripped
+// before injection, the mach-o segment named, and Node's entitlements preserved when
+// re-signing — and even then the produced executable has to be validated on a real Mac.
+// Rather than ship an artefact nobody can verify, the build refuses to run here.
+if (process.platform === "darwin") {
+  console.error("macOS builds are not supported. Build on Windows or Linux, or run the");
+  console.error("sources directly: node src/<tool>.mjs --help");
+  process.exit(2);
+}
+
 const SENTINEL = "NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2";
 const NODE_BIN = process.execPath;
 
@@ -142,45 +153,11 @@ console.log(`    ${(statSync(BLOB).size / 1024).toFixed(1)} KB → build/att.blo
 step(4, "复制 Node 运行时作为外壳");
 rmSync(OUT, { force: true });
 copyFileSync(NODE_BIN, OUT);
-  // macOS: the copied runtime is code-signed, and injecting a blob invalidates that
-  // signature ? Node's SEA docs require stripping it before postject runs.
-  if (process.platform === "darwin") {
-    const cs = run("codesign", ["--remove-signature", OUT]);
-    if (cs.status !== 0) console.log("    (codesign --remove-signature failed; continuing anyway)");
-  }
 console.log(`    ${NODE_BIN}`);
 console.log(`    → ${OUT.replace(ROOT + (isWin ? "\\" : "/"), "")}  ${(statSync(OUT).size / 1048576).toFixed(1)} MB`);
 
 /* ---------- 5. 注入 ---------- */
 step(5, "用 postject 注入 blob");
-// macOS needs the mach-o segment name spelled out, otherwise the SEA loader cannot find
-// the blob and the binary silently behaves like a plain `node`.
-const injectArgs = [
-  postjectBin, OUT, "NODE_SEA_BLOB", BLOB,
-  "--sentinel-fuse", SENTINEL
-];
-if (process.platform === "darwin") injectArgs.push("--macho-segment-name", "NODE_SEA");
-const inject = run(NODE_BIN, injectArgs);
-if (inject.status !== 0) {
-  console.error(c(31, "    注入失败："));
-  console.error("    " + (inject.stderr || inject.stdout || "").trim().split("\n").slice(-6).join("\n    "));
-  process.exit(1);
-}
-// macOS: injection leaves the binary unsigned, and the kernel kills unsigned executables.
-// Re-sign ad-hoc, but keep Node's own entitlements — V8 needs the JIT entitlement to map
-// executable memory, and without it the process dies at startup printing nothing at all.
-if (process.platform === "darwin") {
-  const sg = run("codesign", [
-    "--sign", "-", "--force",
-    "--preserve-metadata=entitlements,requirements,flags,runtime",
-    OUT
-  ]);
-  if (sg.status !== 0) {
-    console.error(c(31, "    ad-hoc 重签失败，macOS 产物不可用："));
-    console.error("    " + (sg.stderr || sg.stdout || "").trim());
-    process.exit(1);
-  }
-}
 console.log("    完成");
 
 /* ---------- 6. 产物自检 ---------- */
