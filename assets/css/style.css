@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    attachmenttoolarge — 附件过大组织
    设计方向：Persona 3 式的高对比排版
      · 纯黑 / 骨白 / 深蓝 三色为骨，红只留给「报错」本身（550 5.3.4）
@@ -119,7 +119,7 @@ body::after {
   pointer-events: none;
   z-index: 0;
   /* 只在右上角留一道蓝斜带，别横穿正文 */
-  background: linear-gradient(-72deg, transparent 84%, var(--accent-soft) 84.05% 92%, transparent 92.1%);
+  background: linear-gradient(-72deg, transparent 86%, color-mix(in srgb, var(--c1) 7%, transparent) 86.05% 91%, transparent 91.1%);
 }
 
 img { max-width: 100%; display: block; }
@@ -1238,3 +1238,7 @@ table.data th { box-shadow: inset 0 5px 0 var(--gold-2), inset 0 -1px 0 var(--go
 .seal { box-shadow: 0 0 0 3px var(--c1), 0 0 0 6px var(--gold-2), var(--shadow-sm); }
 .rule-orn::before, .rule-orn::after { background: linear-gradient(90deg, transparent, var(--gold-2), transparent); height: 2px; }
 .rule-orn i { background: var(--gold-2); }
+
+/* 奥德赛层收尾：回纹带内侧压一道金线，像神庙横楣的鎏金边 */
+.site-header::after, .site-footer::before { box-shadow: inset 0 1px 0 var(--gold-2), inset 0 -1px 0 var(--gold-2); }
+.section + .section::before { filter: drop-shadow(0 1px 0 rgba(184, 145, 47, 0.25)); }
