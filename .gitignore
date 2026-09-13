@@ -24,3 +24,6 @@ _frame.html
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# 独立仓库，不嵌进父仓库
+att-tools/
