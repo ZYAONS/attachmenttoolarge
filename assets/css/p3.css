@@ -1,0 +1,139 @@
+/* ==========================================================================
+   p3.css — the P3 design layer
+   --------------------------------------------------------------------------
+   Separate from style.css on purpose: this file carries the *shape* language and
+   nothing else. Colours still come from the society's own palette (verdigris and
+   gold); the blue and cyan here are reserved for the "dark hour" motif, which is
+   the one place where borrowing P3's colour is the point.
+
+   What this layer adds:
+     · shattered section edges      — sections no longer meet in straight lines
+     · halftone dot fields          — on bands, not as a page-wide texture
+     · speed lines                  — diagonal cyan rules
+     · sticker type                 — skewed caps with hard offset shadows
+     · huge outline numerals        — a ghost number behind each section head
+     · the dark-hour clock          — 19:59, blinking colon
+     · film grain                   — barely there, dark bands only
+   ========================================================================== */
+
+:root {
+  --p3-blue: #12308c;
+  --p3-cyan: #35c6f2;
+  --p3-ink: #07070b;
+  --p3-paper: #f7f6f2;
+  --p3-dot: rgba(18, 48, 140, 0.18);
+  --p3-jag: 16px;
+  --p3-shadow: 5px 5px 0 var(--c2), 10px 10px 0 rgba(7, 7, 11, 0.2);
+}
+html[data-theme="dark"] {
+  --p3-dot: rgba(53, 198, 242, 0.15);
+}
+
+/* ---------- shattered section edges ------------------------------------- */
+.section { position: relative; }
+.section + .section::before {
+  content: ""; position: absolute; left: 0; right: 0; top: calc(var(--p3-jag) * -1);
+  height: var(--p3-jag); background: var(--bg); pointer-events: none;
+  clip-path: polygon(0 100%, 0 42%, 8% 78%, 16% 26%, 26% 82%, 36% 30%, 46% 86%, 56% 32%,
+                     66% 80%, 74% 24%, 84% 76%, 92% 28%, 100% 66%, 100% 100%);
+}
+
+/* ---------- halftone dot fields ----------------------------------------- */
+.p3-dots {
+  background-image: radial-gradient(var(--p3-dot) 1.6px, transparent 1.7px);
+  background-size: 7px 7px;
+}
+.section:nth-of-type(3n+1)::after {
+  content: ""; position: absolute; right: 0; top: 0; width: min(38%, 420px); height: 210px;
+  background-image: radial-gradient(var(--p3-dot) 1.6px, transparent 1.7px);
+  background-size: 7px 7px;
+  -webkit-mask-image: linear-gradient(205deg, #000 18%, transparent 70%);
+  mask-image: linear-gradient(205deg, #000 18%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- speed lines ------------------------------------------------- */
+.p3-speed { position: relative; overflow: hidden; }
+.p3-speed::after {
+  content: ""; position: absolute; inset: -25% -12%; pointer-events: none;
+  background: repeating-linear-gradient(-16deg,
+    rgba(53, 198, 242, 0.11) 0 2px, transparent 2px 13px,
+    rgba(18, 48, 140, 0.07) 13px 14px, transparent 14px 32px);
+}
+
+/* ---------- sticker type ------------------------------------------------ */
+.p3-sticker {
+  display: inline-block;
+  font-family: var(--display); font-weight: 900; font-style: italic;
+  text-transform: uppercase; letter-spacing: -0.005em; line-height: 1;
+  color: var(--p3-paper); background: var(--p3-ink);
+  padding: 8px 18px 10px;
+  transform: skewX(-12deg) rotate(-1.2deg);
+  box-shadow: var(--p3-shadow);
+}
+.p3-title {
+  font-style: italic;
+  text-shadow: 3px 3px 0 rgba(53, 198, 242, 0.32), 7px 7px 0 rgba(7, 7, 11, 0.16);
+}
+
+/* ---------- huge ghost numerals behind section heads -------------------- */
+.section-head { position: relative; }
+.section-head[data-num]::before {
+  content: attr(data-num);
+  position: absolute; left: -0.05em; top: -0.72em; z-index: -1;
+  font-family: var(--display); font-weight: 900; font-style: italic;
+  font-size: clamp(4.5rem, 13vw, 10rem); line-height: 1;
+  color: transparent; -webkit-text-stroke: 2px var(--c2);
+  opacity: 0.45; letter-spacing: -0.05em; pointer-events: none;
+}
+.section-head.center[data-num]::before { left: 50%; transform: translateX(-50%); }
+.section-head[data-num] h2 { position: relative; z-index: 1; }
+
+/* ---------- the dark hour ---------------------------------------------- */
+.dark-hour {
+  display: inline-flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  font-family: var(--display); font-weight: 900; font-style: italic;
+  font-size: clamp(2.4rem, 7.5vw, 5.2rem); line-height: 0.88; letter-spacing: -0.035em;
+  color: var(--p3-paper);
+  text-shadow: 4px 4px 0 var(--p3-blue), 8px 8px 0 rgba(7, 7, 11, 0.28);
+}
+.dark-hour .colon { color: var(--p3-cyan); animation: p3-blink 2s steps(2, end) infinite; }
+.dark-hour small {
+  font-family: var(--mono); font-style: normal; font-weight: 700;
+  font-size: 0.66rem; letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--p3-cyan); text-shadow: none; max-width: 46ch; margin-top: 2px;
+}
+@keyframes p3-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+/* a jagged blue band to drop behind a heading when one is wanted */
+.p3-band {
+  position: relative; color: var(--p3-paper);
+  background: linear-gradient(112deg, var(--p3-blue) 0%, #0a1c5e 58%, #062a76 100%);
+  clip-path: polygon(0 2%, 100% 0, 100% 92%, 0 100%);
+  padding: 34px 30px;
+}
+.p3-band::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(-16deg,
+    rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 14px);
+}
+
+/* ---------- film grain, dark bands only -------------------------------- */
+.p3-grain { position: relative; }
+.p3-grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.45;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.06) 0 1px, transparent 1px 4px);
+}
+
+/* ---------- T-shaped corner brackets on cards --------------------------- */
+.card { position: relative; }
+.card::before, .card::after { width: 24px; height: 24px; border-width: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dark-hour .colon { animation: none; }
+}
+@media print {
+  .section::before, .section::after, .p3-speed::after, .p3-grain::after { display: none; }
+}

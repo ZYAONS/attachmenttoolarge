@@ -1379,3 +1379,164 @@ body::after { transform: translate3d(calc(var(--mx, 0) * -11px), calc(var(--my, 
 .page-head.is-in .section-head::before { transform: skewX(-8deg) scaleY(1); }
 .section-head::after { transform: skewX(-24deg) translateX(46px); opacity: 0; transition: transform 0.5s 0.12s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s 0.12s; }
 .section.is-in .section-head::after { transform: skewX(-24deg) translateX(0); opacity: 1; }
+
+/* ==========================================================================
+   平面设计层 —— 学明日方舟 × P3：扁平、技术、精确
+   去掉所有插画与波纹（人物、船、回纹波浪），改用平面设计的语汇：
+     细网格底 · 四角括标 · 技术铭牌 · 警示斜纹 · 单主色 + 单警示色
+   ========================================================================== */
+:root {
+  /* 取色收敛：主色铜绿、警示赤红、其余一律中性灰阶 */
+  --c1: #1f6b56;   /* 主色 */
+  --c2: #8a8f96;   /* 中性 */
+  --c3: #b4553c;   /* 仅在警示时出现 */
+  --c4: #5f6b70;   /* 中性偏冷 */
+  --grid-line: rgba(13, 13, 16, 0.055);
+  --grid-step: 40px;
+  --hazard: repeating-linear-gradient(-45deg, #14110c 0 8px, #d9a521 8px 16px);
+  --rail: #0d0d10;
+}
+html[data-theme="dark"] {
+  --c1: #4fd1a5;
+  --c2: #7c848c;
+  --c3: #e0775a;
+  --c4: #6a757c;
+  --grid-line: rgba(255, 255, 255, 0.045);
+  --hazard: repeating-linear-gradient(-45deg, #0f0f0f 0 8px, #d9a521 8px 16px);
+  --rail: #f2f1ec;
+}
+
+/* ① 底：细网格（明日方舟的图纸感），替换掉原先的网点 */
+html::after {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-step) var(--grid-step);
+  opacity: 1;
+  animation: grid-drift 120s linear infinite;
+}
+@keyframes grid-drift { from { background-position: 0 0, 0 0; } to { background-position: var(--grid-step) 0, 0 var(--grid-step); } }
+
+/* ② 去掉回纹波浪，改成平整的双细线 + 一段警示斜纹 */
+.site-header::after {
+  height: 8px;
+  background-image: linear-gradient(to bottom, var(--ink) 0 1px, transparent 1px 3px, var(--ink) 3px 4px, transparent 4px),
+                    linear-gradient(to right, var(--ink) 0 84px, transparent 84px);
+  background-size: 100% 8px, 100% 8px;
+  background-repeat: no-repeat;
+  border: 0;
+  animation: none;
+}
+.section + .section::before,
+.site-footer::before,
+.page-head::after {
+  content: "";
+  background-image: linear-gradient(to right, var(--ink) 0 72px, var(--grid-line) 72px);
+  background-size: auto 1px;
+  background-repeat: repeat-x;
+  background-position: left center;
+  height: 12px;
+  opacity: 1;
+  animation: none;
+  border: 0;
+  box-shadow: none;
+}
+.section + .section::before { top: 4px; }
+.site-footer::before { position: absolute; top: 0; left: 0; right: 0; }
+
+/* ③ 卡片：四角括标（瞄准框），扁平化 —— 去掉硬阴影与圆角 */
+.card, .table-wrap, .stats, .member-card, .cta-band, .track-bar, .faq details, .terminal {
+  background-image:
+    linear-gradient(var(--c1), var(--c1)), linear-gradient(var(--c1), var(--c1)),
+    linear-gradient(var(--c1), var(--c1)), linear-gradient(var(--c1), var(--c1)),
+    linear-gradient(var(--c1), var(--c1)), linear-gradient(var(--c1), var(--c1)),
+    linear-gradient(var(--c1), var(--c1)), linear-gradient(var(--c1), var(--c1));
+  background-size: 14px 2px, 2px 14px, 14px 2px, 2px 14px, 14px 2px, 2px 14px, 14px 2px, 2px 14px;
+  background-position: left top, left top, right top, right top, left bottom, left bottom, right bottom, right bottom;
+  background-repeat: no-repeat;
+  border: 1px solid var(--ink);
+  box-shadow: none;
+}
+.card:hover { border-color: var(--c1); box-shadow: none; transform: none; }
+.card::before { display: none; }
+
+/* ④ 段落头：技术铭牌（左边竖条 + 编号 + 虚线导轨） */
+.section-head { padding: 20px 24px 20px 22px; border-left: 3px solid var(--c1); }
+.section-head::before { display: none; }
+.section-head::after {
+  content: "";
+  display: block;
+  position: absolute; left: 22px; right: 24px; bottom: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, var(--ink) 0 6px, transparent 6px 12px);
+  background-size: 12px 1px;
+  background-repeat: repeat-x;
+  opacity: 0.5;
+  transform: none;
+  transition: none;
+  width: auto; top: auto;
+}
+.eyebrow {
+  background: none;
+  color: var(--c1);
+  border-left: 0;
+  padding: 0;
+  transform: none;
+  font-family: var(--mono);
+  letter-spacing: 0.22em;
+}
+.eyebrow::after { display: none; }
+.section-head h2::after { background: var(--c1); width: 44px; height: 4px; transform: none; }
+.section-head h2::before { display: none; }
+
+/* ⑤ 数据条：标签/数值导轨，等宽数字 */
+.stats { display: grid; }
+.stat { border-right: 1px solid var(--ink); box-shadow: none; padding: 20px 18px; }
+.stat:last-child { border-right: 0; }
+.stat-num { font-family: var(--mono); font-weight: 700; letter-spacing: -0.02em; color: var(--c1); }
+.stat:nth-child(4) .stat-num { color: var(--c3); }
+.stat-label { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-2); }
+
+/* ⑥ 按钮：扁平框 + 悬停时警示斜纹扫过 */
+.btn { box-shadow: none; border: 1px solid var(--ink); background: var(--panel); }
+.btn:hover { box-shadow: none; transform: none; border-color: var(--c1); background: var(--panel); color: var(--ink); }
+.btn::after { display: none; }
+.btn-primary { background: var(--c1); color: #fff; border-color: var(--c1); }
+.btn-primary:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ⑦ 徽标/标签：方角、等宽、细线 */
+.badge, .tag { box-shadow: none; border: 1px solid var(--ink); transform: none; background: var(--panel); color: var(--muted); }
+.badge-warn { border-color: var(--c3); color: var(--c3); background: transparent; }
+.badge-ok { border-color: var(--c1); color: var(--c1); background: transparent; }
+.tag { border-radius: 0; }
+.tag:nth-of-type(n) { background: var(--panel); color: var(--muted); }
+
+/* ⑧ 容量计：警示斜纹本身成为刻度 */
+.meter-track { border: 1px solid var(--ink); height: 14px; background-image: var(--hazard); background-size: 16px 16px; opacity: 1; }
+.meter-track::after { display: none; }
+.meter-fill { box-shadow: 0 0 0 1px var(--ink) inset; background: linear-gradient(90deg, var(--c1), var(--c1) 62%, var(--c3)); }
+
+/* ⑨ 表格：图纸表格 */
+table.data th { background: var(--panel); color: var(--ink); border-bottom: 1px solid var(--ink); box-shadow: none; font-family: var(--mono); }
+table.data td { border-bottom: 1px dashed var(--line-soft); }
+table.data tbody tr:nth-child(even) { background: transparent; }
+table.data td:first-child { color: var(--c1); }
+
+/* ⑩ 引述 / 时间线 / 页脚：一律扁平 */
+.quote { border: 1px solid var(--ink); border-left: 3px solid var(--c1); box-shadow: none; background-image: none; }
+.quote::before { color: var(--c1); }
+.timeline li::before { box-shadow: none; border-radius: 0; transform: none; background: var(--c1); }
+.timeline::before { background: var(--line); width: 1px; }
+.site-footer { background-image: none; }
+.music-pill { box-shadow: none; border: 1px solid var(--ink); }
+.seal { box-shadow: 0 0 0 1px var(--c1); transform: none; }
+.page-head { border-bottom: 1px solid var(--ink); }
+.page-head::after { background-image: linear-gradient(to right, var(--ink) 0 96px, transparent 96px); }
+.rule-orn i { background: var(--c1); animation: none; }
+
+/* ⑪ 保留动效：只留技术感的三种（进度条、逐行终端、数字跳字、网格漂移、悬停金线） */
+.nav-links a::after { background: var(--c1); }
+.hero h1, .page-head h1 {
+  background-image: linear-gradient(100deg, var(--text) 0%, var(--c1) 30%, var(--c2) 50%, var(--text) 82%);
+  animation-duration: 22s;
+}
