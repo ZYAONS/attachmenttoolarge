@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    att CLI 自检 —— 真的跑一遍，不看代码
 
    用法： node tools/cli-test.mjs
@@ -23,7 +23,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "..");
 const CLI = join(ROOT, "cli", "att.mjs");
 
-let failed = 0, total = 0;
+let failed = 0, total = 0; let lastSizeProbe = "?";
 const results = [];
 function ok(name, pass, detail = "") {
   total++;
@@ -166,7 +166,18 @@ console.log("\n=== 5. 分片损坏 / 缺失 ===");
 }
 
 /* ---------- 6. 收件人双击还原（真跑脚本） ---------- */
+/* 这一段只在 Windows 上有意义：PowerShell 与 cmd.exe 是那两个脚本的运行环境。
+   在 Linux/macOS 上改为断言脚本本身可执行且带哈希校验，否则 CI 会误报失败。 */
 console.log("\n=== 6. 收件人双击还原 ===");
+if (process.platform !== "win32") {
+  const sh = readdirSync(work).find((f) => f.endsWith(".att-reassemble.sh"));
+  const shText = readFileSync(join(work, sh), "utf8");
+  ok("生成 .sh 还原脚本", !!sh && /sha256sum/.test(shText), sh);
+  const r = spawnSync("sh", [sh], { encoding: "utf8", cwd: work, timeout: 120000 });
+  ok("sh 脚本可独立还原并校验", r.status === 0 && existsSync(join(work, "报价单_最终版.bin")) && sha(join(work, "报价单_最终版.bin")) === srcHash,
+     ((r.stdout || "").trim().split("\n").pop() || "exit=" + r.status).slice(0, 52));
+  ok("本平台跳过 Windows 双击测试", true, process.platform);
+} else {
 {
   const ps1 = readdirSync(work).find((f) => f.endsWith(".att-reassemble.ps1"));
   const cmd = readdirSync(work).find((f) => f.endsWith(".att-reassemble.cmd"));
@@ -184,6 +195,7 @@ console.log("\n=== 6. 收件人双击还原 ===");
   const sh = readdirSync(work).find((f) => f.endsWith(".att-reassemble.sh"));
   const shText = readFileSync(join(work, sh), "utf8");
   ok("生成的 .sh 含哈希校验逻辑", /sha256sum/.test(shText) && /expected=/.test(shText), sh);
+}
 }
 
 /* ---------- 7. ndr ---------- */
@@ -223,8 +235,9 @@ console.log("\n=== 8. 参数与错误处理 ===");
   ok("非法 --limit 被拒绝", att(["split", src, "--limit", "banana"]).code === 1, "banana → 报错");
   ok("size 解析支持多种写法", (() => {
     const r = att(["split", src, "--limit", "1.5MB", "--json", "--out", join(work, "alt")]);
-    try { return JSON.parse(r.out).limitBytes === Math.round(1.5 * 1024 * 1024); } catch { return false; }
-  })(), "1.5MB = 1572864 字节");
+    try { lastSizeProbe = String(JSON.parse(r.out).limitBytes); return JSON.parse(r.out).limitBytes === Math.round(1.5 * 1024 * 1024); }
+    catch { lastSizeProbe = "exit=" + r.code + " out=" + (r.out || r.err || "").trim().slice(0, 60); return false; }
+  })(), "1.5MB → " + lastSizeProbe);
 }
 
 /* ---------- 9. 网站表格与 CLI 数据一致性 ---------- */
