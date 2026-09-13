@@ -208,8 +208,20 @@ const SUITE = `(async () => {
     ok("说唱页有独立播放器", true, "audio[src=rap.mp3]");
     ok("成品歌已加载", rapAudio.duration > 150 && rapAudio.duration < 200, Math.round(rapAudio.duration) + "s");
     ok("提供 mp3 下载", !!document.querySelector('a[href$="rap.mp3"][download]'), "download link");
+
+    // the two alternate treatments are rendered from assets/js/recordings.js
+    const alts = [...document.querySelectorAll("[data-recordings] audio")];
+    ok("另有两条改编版", alts.length === 2, alts.length + " alternate tracks");
+    for (const a of alts) {
+      if (!a.duration) await until(() => a.duration > 0 || a.error, 8000, 200);
+    }
+    const loaded = alts.filter(a => a.duration > 140 && a.duration < 200);
+    ok("改编版音频可用", loaded.length === alts.length && alts.length === 2,
+       alts.map(a => (a.getAttribute("src").split("/").pop() || "?") + " " + Math.round(a.duration || 0) + "s").join(" · "));
+    ok("改编版有下载链接", document.querySelectorAll("[data-recordings] a[download]").length === 2, "two download links");
+    ok("改编版歌词已渲染", document.querySelectorAll("[data-recordings] .lyric-line").length >= 30,
+       document.querySelectorAll("[data-recordings] .lyric-line").length + " lines");
   } else {
-    // 只有说唱页才有它；其他页面跳过即可，不算失败
     ok("本页无说唱播放器（跳过）", true, "N/A on this page");
   }
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
@@ -206,6 +206,30 @@
     </div>
   </section>
 
+  <!-- ============ Three recordings ============ -->
+  <section class="section" id="versions">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Three recordings</span>
+        <h2>The same complaint, three ways</h2>
+        <p class="lead">
+          One story — a 24.7 MB file, a 20 MB wall, an evening at 19:59 — written three times in
+          three forms. Each recording was generated from its own lyrics by the same open model,
+          so the words you read below are the words being sung.
+        </p>
+      </div>
+      <div class="grid grid-3" data-recordings></div>
+      <div class="callout" style="margin-top:22px">
+        <div>
+          <b>Why a blues and a pop version</b>
+          Because the form changes what the complaint is about. Twelve-bar AAB turns it into
+          something you repeat until it stops hurting; an arena chorus turns it into something a
+          room can shout. The rap keeps it as a story with a beat under it.
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ Want a real vocal? ============ -->
   <section class="section">
     <div class="container">
@@ -307,6 +331,7 @@ late-night office mood, melancholic but humorous</pre>
 </footer>
 
 <script src="assets/js/lyrics.js"></script>
+<script src="assets/js/recordings.js"></script>
 <script src="assets/js/music.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
@@ -386,6 +411,29 @@ late-night office mood, melancholic but humorous</pre>
       if (note) note.textContent = "Background music on the site: “Failed at 19:59” · playing";
     });
   }
+  /* ---- render the alternate recordings from assets/js/recordings.js ---- */
+  (function () {
+    var host = document.querySelector("[data-recordings]");
+    if (!host || !window.ATTRECORDINGS) return;
+    var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
+    host.innerHTML = window.ATTRECORDINGS.map(function (r) {
+      var lyrics = r.sections.map(function (s) {
+        return '<div class="lyric-label" style="margin-top:14px">' + esc(s.label) + "</div>" +
+          s.lines.map(function (l) { return '<p class="lyric-line" style="cursor:default">' + esc(l) + "</p>"; }).join("");
+      }).join("");
+      return '<article class="card project-card">' +
+        '<div class="project-top"><span class="project-name">' + esc(r.id) + "</span>" +
+        '<span class="badge badge-ok">320 kbps</span></div>' +
+        "<h3>" + esc(r.title) + "</h3>" +
+        '<p class="project-desc">' + esc(r.note) + "</p>" +
+        '<audio controls preload="metadata" src="assets/audio/' + esc(r.id) + '.mp3" style="width:100%;margin:14px 0"></audio>' +
+        '<details><summary style="cursor:pointer;font-family:var(--mono);font-size:.8rem">Lyrics (' +
+          r.sections.reduce(function (n, s) { return n + s.lines.length; }, 0) + " lines)</summary>" + lyrics + "</details>" +
+        '<div class="project-meta"><a href="assets/audio/' + esc(r.id) + '.mp3" download style="color:var(--accent)">Download mp3</a>' +
+        "<span>" + esc(r.style.split(",").slice(0, 2).join(",")) + "</span></div>" +
+        "</article>";
+    }).join("");
+  })();
 })();
 </script>
 </body>
