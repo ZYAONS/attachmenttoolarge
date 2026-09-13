@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    attachmenttoolarge — 浏览器端自检（CDP 驱动，零依赖）
 
    用法：
@@ -125,6 +125,12 @@ const SUITE = `(async () => {
   ok("导航链接渲染", document.querySelectorAll("[data-nav-links] a").length >= 6, document.querySelectorAll("[data-nav-links] a").length + " 个");
   await until(() => hiddenNow() === 0, 4000);
   ok("首屏区块全部可见", hiddenNow() === 0, hiddenNow() + " 个首屏区块仍透明");
+  const termLines = [...document.querySelectorAll(".terminal .term-line")];
+  if (termLines.length) {
+    await until(() => termLines.every(l => getComputedStyle(l).opacity === "1"), 5000, 150);
+    const hidden = termLines.filter(l => getComputedStyle(l).opacity !== "1").length;
+    ok("终端文字可见（动画未藏内容）", hidden === 0, termLines.length + " 行，隐藏 " + hidden);
+  }
   ok("未横向溢出视口", document.documentElement.scrollWidth <= window.innerWidth + 1, document.documentElement.scrollWidth + " / " + window.innerWidth);
   ok("页脚年份已填充", /\\d{4}/.test(document.querySelector("[data-year]")?.textContent || ""), document.querySelector("[data-year]")?.textContent);
 

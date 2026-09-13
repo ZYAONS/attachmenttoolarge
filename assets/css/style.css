@@ -1343,3 +1343,39 @@ html::after {
   .hero h1, .page-head h1, html::after, .site-header::after, .site-footer::before,
   .brand-emblem, .hero-crest img, .rule-orn i { animation: none !important; }
 }
+
+/* ==========================================================================
+   动效 · 进阶 —— 终端逐行写出、卡片错位滑入、色板扫入、鼠标视差
+   全部只在有 JS 时启用（html.js），并且都有保险丝：类没加上时内容照常可见。
+   ========================================================================== */
+
+/* ⑪ 终端：一行一行写出来 */
+.js .terminal .term-body.is-typing .term-line { opacity: 0; }
+.js .terminal .term-body.is-typing.is-in .term-line {
+  animation: term-in 0.26s ease-out forwards;
+  animation-delay: calc(var(--i, 0) * 0.16s);
+}
+@keyframes term-in {
+  from { opacity: 0; transform: translateX(-7px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ⑫ 卡片：错位滑入（按 --i 依次进场） */
+.js .grid.is-in > * {
+  animation: card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 0.08s);
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(18px) skewX(-2deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ⑬ 鼠标视差：背景斜带随指针轻微反向移动 */
+body::after { transform: translate3d(calc(var(--mx, 0) * -11px), calc(var(--my, 0) * -8px), 0); will-change: transform; }
+
+/* ⑭ 色板扫入：段落头的竖色条自上而下展开，斜色块从右侧滑入 */
+.section-head::before { transform: skewX(-8deg) scaleY(0); transform-origin: top center; transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+.section.is-in .section-head::before,
+.page-head.is-in .section-head::before { transform: skewX(-8deg) scaleY(1); }
+.section-head::after { transform: skewX(-24deg) translateX(46px); opacity: 0; transition: transform 0.5s 0.12s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s 0.12s; }
+.section.is-in .section-head::after { transform: skewX(-24deg) translateX(0); opacity: 1; }

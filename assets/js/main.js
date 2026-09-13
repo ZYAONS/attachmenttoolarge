@@ -387,3 +387,74 @@
   }, { threshold: 0.35 });
   nums.forEach(function (n) { io.observe(n); });
 })();
+
+/* ==========================================================================
+   动效 · 进阶：终端逐行、卡片错位、色板扫入、鼠标视差
+   每个观察目标都有保险丝：3 秒内没进视口也强制显示，绝不留下隐形内容。
+   ========================================================================== */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce) return;
+
+  var targets = [];
+
+  /* ⑪ 终端：给每行编号 */
+  [].slice.call(document.querySelectorAll(".terminal .term-body")).forEach(function (body) {
+    [].slice.call(body.querySelectorAll(".term-line")).forEach(function (line, i) {
+      line.style.setProperty("--i", i);
+    });
+    body.classList.add("is-typing");
+    targets.push(body);
+  });
+
+  /* ⑫ 卡片：给每张编号（父级进场后依次播放） */
+  [].slice.call(document.querySelectorAll(".grid")).forEach(function (grid) {
+    [].slice.call(grid.children).forEach(function (child, i) {
+      child.style.setProperty("--i", i);
+    });
+    targets.push(grid);
+  });
+
+  /* ⑭ 色板：段落与页头 */
+  [].slice.call(document.querySelectorAll(".section, .page-head")).forEach(function (s) {
+    targets.push(s);
+  });
+
+  if (!targets.length) return;
+
+  var fired = 0;
+  function revealAll() { targets.forEach(function (t) { t.classList.add("is-in"); }); }
+
+  /* 保险丝：无论如何，3 秒后内容必须可见 */
+  setTimeout(function () { if (fired < targets.length) revealAll(); }, 3000);
+
+  if (!("IntersectionObserver" in window)) { revealAll(); return; }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      en.target.classList.add("is-in");
+      fired++;
+      io.unobserve(en.target);
+    });
+  }, { threshold: 0.2, rootMargin: "0px 0px -6% 0px" });
+
+  targets.forEach(function (t) { io.observe(t); });
+
+  /* ⑬ 鼠标视差：只在精确指针设备上启用 */
+  if (window.matchMedia && window.matchMedia("(pointer: fine)").matches) {
+    var root = document.documentElement, pending = false, tx = 0, ty = 0;
+    window.addEventListener("mousemove", function (e) {
+      tx = (e.clientX / window.innerWidth - 0.5) * 2;
+      ty = (e.clientY / window.innerHeight - 0.5) * 2;
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(function () {
+        root.style.setProperty("--mx", tx.toFixed(3));
+        root.style.setProperty("--my", ty.toFixed(3));
+        pending = false;
+      });
+    }, { passive: true });
+  }
+})();
