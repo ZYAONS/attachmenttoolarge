@@ -1,0 +1,26 @@
+﻿# 构建产物与本地数据（不入库）
+node_modules/
+build/
+dist/
+*.blob
+*.exe
+
+# 注册后端的账号库：里面是真实的密码哈希，绝不入库
+server/data/
+server/data/*.json
+*.tmp
+
+# 测试与截图的可再生产物
+_check-out.txt
+
+# 与本项目无关的工作区文件（属于其他任务）
+_pdftext/
+_toolcheck.txt
+_frame.html
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

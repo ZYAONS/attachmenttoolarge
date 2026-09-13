@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Member sign-in · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="Sign in as a registered member to view your membership card and the directory.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container auth-wrap" style="text-align:center">
+      <span class="seal" style="margin:0 auto 16px">ATT<br>20MB</span>
+      <span class="eyebrow" style="justify-content:center">Member sign-in</span>
+      <h1>Verify your number</h1>
+      <p class="lead">
+        When a password is wrong we will not tell you whether it was the email address or the password that was wrong —
+        we say only “incorrect”. That is deliberate; do not take it as coldness.
+      </p>
+      <p style="margin:16px 0 0"><span class="badge" data-mode-badge>Probing the backend…</span></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container auth-wrap">
+      <div class="callout callout-warn" data-static-notice style="display:none; margin-bottom:22px">
+        <div>
+          <b>Static mode</b>
+          Signing in requires a backend. Run <code>node server/server.mjs</code> and open the site at the address it prints.
+        </div>
+      </div>
+
+      <form class="card reveal" data-auth="login" novalidate>
+        <div class="card-num">FORM B · VERIFICATION OF IDENTITY</div>
+        <div class="form-grid" style="margin-top:18px">
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" required autocomplete="current-password">
+          </div>
+
+          <div class="form-msg" data-form-msg role="status"></div>
+
+          <div class="btn-row">
+            <button class="btn btn-primary" type="submit">Sign in</button>
+            <a class="btn btn-ghost" href="register.html">Not a member yet? Submit a petition</a>
+          </div>
+        </div>
+      </form>
+
+      <div class="callout" style="margin-top:20px">
+        <div>
+          <b>A note on sessions</b>
+          On signing in, the server issues an HttpOnly cookie valid for 30 days.
+          Sessions live in the server's memory — restart the server and you sign in again. That is a deliberate simplification, not a bug.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul>
+          <li><a href="register.html">Apply</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="members.html">Directory</a></li>
+          <li><a href="member.html">My card</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+</body>
+</html>

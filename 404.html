@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>550 5.3.4 · page too large (or not there) — attachmenttoolarge</title>
+<meta name="description" content="The page you asked for exceeds the maximum page size this server allows. Or it simply does not exist.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="error-page">
+    <div>
+      <span class="badge badge-warn"><span class="dot dot-live"></span> automatic reply from postmaster@attachmenttoolarge.org</span>
+      <div class="error-code">550</div>
+      <h1 style="margin-bottom:12px">This page is too large, same as your attachment</h1>
+      <p class="lead" style="max-width:560px; margin:0 auto 8px">
+        So large it may not exist at all. The server's exact words were:
+      </p>
+      <p class="mono" style="color:var(--accent); font-size:0.86rem; margin-bottom:26px">
+        550 5.3.4 Message size exceeds fixed maximum message size
+      </p>
+
+      <div class="terminal" style="max-width:560px; margin:0 auto 28px; text-align:left">
+        <div class="term-bar"><i></i><i></i><i></i><span class="term-title">the path you asked for</span></div>
+        <div class="term-body">
+          <div class="term-line"><span class="term-prompt">GET</span> <span id="bad-path" class="term-err">/no/idea/which/page</span></div>
+          <div class="term-line term-dim">Looking it up …</div>
+          <div class="term-line term-err">✗ Not found, and no “send a link instead” advice offered</div>
+          <div class="term-line term-ok">→ Suggestion: go home, or go and look at the 20 MB monument</div>
+        </div>
+      </div>
+
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn-primary" href="index.html">Back to home</a>
+        <a class="btn" href="projects.html">Browse projects</a>
+        <a class="btn btn-ghost" href="blog-20mb.html">See the monument</a>
+      </div>
+
+      <p class="small muted" style="margin-top:30px">
+        If you are certain this address should exist, please
+        <a href="contact.html" style="color:var(--accent)">tell us</a> —
+        and include the raw error text. We like raw error text.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+  // Show the path the user actually requested in the terminal,
+  // so the error page is not entirely useless.
+  (function () {
+    var el = document.getElementById("bad-path");
+    if (!el) return;
+    var p = decodeURIComponent(location.pathname + location.search);
+    el.textContent = p.length > 60 ? p.slice(0, 57) + "…" : p || "/";
+  })();
+</script>
+</body>
+</html>

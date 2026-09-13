@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>We built a monument to 20 MB · attachmenttoolarge</title>
+<meta name="description" content="A virtual headstone whose inscription is six bytes long. On the unveiling of the 20 MB monument, the arguments we had, and what a monument can and cannot do.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <a href="blog.html">Blog</a> / We built a monument to 20 MB</div>
+      <div class="post-tags" style="margin-bottom:16px">
+        <span class="tag">Essay</span><span class="tag">Outlook</span><span class="tag">2025-11-18</span><span class="tag">6 min read</span>
+      </div>
+      <h1>We built a monument to 20 MB</h1>
+      <p class="lead">
+        The inscription is six bytes. One of them is a newline — because the contributor who carved it
+        insisted that a monument should end with a newline, the way a letter should end with a signature.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="prose reveal">
+        <p>
+          At a community meeting last winter, someone suggested that we ought to do something about 20 MB.
+          The proposal sat in the chat log in silence for forty seconds — in an open-source project,
+          forty seconds of silence is close to unanimous consent.
+        </p>
+
+        <h2>Why 20 MB</h2>
+        <p>
+          Because it is the wall most of us hit first. Not 35 MB, not 10 MB,
+          but the 20 MB at Outlook.com that appears nowhere in the compose window and only shows itself
+          after you press Send. It has its own error, its own error code, and its own gentle piece of advice:
+        </p>
+        <blockquote>
+          Try putting the file in a shared location and sending a link instead.
+        </blockquote>
+        <p>
+          We have read that sentence so many times that it has taken on the character of a prayer:
+          polite, logically sound, and no help at all with your actual problem.
+        </p>
+
+        <h2>The inscription</h2>
+        <p>The final inscription is below, six bytes in total:</p>
+        <pre><code>20 MB
+</code></pre>
+        <p>
+          Yes, the trailing newline counts as a byte. Some objected that a newline is not part of an
+          inscription and should be counted as five bytes. The proposer replied:
+          <em>“The inscription is six bytes because six is divisible by two three times.
+          We do not have coincidences in this society.”</em> The vote was 23 to 4.
+        </p>
+
+        <h2>What we argued about on unveiling day</h2>
+        <ul>
+          <li>
+            <b>Font.</b> Some argued for monospace, on the grounds that “this is a monument for engineers”;
+            others held that monospace looks like a log file, not a monument. The compromise: monospace for
+            the inscription, sans-serif for the plinth.
+          </li>
+          <li>
+            <b>Whether to put a date on it.</b> A date would let people assume 20 MB is over.
+            We all know it is not — it is still stopping people today. The date on the plinth reads
+            <code>still maintained</code>.
+          </li>
+          <li>
+            <b>Whether to carve the error code.</b> The proposal was to cut <code>0x80040610</code> into the back,
+            the way the back of an epitaph works: visible only to those willing to walk around. Passed unanimously.
+          </li>
+        </ul>
+
+        <h2>What a monument can do</h2>
+        <p>
+          Honestly, nothing. It will not raise the limit by a single byte, and it will not save anyone four minutes.
+          But it turns something long treated as “you failed to configure it properly” into a public object —
+          from here on, you are not the only one stuck at 99%.
+        </p>
+        <p>
+          That is the entire idea behind this site: collect the vague errors, translate them into plain language,
+          stamp them with a date and a source, and leave them somewhere other people can find them.
+          The rest is for the tools. What the tools cannot fix, we complain about together.
+        </p>
+
+        <hr>
+
+        <h3>If you want one of your own</h3>
+        <p>
+          The source of the monument lives in the <code>/monument</code> directory of the repository:
+          under two hundred lines of HTML. You can carve your own number into it — 10 MB, 25 MB, 50 MB,
+          or that gateway at your company nobody dares to touch.
+        </p>
+        <p>
+          One rule: keep the trailing newline in the inscription. It is the least useful,
+          and the least dispensable, of the six bytes on the stone.
+        </p>
+
+        <div class="btn-row" style="margin-top:34px">
+          <a class="btn btn-primary" href="join.html">Get involved →</a>
+          <a class="btn btn-ghost" href="blog.html">← Back to the blog</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="join.html#flow">How to contribute</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html#faq">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hello@attachmenttoolarge.org">hello@attachmenttoolarge.org</a></li>
+          <li><a href="contact.html">Mailing list</a></li>
+          <li><a href="contact.html">Matrix channel</a></li>
+          <li><a href="404.html">Status page</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

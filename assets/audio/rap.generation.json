@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-09-13T15:44:50.600Z",
+  "source": "ACE-Step via Hugging Face Space (remote; no model downloaded locally)",
+  "space": "ace-step-ace-step.hf.space",
+  "duration": 170,
+  "style": "boom-bap hip-hop, 88 bpm, dusty vinyl crackle, warm upright bass, jazz-muted piano loop, soft brushed drums, laid-back male rap vocal, storytelling flow, clear english diction, late-night office mood, melancholic but humorous",
+  "lyrics": "[intro]\nEleven forty at night, cursor blinking slow\nDragged the file in and the whole thing froze\n[chorus]\nAttachment too large, attachment too large\nIt ain't that I can't send it, it's the line they drew too hard\nAttachment too large, attachment too large\nFive-five-oh, five-point-three-point-four, I know it by heart\n[verse]\nTwenty-four point seven megabytes of quarterly truth\nProgress bar sat at ninety-nine and it never moved\nPostmaster wrote back, polite as a priest\n\"Put it in a shared location, send a link instead\" — please\nBut the buyer on the other end? Phone only, never clicks\nYou say \"just send a link\", I say \"that's how you lose the deal\"\nZero-x-eight-zero-zero-four-zero-six-one-zero, cold little code\nTranslated into human: this door does not open, no\nDug through the docs for hours, twenty megs is the wall\nThirty-five lives on another product line, page four of it all\nAdmin said don't touch it, that policy's from the guy before\nAnd I believe him — nobody knows where that chain starts anymore\n[chorus]\nAttachment too large, attachment too large\nIt ain't that I can't send it, it's the line they drew too hard\nAttachment too large, attachment too large\nFive-five-oh, five-point-three-point-four, I know it by heart\n[verse]\nOpened up the folder, every name said \"final\"\nFinal-two, final-real, final-do-not-edit-at-all\nEvery single one of them got edited twice\nHuman optimism, written in the filename, nice\nThen I learned one trick: cut it into six and send\nFour point one megs a piece, they double-click and it's back again\nNo sign-up, no strange cloud drive, no link that dies in seven days\nNo explaining to a stranger why the URL expired again\nToo large is not a verdict, it's a setting someone chose\nSplitting is the dumb fix, but the dumb one always holds\nPast twenty megabytes we still say the whole thing out\nAin't a flex — it's making sure the other side receives it now\n[outro]\nPaperclip pops up: \"Need help writing that mail?\"\nYeah, I do — so I went and wrote the tool\nEleven forty failed, so zero-four became a repo\nToo large? Then cut it. Piece by piece. Send it. Go.",
+  "file": "rap.mp3",
+  "bytes": 6801645,
+  "params": {
+    "infer_step": 60,
+    "guidance_scale": 15,
+    "scheduler_type": "euler",
+    "cfg_type": "apg",
+    "omega_scale": 10,
+    "lora": "none"
+  }
+}

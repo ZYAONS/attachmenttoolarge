@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Member directory · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="The register of attachmenttoolarge: name, number, rank and date of joining — and never an email address.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / Directory</div>
+      <span class="eyebrow">The register</span>
+      <h1>Member directory</h1>
+      <p class="lead">
+        The Society's register is public, but only in the parts that must be: name, number, rank, date of joining.
+        An email address is a private matter — it does not appear here, and it appears in no form whatever in the API response.
+      </p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; align-items:center">
+        <span class="badge" data-mode-badge>Probing the backend…</span>
+        <a class="btn btn-sm btn-primary" href="register.html">Submit a petition</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- the directory is injected by auth.js -->
+      <div data-auth="members" class="reveal"></div>
+
+      <div class="grid grid-3" style="margin-top:34px">
+        <div class="card reveal">
+          <div class="card-num">Seats</div>
+          <h3>20 founding seats</h3>
+          <p class="muted small">Numbers 1 to 20 are founding members, with an extra mark on the card. The figure is taken from the red line that drove us to distraction.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-num">Order</div>
+          <h3>Arranged by number</h3>
+          <p class="muted small">Not by activity, not by volume of contribution, not by who spotted the problem first. First come, first entered — simple, and fair.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-num">Exit</div>
+          <h3>Leave at any time</h3>
+          <p class="muted small">Resign from the “My card” page by confirming your number; the server deletes the record outright and keeps no copy.</p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:26px">
+        <div>
+          <b>This is real data, not a hard-coded list</b>
+          This page reads the server's account file
+          (<code>server/data/accounts.json</code>) through <code>GET /api/members</code>.
+          Start the backend on another machine and you will see an empty register —
+          which is precisely how you know it is not lying to you.
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul>
+          <li><a href="register.html">Apply</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="members.html">Directory</a></li>
+          <li><a href="member.html">My card</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+</body>
+</html>

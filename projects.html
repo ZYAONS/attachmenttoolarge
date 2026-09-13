@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="A real, runnable att CLI (split, join, info, limits, ndr), the limits database, and five more tools — MIT licensed, zero dependencies.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / Projects</div>
+      <span class="eyebrow">Toolchain</span>
+      <h1>Six tools, one obsession</h1>
+      <p class="lead">
+        All MIT licensed, no runtime dependencies, small enough to read over lunch.
+        They do not replace your mail client. They knock a hole in the wall that says
+        “attachment too large” and leave the rest to you.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ REAL, RUNNABLE ============ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Not a concept</span>
+        <h2>There is a working <code>att</code> in this repository</h2>
+        <p class="lead">
+          No install, no sign-up, no dependencies — one Node file is the entire implementation.
+          Every command below was run on real files, and the output is pasted verbatim.
+        </p>
+      </div>
+
+      <div class="grid grid-2" style="gap:36px; align-items:start">
+        <div class="reveal">
+          <div class="terminal">
+            <div class="term-bar"><i></i><i></i><i></i><span class="term-title">att info "Q3-report_v7_final-FINAL.xlsx"</span></div>
+            <div class="term-body">
+              <div class="term-line">Q3-report_v7_final-FINAL.xlsx</div>
+              <div class="term-line term-dim">  File size       24.7 MB  (25899827 bytes)</div>
+              <div class="term-line term-ok">  Encoded size    33.8 MB  (Base64 inflates it 37% — this is what the server sees)</div>
+              <div class="term-line term-err">  At 20 MB        needs 2 shards</div>
+              <div class="term-line" style="margin-top:8px">  Will it send?</div>
+              <div class="term-line term-err">    ✗  Outlook.com                                 limit 20 MB · over by 13.8 MB</div>
+              <div class="term-line term-ok">    ✓  Exchange Online (Microsoft 365 default)    limit 35 MB</div>
+              <div class="term-line term-err">    ✗  On-premises Exchange (factory default)     limit 10 MB · over by 23.8 MB</div>
+              <div class="term-line term-dim">    –  Outlook desktop client                    no client-side limit</div>
+              <div class="term-line term-err">    ✗  Corporate SMTP gateway (typical range)     limit 25 MB · over by 8.80 MB</div>
+              <div class="term-line term-ok">    ✓  QQ Mail (reference)                       limit 50 MB</div>
+              <div class="term-line term-dim" style="margin-top:8px">  Data verified 2025-11-14. Defaults change; check the official docs.</div>
+              <div class="term-line term-ok" style="margin-top:8px">  Try: att split "Q3-report_v7_final-FINAL.xlsx" --limit 20MB</div>
+            </div>
+          </div>
+          <div class="callout callout-ok" style="margin-top:16px">
+            <div>
+              <b>It does not treat 24.7 MB as 24.7 MB</b>
+              The server measures the encoded message: 33.8 MB. That single step is where most
+              people go wrong. Split at 20 MB and two messages carry it.
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div class="terminal">
+            <div class="term-bar"><i></i><i></i><i></i><span class="term-title">split → join, and a translated bounce</span></div>
+            <div class="term-body">
+              <div class="term-line"><span class="term-prompt">$</span> att split "Q3-report_v7_final-FINAL.xlsx" --limit 20MB</div>
+              <div class="term-line term-ok">✓ Cut into 2 shards, 20.0 MB max each</div>
+              <div class="term-line term-dim">  …att-part-001  20.0 MB   cd52d81e25f372e6…</div>
+              <div class="term-line term-dim">  …att-part-002   4.70 MB  cdeb5d17f2cfce2e…</div>
+              <div class="term-line term-dim">  manifest  …xlsx.att.json  (verifies every shard when rebuilding)</div>
+              <div class="term-line" style="margin-top:8px"><span class="term-prompt">$</span> att join "…xlsx.att.json"</div>
+              <div class="term-line term-ok">✓ Reassembled: Q3-report_v7_final-FINAL.xlsx</div>
+              <div class="term-line term-dim">  all 2 shards verified · 24.7 MB</div>
+              <div class="term-line term-dim">  SHA-256  e7bc64c9d8859f2b…</div>
+              <div class="term-line" style="margin-top:8px"><span class="term-prompt">$</span> att ndr bounce.txt</div>
+              <div class="term-line term-dim">  codes  550 5.3.4</div>
+              <div class="term-line term-err">  550 5.3.4 · Message size exceeds fixed maximum message size</div>
+              <div class="term-line term-dim">    Who blocked it   your side (submission server or outbound gateway)</div>
+              <div class="term-line term-dim">    Next             · split it: att split &lt;file&gt; --limit 20MB</div>
+            </div>
+          </div>
+
+          <div class="btn-row" style="margin-top:16px">
+            <button class="btn btn-sm" type="button" data-copy="node cli/att.mjs info &quot;your-file.xlsx&quot;">Copy info command</button>
+            <button class="btn btn-sm" type="button" data-copy="node cli/att.mjs split &quot;your-file.xlsx&quot; --limit 20MB">Copy split command</button>
+            <button class="btn btn-sm" type="button" data-copy="node server/server.mjs">Copy server command</button>
+          </div>
+
+          <div class="callout" style="margin-top:16px">
+            <div>
+              <b>Five subcommands, no dependencies</b>
+              <code>limits</code> reads the database · <code>info</code> decides whether it will send ·
+              <code>split</code> cuts it · <code>join</code> verifies and rebuilds · <code>ndr</code> translates the bounce.
+              Everything happens on your machine; nothing is uploaded.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT IT WILL BECOME ============ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="grid grid-2" style="gap:36px; align-items:start">
+        <div class="reveal">
+          <h2 style="margin-top:0">Where we want to end up (not shipped yet)</h2>
+          <p class="lead">
+            These are the distribution channels we <strong>want</strong>. None of them exist in a public
+            registry yet. They are written down so we do not forget the goal — not so you go and try them.
+          </p>
+          <div class="terminal" style="margin-top:8px">
+            <div class="term-bar"><i></i><i></i><i></i><span class="term-title">Install (aspirational, unavailable)</span></div>
+            <div class="term-body">
+              <div class="term-line term-dim"># Windows</div>
+              <div class="term-line"><span class="term-prompt">PS&gt;</span> winget install attachmenttoolarge.att</div>
+              <div class="term-line term-dim" style="margin-top:8px"># macOS / Linux</div>
+              <div class="term-line"><span class="term-prompt">$</span> brew install att/tap/att</div>
+              <div class="term-line term-dim" style="margin-top:8px"># any machine with Node</div>
+              <div class="term-line"><span class="term-prompt">$</span> npm i -g @att/cli</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <div class="callout callout-warn">
+            <div>
+              <b>Being honest</b>
+              The society is fictional and the star counts are demo data. But <code>cli/att.mjs</code> is
+              real: it splits, verifies and rebuilds, and the rebuild scripts it generates have been
+              double-clicked on Windows during our own tests.
+            </div>
+          </div>
+          <div class="terminal" style="margin-top:16px">
+            <div class="term-bar"><i></i><i></i><i></i><span class="term-title">On the recipient's side (nothing to install)</span></div>
+            <div class="term-body">
+              <div class="term-line term-dim">they receive 2 attachments + a .att.json manifest + a rebuild script</div>
+              <div class="term-line term-ok">Windows      double-click  …xlsx.att-reassemble.cmd</div>
+              <div class="term-line term-ok">macOS/Linux  sh            …xlsx.att-reassemble.sh</div>
+              <div class="term-line term-dim" style="margin-top:8px">✓ Verified. File is complete: Q3-report_v7_final-FINAL.xlsx</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MATRIX ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Project matrix</span>
+        <h2>Pick one to start with</h2>
+        <p class="lead">Star counts refresh weekly. Status labels are voted on in an RFC, so you never have to guess.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">splitter</span>
+            <span class="badge badge-ok">v0.1.0 · works today</span>
+          </div>
+          <p class="project-desc">
+            Splits by a target limit and generates cross-platform rebuild scripts, verifying
+            every shard with SHA-256. <b>In this repository</b>: <code>cli/att.mjs</code>.
+            Interleaved delivery and resumable transfers are still on the roadmap.
+          </p>
+          <div class="project-meta">
+            <span>Node</span><span>zero deps</span><span>single file</span><span class="tag">shipped</span>
+          </div>
+        </article>
+
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">ndr-translator</span>
+            <span class="badge badge-ok">stable</span>
+          </div>
+          <p class="project-desc">
+            Parses a bounce and returns one sentence: who blocked it, how big, what to do next.
+            Covers 60+ templates, including the versions that gateways rewrite into vagueness.
+          </p>
+          <div class="project-meta">
+            <span>Rust</span><span class="stars">1.8k</span><span>v2.0.4</span><span class="tag">library + CLI</span>
+          </div>
+        </article>
+
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">limits.json</span>
+            <span class="badge badge-warn">continuously updated</span>
+          </div>
+          <p class="project-desc">
+            Attachment and message size limits for the services we can actually test. Every record
+            carries a reproduction method, a direction (inbound/outbound) and a verification date.
+          </p>
+          <div class="project-meta">
+            <span>JSON + Schema</span><span>in repo</span><span>verified 2025-11</span>
+          </div>
+        </article>
+
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">link-shim</span>
+            <span class="badge">beta</span>
+          </div>
+          <p class="project-desc">
+            For when you genuinely must send a link: uploads to storage you control and writes a
+            note the recipient understands, with a one-time token and an expiry. Not your files on
+            someone else's servers.
+          </p>
+          <div class="project-meta">
+            <span>Go</span><span class="stars">1.2k</span><span>v1.4.2</span>
+          </div>
+        </article>
+
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">replyall-guard</span>
+            <span class="badge">beta</span>
+          </div>
+          <p class="project-desc">
+            An Outlook add-in. When the attachment is over the limit and there are more than five
+            recipients, it intervenes the instant before you hit Reply All — and offers to split it.
+          </p>
+          <div class="project-meta">
+            <span>Rust + WASM</span><span class="stars">940</span><span>v0.9.0</span>
+          </div>
+        </article>
+
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">ost-surgeon</span>
+            <span class="badge badge-warn">experimental</span>
+          </div>
+          <p class="project-desc">
+            Read-only inspection of local caches (.ost / .pst) deformed by oversized attachments:
+            it lists what can be exported safely and what must be abandoned. It <b>never writes</b> to
+            the original — that promise is in the LICENSE.
+          </p>
+          <div class="project-meta">
+            <span>Python</span><span class="stars">610</span><span>v0.6.3</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LIMITS ============ -->
+  <section class="section" id="limits">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">data/limits.json</span>
+        <h2>Attachment limits at a glance</h2>
+        <p class="lead">
+          A slice of the database. Limits move with product changes, so always confirm against the
+          official documentation; what we record is the value we last measured and the date we measured it.
+        </p>
+      </div>
+
+      <div class="table-wrap reveal">
+        <table class="data">
+          <thead>
+            <tr><th>Service</th><th>Limit</th><th>Notes</th><th>Verified</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Outlook.com</td>
+              <td><b>20 MB</b></td>
+              <td>Above this it suggests “send a share link instead” — the phrase this site is named after.</td>
+              <td>2025-11</td>
+            </tr>
+            <tr>
+              <td>Exchange Online (default)</td>
+              <td><b>35 MB</b></td>
+              <td>The Microsoft 365 organisation default; admins can change it, and inbound may differ from outbound.</td>
+              <td>2025-11</td>
+            </tr>
+            <tr>
+              <td>On-premises Exchange (factory)</td>
+              <td><b>10 MB</b></td>
+              <td>A default from the mid-2000s still alive on plenty of internal servers, because nobody dares touch it.</td>
+              <td>2025-10</td>
+            </tr>
+            <tr>
+              <td>Outlook desktop client</td>
+              <td>depends on account</td>
+              <td>The client itself sets no limit — what you hit is the server or a gateway.</td>
+              <td>2025-11</td>
+            </tr>
+            <tr>
+              <td>Corporate SMTP gateway</td>
+              <td>10–35 MB</td>
+              <td>Usually the first wall you hit, and the hardest one to find.</td>
+              <td>2025-11</td>
+            </tr>
+            <tr>
+              <td>Gmail (reference)</td>
+              <td>25 MB</td>
+              <td>Included for calibration of our own feelings.</td>
+              <td>2025-11</td>
+            </tr>
+            <tr>
+              <td>QQ Mail (reference)</td>
+              <td>50 MB</td>
+              <td>The generous corner of the Chinese internet, reminding us the world is not uniform.</td>
+              <td>2025-09</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="btn-row reveal" style="margin-top:20px">
+        <button class="btn btn-sm" type="button" data-copy="att limits outlook.com">Copy query command</button>
+        <span class="small muted">Or read <code>data/limits.json</code> directly — the CLI reads the same file.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROADMAP ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Roadmap</span>
+        <h2>The next six months</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card reveal">
+          <div class="card-num">In progress</div>
+          <h3>splitter v0.2</h3>
+          <ul style="color:var(--muted); padding-left:20px; margin:0">
+            <li>Interleaved shard delivery</li>
+            <li>Missing-shard self-check</li>
+            <li>Resume and retry strategies</li>
+          </ul>
+        </div>
+        <div class="card reveal">
+          <div class="card-num">Planned</div>
+          <h3>Limits database API</h3>
+          <ul style="color:var(--muted); padding-left:20px; margin:0">
+            <li>Read-only JSON endpoint with ETags</li>
+            <li>Every record traceable with git blame</li>
+            <li>A form for submitting measured results</li>
+          </ul>
+        </div>
+        <div class="card reveal">
+          <div class="card-num">Pure wishful thinking</div>
+          <h3>Sociology of file naming</h3>
+          <ul style="color:var(--muted); padding-left:20px; margin:0">
+            <li>Count occurrences of “final”</li>
+            <li>Correlate with file size</li>
+            <li>The conclusion will not need a paper</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-band reveal">
+        <span class="eyebrow">Contribute</span>
+        <h2>Found a wrong limit? That is the issue we most want</h2>
+        <p class="lead">Bring the reproduction method, the service, the date and the measured value. It goes in the database with your name on it.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="join.html">How to contribute →</a>
+          <a class="btn btn-ghost" href="contact.html">Contact the maintainers</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul>
+          <li><a href="register.html">Apply</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="members.html">Directory</a></li>
+          <li><a href="member.html">My card</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

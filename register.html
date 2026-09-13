@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apply for membership · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="Submit a petition for membership and receive your membership number and card. The first 20 members are founding members.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / Apply</div>
+      <div style="display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom:14px">
+        <span class="seal">ATT<br>20MB</span>
+        <div>
+          <span class="eyebrow">Petition for membership</span>
+          <h1 style="margin:0">I hereby petition to join the Attachment Too Large Society</h1>
+        </div>
+      </div>
+      <p class="lead">
+        The Society charges no dues, requires no sponsor and takes no interest in your credentials —
+        it asks only that you have been stopped by an “attachment too large” error at least once, and are still willing to say so.
+      </p>
+      <p style="margin:18px 0 0"><span class="badge" data-mode-badge>Probing the backend…</span></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2" style="gap:44px; align-items:start">
+
+        <!-- ============ THE PETITION ============ -->
+        <form class="card reveal" data-auth="register" novalidate>
+          <div class="card-num">FORM A · APPLICATION FOR MEMBERSHIP</div>
+          <h2 style="font-size:1.35rem">Enter the particulars below</h2>
+
+          <div class="form-grid" style="margin-top:20px">
+            <div class="field">
+              <label for="name">Name <span class="muted">*</span></label>
+              <input id="name" name="name" type="text" required placeholder="Just call me Old Chen" autocomplete="nickname">
+              <div class="hint">2–40 characters. It appears on your membership card and in the public directory.</div>
+            </div>
+            <div class="field">
+              <label for="email">Email address <span class="muted">*</span></label>
+              <input id="email" name="email" type="email" required placeholder="you@example.com" autocomplete="email">
+              <div class="hint">Used only for signing in and verifying who you are. It will <b>not</b> appear in the public directory.</div>
+            </div>
+            <div class="field">
+              <label for="password">Password <span class="muted">*</span></label>
+              <input id="password" name="password" type="password" required autocomplete="new-password">
+              <div class="hint">At least 10 characters. The server keeps a salted scrypt hash; the plaintext never touches disk.</div>
+            </div>
+            <div class="field">
+              <label for="password2">Write it again <span class="muted">*</span></label>
+              <input id="password2" name="password2" type="password" required autocomplete="new-password">
+            </div>
+            <div class="field">
+              <label for="reason">Reason for applying (may be left blank)</label>
+              <textarea id="reason" name="reason" placeholder="March 2023: a 26 MB drawing came back three times…"></textarea>
+              <div class="hint">500 characters or fewer. The good ones go into the archive.</div>
+            </div>
+            <div class="field">
+              <label style="display:flex; gap:10px; align-items:flex-start; font-weight:400">
+                <input type="checkbox" required style="width:auto; margin-top:6px">
+                <span>I have read the <a href="about.html" style="color:var(--accent)">four rules</a>, and I agree not to defend a filename like “final version”.</span>
+              </label>
+            </div>
+
+            <div class="form-msg" data-form-msg role="status"></div>
+
+            <div class="btn-row">
+              <button class="btn btn-primary" type="submit">Submit the petition</button>
+              <a class="btn btn-ghost" href="login.html">Already have a number? Sign in</a>
+            </div>
+          </div>
+        </form>
+
+        <!-- ============ SIDE NOTES ============ -->
+        <div class="reveal">
+          <div class="callout callout-warn" data-static-notice style="display:none">
+            <div>
+              <b>Static mode</b>
+              This page needs a backend in order to register anybody at all. You have presumably opened the site
+              as plain static files (over GitHub Pages, for instance). Run <code>node server/server.mjs</code> locally
+              and open this page at the address it prints.
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:0">
+            <div class="card-num">Membership</div>
+            <h3>The first 20 are founding members</h3>
+            <p class="muted small">
+              The number of seats is our tribute to 20 MB. Founding members carry one extra mark on
+              their card, and a note in the directory for as long as this Society shall exist.
+            </p>
+            <div class="rule-orn"><i></i></div>
+            <h3>What you receive</h3>
+            <ul class="muted small" style="padding-left:20px; margin:0">
+              <li>A membership number of the form <code>ATT-20MB-000001</code></li>
+              <li>A printable membership card (framing is your own affair)</li>
+              <li>A place in the directory — name and number only, never an email address</li>
+              <li>The right to resign at any time, in one click, genuinely deleted, no copy kept</li>
+            </ul>
+          </div>
+
+          <div class="callout" style="margin-top:18px">
+            <div>
+              <b>On security, plainly</b>
+              Passwords are stored as salted <code>scrypt</code> hashes; the plaintext never touches disk. Sessions
+              are HttpOnly cookies. Every write needs a CSRF double-submit token. Registration and sign-in are both
+              rate-limited per IP. All of this is genuinely implemented — the source is in <code>server/server.mjs</code>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MEMBERSHIP CARD SLOT ============ -->
+  <section class="section" data-member-card></section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Extract from the statutes</span>
+        <h2>Applying constitutes agreement to the following three articles</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card reveal">
+          <div class="card-num">Article I</div>
+          <p>The original error outranks your paraphrase. When you file a ticket, paste the raw bounce message. Do not tidy it, and do not delete the lines that look useless.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-num">Article II</div>
+          <p>Do not mock the person asking. The sole exception is file-naming habits — especially those who reach “final version” for the seventh time.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-num">Article III</div>
+          <p>Cite a source and a date for every number. “I think it was 25 MB” is not data; it is a reminiscence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul>
+          <li><a href="register.html">Apply</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="members.html">Directory</a></li>
+          <li><a href="member.html">My card</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+</body>
+</html>

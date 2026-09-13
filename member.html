@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My membership card · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="View your membership number and card, or resign from the Society.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / My card</div>
+      <span class="eyebrow">Membership card</span>
+      <h1>Proof of standing</h1>
+      <p class="lead">
+        The only use of this certificate is to remind you that twenty megabytes is not a law of physics — it is a policy somebody typed into a configuration file one afternoon.
+      </p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; align-items:center">
+        <span class="badge" data-mode-badge>Probing the backend…</span>
+        <button class="btn btn-sm btn-ghost" type="button" data-auth-logout>Sign out</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- the membership card is injected by auth.js -->
+      <div data-auth="member" class="reveal"></div>
+
+      <!-- resignation (shown only once signed in) -->
+      <form class="card reveal" data-auth="leave" style="display:none; margin-top:24px; max-width:640px">
+        <div class="card-num">FORM C · RESIGNATION</div>
+        <h3>Leave the Society</h3>
+        <p class="muted small">
+          This is a real deletion: the server removes your account and its hash at once, your session is voided with it,
+          and there is no recovering either. To guard against a stray click, type your membership number exactly.
+        </p>
+        <div class="form-grid" style="margin-top:16px">
+          <div class="field">
+            <label for="confirm">Membership number</label>
+            <input id="confirm" name="confirm" type="text" placeholder="ATT-20MB-000000" autocomplete="off">
+          </div>
+          <div class="form-msg" data-form-msg role="status"></div>
+          <div class="btn-row">
+            <button class="btn" type="submit">Confirm resignation</button>
+            <span class="small muted">Change your mind afterwards and you have only yourself to blame — we do delete it.</span>
+          </div>
+        </div>
+      </form>
+
+      <div class="grid grid-2" style="gap:24px; margin-top:26px">
+        <div class="callout">
+          <div>
+            <b>Rights of members</b>
+            To consult the limits database, to attend the quarterly Bounce Message Reading, and to state on any
+            occasion, with a completely straight face, that “it is base64 inflation, not the size of the file”.
+          </div>
+        </div>
+        <div class="callout">
+          <div>
+            <b>Obligations of members</b>
+            There is one, and only one: when an attachment size limit stops you, keep the original bounce message.
+            Every scrap of this Society's history grew out of those.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul>
+          <li><a href="register.html">Apply</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="members.html">Directory</a></li>
+          <li><a href="member.html">My card</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/auth.js"></script>
+</body>
+</html>

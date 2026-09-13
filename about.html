@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="How a 24.7 MB quotation got rejected at 23:40 and turned into a society: origin story, a timeline of one limit, four rules, and the people involved.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / About</div>
+      <span class="eyebrow">Origin</span>
+      <h1>A story about 24.7 megabytes</h1>
+      <p class="lead">
+        We are not a company. There is no funding, no office, no roadmap with dates.
+        We are a group of people stopped by the same product limit, who decided to at least
+        describe it accurately.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ ORIGIN ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2" style="gap:48px; align-items:start">
+        <div class="prose reveal" style="max-width:none">
+          <h2 style="margin-top:0">A Thursday in September 2018</h2>
+          <p>
+            At 23:40 a 24.7 MB quotation crawled through Outlook for two minutes, the progress
+            bar reached 99%, and stopped. Four minutes later a message from
+            <code>postmaster</code> arrived:
+          </p>
+          <blockquote>
+            550 5.3.4 Message size exceeds fixed maximum message size
+          </blockquote>
+          <p>
+            That night we learned three things. First, <strong>Outlook.com caps attachments at 20 MB</strong>.
+            Second, that cap appears nowhere in the window where you write the message.
+            Third, the official advice is “put the file in a shared location and send a link instead” —
+            and the recipient was a procurement manager with a phone who does not open links.
+          </p>
+          <p>Within the same hour we had a repository, a first splitting script, and a name taken from the error itself.</p>
+        </div>
+
+        <div class="reveal">
+          <div class="terminal">
+            <div class="term-bar"><i></i><i></i><i></i><span class="term-title">That night, as recorded</span></div>
+            <div class="term-body">
+              <div class="term-line term-dim">23:40 &nbsp;start sending "quotation_final.xlsx"</div>
+              <div class="term-line term-dim">23:42 &nbsp;progress 99%</div>
+              <div class="term-line term-dim">23:46 &nbsp;bounce: 550 5.3.4</div>
+              <div class="term-line term-err">23:47 &nbsp;"so what exactly did 24 MB do wrong"</div>
+              <div class="term-line term-dim">23:51 &nbsp;found the 20 MB limit, page four of the docs</div>
+              <div class="term-line term-err">23:52 &nbsp;"why is that on page four"</div>
+              <div class="term-line term-ok">00:03 &nbsp;first splitting script works</div>
+              <div class="term-line term-ok">00:04 &nbsp;repository created. Society founded ✓</div>
+            </div>
+          </div>
+          <div class="callout callout-ok" style="margin-top:18px">
+            <div>
+              <b>Where we are now</b>
+              312 contributors · 6 active projects · 7 services in the limits database ·
+              0 messages abandoned because “just send a link”.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TIMELINE ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Timeline</span>
+        <h2>The biography of one limit</h2>
+        <p class="lead">We are not historians, but somebody was genuinely stuck in every one of these squares.</p>
+      </div>
+
+      <ul class="timeline reveal">
+        <li>
+          <div class="tl-year">1997</div>
+          <div class="tl-title">The paperclip starts watching you type</div>
+          <div class="tl-desc">The Office 97 assistant becomes our acknowledged ancestor: it appeared at the worst possible moment and sincerely suggested you send a link instead.</div>
+        </li>
+        <li>
+          <div class="tl-year">2003</div>
+          <div class="tl-title">On-premises Exchange ships with 10 MB</div>
+          <div class="tl-desc">The default that haunted a generation of IT staff. It survived into the 2020s on countless internal servers because nobody dared touch it.</div>
+        </li>
+        <li>
+          <div class="tl-year">2013</div>
+          <div class="tl-title">Outlook.com draws the 20 MB line</div>
+          <div class="tl-desc">The same year OneDrive share links began appearing after every failure. Both halves of the story were now in place.</div>
+        </li>
+        <li>
+          <div class="tl-year">2015</div>
+          <div class="tl-title">Exchange Online moves to 25 MB</div>
+          <div class="tl-desc">The cheering lasted about a day, until somebody noticed the recipient was on Outlook.com.</div>
+        </li>
+        <li>
+          <div class="tl-year">2018-09</div>
+          <div class="tl-title">A 24.7 MB quotation is rejected</div>
+          <div class="tl-desc">Started at 23:40, society founded at 00:04. This is the entire reason the site exists.</div>
+        </li>
+        <li>
+          <div class="tl-year">2020</div>
+          <div class="tl-title">Exchange Online defaults to 35 MB</div>
+          <div class="tl-desc">We wept with joy, then discovered the 20 MB Outlook.com limit was completely untouched. The world restored its usual absurdity.</div>
+        </li>
+        <li>
+          <div class="tl-year">2023</div>
+          <div class="tl-title">The limits database passes 40 services</div>
+          <div class="tl-desc">Every entry carries a reproduction method and a verification date, because “I think it was 25 MB” is not data.</div>
+        </li>
+        <li>
+          <div class="tl-year">2025</div>
+          <div class="tl-title">The 20 MB monument is unveiled</div>
+          <div class="tl-desc">A virtual headstone with a six-byte inscription. It reminds us that limits change, while file-naming habits do not.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ RULES ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">What we believe</span>
+        <h2>Four rules unlikely to be overturned</h2>
+      </div>
+      <div class="grid grid-2">
+        <article class="card reveal">
+          <div class="card-num">Rule 01</div>
+          <h3>Limits must be stated, not guessed</h3>
+          <p>Every “attachment too large” should tell you the limit, who set it, and how to change it.
+             A vague error is a failure of the software, not of the person reading it.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-num">Rule 02</div>
+          <h3>The recipient comes first</h3>
+          <p>Our tools never require the recipient to install software, create an account, click a link,
+             or upgrade a browser. If rebuilding a file is harder than a double-click, it was not delivered.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-num">Rule 03</div>
+          <h3>Never mock the person asking</h3>
+          <p>There is exactly one exception: file naming. Any filename containing “final”, “final2” or
+             “FINAL-for-real” will be politely offered <code>att split --limit 20MB</code>.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-num">Rule 04</div>
+          <h3>Everything must be reproducible</h3>
+          <p>Data needs a method, conclusions need a capture, bugs need a minimal reproduction.
+             “It doesn't work here” is not a report. “It doesn't work here, and here are 12 lines” is.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PEOPLE ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">People</span>
+        <h2>Put these six in one mail thread and step back</h2>
+        <p class="lead">All pseudonyms. Real identities are unnecessary — we have all spent time inside the same 99%.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card person reveal">
+          <div class="avatar" style="background:linear-gradient(135deg,#a8382a,#c4553c)">Ch</div>
+          <h3>Chen</h3>
+          <div class="person-role">Shard algorithm maintainer</div>
+          <p class="person-quote">“I'm not superstitious about powers of two. I just don't trust numbers that aren't.”</p>
+        </article>
+        <article class="card person reveal">
+          <div class="avatar" style="background:linear-gradient(135deg,#3f6b4a,#6f9b63)">M</div>
+          <h3>Mira</h3>
+          <div class="person-role">Bounce archaeologist</div>
+          <p class="person-quote">“I have read six thousand NDRs. I still believe in people — just not in their gateways.”</p>
+        </article>
+        <article class="card person reveal">
+          <div class="avatar" style="background:linear-gradient(135deg,#a8894a,#c9a961)">📎</div>
+          <h3>Paperclip 4.0</h3>
+          <div class="person-role">Mascot · honorary chair</div>
+          <p class="person-quote">“It looks like you're writing a message that can never be sent. Would you like help?”</p>
+        </article>
+        <article class="card person reveal">
+          <div class="avatar" style="background:linear-gradient(135deg,#8c6a3f,#b98f52)">B</div>
+          <h3>Bear</h3>
+          <div class="person-role">Documentation &amp; localisation</div>
+          <p class="person-quote">“If a document has to be read three times, the document is wrong, not you.”</p>
+        </article>
+        <article class="card person reveal">
+          <div class="avatar" style="background:linear-gradient(135deg,#3f5d68,#5f8794)">Y</div>
+          <h3>Yuki</h3>
+          <div class="person-role">Performance &amp; packet capture</div>
+          <p class="person-quote">“At second 240 of the 99% bar, I caught it. It was computing a hash.”</p>
+        </article>
+        <article class="card person reveal">
+          <div class="avatar" style="background:linear-gradient(135deg,#6b5a44,#8a7a63)">@</div>
+          <h3>An Exchange admin</h3>
+          <div class="person-role">The one who set the limit · anonymous</div>
+          <p class="person-quote">“I set the limit, but the person before me set mine. It's a long chain.”</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GOVERNANCE ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2" style="gap:44px; align-items:start">
+        <div class="reveal">
+          <span class="eyebrow">Governance</span>
+          <h2>How we argue, and how we stop</h2>
+          <p class="lead">
+            Anything that affects users goes through an RFC: public proposal, two weeks of
+            discussion, maintainer review. Votes count heads, not commits — writing more does
+            not mean being right.
+          </p>
+          <ul style="color:var(--muted); padding-left:20px; display:grid; gap:10px">
+            <li>Cross-project decisions are settled by a rotating group of five maintainers on six-month terms.</li>
+            <li>Any deadlock older than two weeks is closed by a coin toss. The coin is a 20 MB commemorative.</li>
+            <li>Reversed decisions stay in the repository with the reason they failed. We do not delete history.</li>
+            <li>No lifetime positions. Two quiet quarters and you become an honorary member.</li>
+          </ul>
+        </div>
+        <div class="reveal">
+          <div class="callout callout-warn">
+            <div>
+              <b>A note on the name</b>
+              We are called attachmenttoolarge because that is what Outlook said, not because we
+              like the situation. The name is a souvenir, not a goal.
+            </div>
+          </div>
+          <div class="callout" style="margin-top:16px">
+            <div>
+              <b>Relationship with Microsoft</b>
+              None whatsoever. This is a demo site for a fictional society; product names and error
+              codes appear for technical discussion and mild mockery only.
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:22px">
+            <a class="btn btn-primary" href="register.html">Apply for membership →</a>
+            <a class="btn btn-ghost" href="projects.html">Browse projects</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul>
+          <li><a href="register.html">Apply</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="members.html">Directory</a></li>
+          <li><a href="member.html">My card</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

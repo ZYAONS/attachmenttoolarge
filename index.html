@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="A society of people whose files never fit. Real tooling for Outlook and Exchange attachment limits: shard splitting, NDR translation, a limits database — plus a monument to 20 MB.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy reveal">
+        <span class="badge badge-warn"><span class="dot dot-live"></span> 550 5.3.4 · a deliberately unserious society</span>
+        <h1 style="margin-top:18px">Send the file that <span class="strike">doesn't fit</span></h1>
+        <p class="lead">
+          Outlook says: <em>“Try putting the file in a shared location and sending a link instead.”</em>
+          We say no. We build tools that cut a 24.7 MB quarterly report into six pieces,
+          deliver every byte to the recipient, and never ask anyone to click a OneDrive link.
+        </p>
+        <div class="btn-row" style="margin-top:26px">
+          <a class="btn btn-primary" href="projects.html">See what we build →</a>
+          <a class="btn btn-ghost" href="about.html">How this started</a>
+        </div>
+        <div class="hero-meta">
+          <span class="badge">20 MB — the Outlook.com wall</span>
+          <span class="badge">35 MB — Exchange Online default</span>
+          <span class="badge">0 “Reply All” incidents</span>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="terminal">
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">outlook-cli — attachment delivery, live</span></div>
+          <div class="term-body">
+            <div class="term-line"><span class="term-prompt">PS C:\&gt;</span> outlook --attach "Q3-report_v7_final-FINAL.xlsx"</div>
+            <div class="term-line term-dim">mounting attachment … 24.7 MB</div>
+            <div class="term-line term-err">550 5.3.4 Message size exceeds fixed maximum message size</div>
+            <div class="term-line term-err">0x80040610: the message exceeds the size limit for this user</div>
+            <div class="term-line term-dim">suggestion: use a shared location and send a link instead</div>
+            <div class="term-line" style="margin-top:10px"><span class="term-prompt">PS C:\&gt;</span> att split "Q3-report_v7_final-FINAL.xlsx" --limit 20MB</div>
+            <div class="term-line term-ok">✓ 2 shards, 20.0 MB and 4.70 MB</div>
+            <div class="term-line term-ok">✓ reassemble.cmd written (double-click to rebuild)</div>
+            <div class="term-line term-dim">The recipient will never know this happened.<span class="term-cursor"></span></div>
+          </div>
+        </div>
+
+        <div class="meter" data-meter data-meter-max="20">
+          <div class="meter-head">
+            <span>Attachment size</span>
+            <span data-meter-value>0.0 MB / 20.0 MB</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill"></div></div>
+          <div class="meter-note"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="section-sm">
+    <div class="container">
+      <div class="stats reveal">
+        <div class="stat">
+          <div class="stat-num">4.2<span> PB</span></div>
+          <div class="stat-label">attachments carried, all time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">8,388,608</div>
+          <div class="stat-label">shards cut (2²³ — we like round numbers)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">41,208</div>
+          <div class="stat-label">times 550 5.3.4 was translated into English</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">0</div>
+          <div class="stat-label">messages abandoned because “just send a link”</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHY WE EXIST ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Why we exist</span>
+        <h2>Your mail client never tells you the truth</h2>
+        <p class="lead">
+          “Attachment too large” is a remarkably vague accusation. Between 20 MB and 35 MB sit
+          two product lines, three tenant configurations, one Exchange administrator you have
+          never met, and a policy written in 2003.
+        </p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card reveal">
+          <div class="card-icon">📏</div>
+          <h3>State the limit out loud</h3>
+          <p>Outlook.com 20 MB, Exchange Online 35 MB by default, on-premises Exchange often 10 MB.
+             <code>data/limits.json</code> records the real numbers, each with a method and a date.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon">✂️</div>
+          <h3>Splitting is the honest fix</h3>
+          <p><code>att split</code> cuts a file into pieces the recipient never notices, verifies every
+             shard with SHA-256, and ships a rebuild script that needs nothing installed.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon">🧾</div>
+          <h3>Translate the bounce</h3>
+          <p><code>att ndr</code> reads a rejection and names the gate: your submission server,
+             the recipient's gateway, or the one in the middle you did not know existed.</p>
+        </article>
+      </div>
+
+      <div class="callout reveal" style="margin-top:26px">
+        <div>
+          <b>Where we stand</b>
+          Share links are fine — but recipients do not click them. Our goal is not to abolish
+          OneDrive. It is to keep a path open for when the <strong>actual file</strong> has to arrive.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ERROR TABLE ============ -->
+  <section class="section" id="errors">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">The crowd favourite</span>
+        <h2>Outlook errors, translated into English</h2>
+        <p class="lead">Checked line by line against real bounce messages by 312 contributors. Corrections welcome — especially if you were stuck at 99%.</p>
+      </div>
+
+      <div class="table-wrap reveal">
+        <table class="data">
+          <thead>
+            <tr><th>Code / text</th><th>What Microsoft says</th><th>What it means</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>550 5.3.4</td>
+              <td>Message size exceeds fixed maximum message size</td>
+              <td>Your file wanted first class. This flight is economy only.</td>
+            </tr>
+            <tr>
+              <td>0x80040610</td>
+              <td>The message being sent exceeds the message size established for this user</td>
+              <td>Outlook says “no” with it the way a cough says “I'm not coming”.</td>
+            </tr>
+            <tr>
+              <td>552 5.2.3</td>
+              <td>Message size exceeds fixed maximum message size (rejected by the recipient)</td>
+              <td>You made it through. The other server surrendered first.</td>
+            </tr>
+            <tr>
+              <td>0x8004210B</td>
+              <td>Operation timed out while sending</td>
+              <td>It is not stuck. It is counting the bytes in your attachment, one at a time.</td>
+            </tr>
+            <tr>
+              <td>Try putting the file…</td>
+              <td>…in a shared location and sending a link instead.</td>
+              <td>A gentle refusal, carefully packaged as life advice.</td>
+            </tr>
+            <tr>
+              <td>Progress bar: 99%</td>
+              <td>(no message at all)</td>
+              <td>Outlook's finest silence. Four minutes long.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Open source</span>
+        <h2>Six tools, one obsession</h2>
+        <p class="lead">MIT licensed, no runtime dependencies, small enough to read over lunch.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">splitter</span>
+            <span class="badge badge-ok">v0.1.0 · works today</span>
+          </div>
+          <p class="project-desc">Splits by any limit, writes a manifest with per-shard SHA-256, generates rebuild scripts for Windows and POSIX. In this repo: <code>cli/att.mjs</code> — one file, no dependencies.</p>
+          <div class="project-meta">
+            <span>Node</span><span>zero deps</span><span>single file</span>
+          </div>
+        </article>
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">ndr-translator</span>
+            <span class="badge badge-ok">stable</span>
+          </div>
+          <p class="project-desc">Reads a bounce and answers three questions: who blocked it, how big was it, what do I do next. 60+ templates, including the ones rewritten by gateways.</p>
+          <div class="project-meta">
+            <span>Rust</span><span class="stars">1.8k</span><span>v2.0.4</span>
+          </div>
+        </article>
+        <article class="card project-card reveal">
+          <div class="project-top">
+            <span class="project-name">limits.json</span>
+            <span class="badge badge-warn">continuously updated</span>
+          </div>
+          <p class="project-desc">A machine-readable record of attachment limits, each entry carrying a reproduction method and a verification date. No “I think it was 25 MB”.</p>
+          <div class="project-meta">
+            <span>JSON</span><span>verified 2025-11</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="btn-row reveal" style="margin-top:28px">
+        <a class="btn" href="projects.html">All six projects →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUOTE ============ -->
+  <section class="section">
+    <div class="container">
+      <blockquote class="quote reveal">
+        We do not blame the 20 MB. We blame whoever named a 24.7 MB spreadsheet “final”
+        — and that person is usually us.
+        <footer>— Article 1, Manifesto of the Attachment Too Large Society</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ============ LATEST POSTS ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">From the blog</span>
+        <h2>Recently written</h2>
+      </div>
+      <div class="reveal">
+        <article class="post">
+          <div class="post-date">2025-11-18</div>
+          <div>
+            <h3 class="post-title"><a href="blog-20mb.html">We built a monument to 20 MB</a></h3>
+            <p class="post-excerpt">Why an open-source society commissioned a headstone for a product limit, and what those six bytes of inscription really say.</p>
+            <div class="post-tags"><span class="tag">Essay</span><span class="tag">Outlook</span></div>
+          </div>
+        </article>
+        <article class="post">
+          <div class="post-date">2025-10-02</div>
+          <div>
+            <h3 class="post-title"><a href="blog-limits.html">One message, three limits</a></h3>
+            <p class="post-excerpt">Where the Outlook.com, Exchange Online and on-premises numbers come from — and why 0x80040610 turns up after you fixed the config.</p>
+            <div class="post-tags"><span class="tag">Technical</span><span class="tag">Exchange</span></div>
+          </div>
+        </article>
+        <article class="post">
+          <div class="post-date">2025-08-21</div>
+          <div>
+            <h3 class="post-title"><a href="blog.html">For everyone stuck at 99%</a></h3>
+            <p class="post-excerpt">What Outlook is actually doing during those four minutes, with a reproducible packet capture.</p>
+            <div class="post-tags"><span class="tag">Debugging</span><span class="tag">Packet capture</span><span class="badge badge-warn">draft</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-band reveal">
+        <span class="eyebrow">Join us</span>
+        <h2>Write code, or just come and tell the story</h2>
+        <p class="lead">
+          We need maintainers, documentation, translations, and an endless supply of
+          “my attachment broke me” field reports. One rule: if your PR is over 20 MB, split it first.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="register.html">Apply for membership →</a>
+          <a class="btn btn-ghost" href="join.html">How to contribute</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul>
+          <li><a href="register.html">Apply</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="members.html">Directory</a></li>
+          <li><a href="member.html">My card</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

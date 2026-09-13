@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="How to join attachmenttoolarge: who we are looking for, a five-step contribution flow, the code rules, and an application form that will reject your submission for being too large.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / Join us</div>
+      <span class="eyebrow">Get involved</span>
+      <h1>Contribute, or just come and tell us a story</h1>
+      <p class="lead">
+        We don't quiz you on algorithms, we don't check your degree, and we won't ask you to fix
+        three small bugs first to prove you mean it. The only real requirement: when you describe a problem, bring a way to reproduce it.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ WHY ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Why it is worth it</span>
+        <h2>Three things this place gives you</h2>
+      </div>
+      <div class="grid grid-3">
+        <article class="card reveal">
+          <div class="card-icon">🧩</div>
+          <h3>A small, complete problem domain</h3>
+          <p>The whole field is “the file is too large and the pipe is too narrow”. Clear edges, almost no dependencies,
+             so you can read a module from top to bottom in a single weekend — which in modern open source already counts as a luxury.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon">📚</div>
+          <h3>Your name ends up in the data</h3>
+          <p>Every limit entry carries a submitter and a verification date. You say 35 MB,
+             and six months later someone re-measures it your way, so your name stays in <code>git blame</code>.</p>
+        </article>
+        <article class="card reveal">
+          <div class="card-icon">🫶</div>
+          <h3>A place that does not pretend</h3>
+          <p>We accept “I don't know” and “I got it wrong”.
+             So far 11 RFCs have been merged and then overturned by the people who wrote them, and every one is still in the repository.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHO ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Who we are looking for</span>
+        <h2>Five kinds of people, none of whom need a CV</h2>
+      </div>
+      <div class="table-wrap reveal">
+        <table class="data">
+          <thead><tr><th>Role</th><th>What they do</th><th>Bar to clear</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Maintainer</td>
+              <td>Review PRs, push RFCs forward, decide what the limits database accepts</td>
+              <td>Has merged 5 or more PRs and knows at least one sub-project well</td>
+            </tr>
+            <tr>
+              <td>Documentation writer</td>
+              <td>Turn error codes into paragraphs a human can read, maintain the translation table</td>
+              <td>Can tell an explanation from an excuse</td>
+            </tr>
+            <tr>
+              <td>Localisation</td>
+              <td>Interface and documentation translation across five languages: Chinese, English, Japanese, German, Spanish</td>
+              <td>Native-level phrasing, and willing to hear “the register is off here”</td>
+            </tr>
+            <tr>
+              <td>Data verification</td>
+              <td>Measure provider limits for real, submit the method and the date</td>
+              <td>Has at least two mailboxes that can send mail (your own will do)</td>
+            </tr>
+            <tr>
+              <td>Story collector</td>
+              <td>Record real failure scenes: the raw error, the time, what was done about it</td>
+              <td>Has been stopped by an attachment limit at least once, and still wants to talk about it</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FLOW ============ -->
+  <section class="section" id="flow">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Contribution flow</span>
+        <h2>Five steps, and the last one is a little unusual</h2>
+      </div>
+
+      <ul class="timeline reveal">
+        <li>
+          <div class="tl-year">STEP 01</div>
+          <div class="tl-title">Start with the time you got stuck</div>
+          <div class="tl-desc">The best starting point for a contribution is a real problem, not “I want to help but I don't know what to do”. Dig out your bounce messages — the material is in there.</div>
+        </li>
+        <li>
+          <div class="tl-year">STEP 02</div>
+          <div class="tl-title">Open an issue that says what it means</div>
+          <div class="tl-desc">Please include: the raw error (plain text or a screenshot), the file size, the provider and product version, the date, and what you already tried.
+             “It doesn't work for me” is not an issue. “It doesn't work for me, here are 12 lines that reproduce it” is.</div>
+        </li>
+        <li>
+          <div class="tl-year">STEP 03</div>
+          <div class="tl-title">Fork, and name the branch att/&lt;verb&gt;-&lt;object&gt;</div>
+          <div class="tl-desc">For example <code>att/add-shard-checksum</code>. Start commit messages with a verb, and let one commit do one thing.</div>
+        </li>
+        <li>
+          <div class="tl-year">STEP 04</div>
+          <div class="tl-title">Open a PR — and please keep it under 20 MB</div>
+          <div class="tl-desc">
+            This is not a joke. We really did reject a 47 MB PR, on the grounds that “the attachment size this site will not accept,
+            this site's own repository will not accept either”. If you must ship a large file, split it with
+            <code>att splitter</code> first, or attach a download link.
+          </div>
+        </li>
+        <li>
+          <div class="tl-year">STEP 05</div>
+          <div class="tl-title">Two maintainers review, then it merges</div>
+          <div class="tl-desc">
+            A rejected PR gets a specific reason, and the branch link stays in the discussion —
+            because “why this doesn't work” is itself part of the documentation.
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ RULES ============ -->
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-2" style="gap:44px; align-items:start">
+        <div class="reveal">
+          <span class="eyebrow">Code rules</span>
+          <h2>A few hard ones, and not many</h2>
+          <ul style="color:var(--muted); padding-left:20px; display:grid; gap:11px">
+            <li>Comments explain why, not what.</li>
+            <li>Force-pushing to <code>main</code> is banned. It happened to us once, and it was the worst day of 2021.</li>
+            <li>Any change that touches bounce parsing must ship with a real bounce sample (redacted is fine).</li>
+            <li>Wherever a limit number has to match exactly, no hard-coded magic values — read it from the limits data.</li>
+            <li>Naming a file <code>final_final</code> is not allowed. The audit script blocks it, and then reads the file name out loud in CI.</li>
+          </ul>
+        </div>
+        <div class="reveal">
+          <span class="eyebrow">Code of conduct</span>
+          <h2>The one-sentence version</h2>
+          <p class="lead">Strict about the work, polite about the person.</p>
+          <div class="callout" style="margin-top:20px">
+            <div>
+              <b>Be specific</b>
+              Do not mock questions, do not repost private messages, do not drop someone else's error into the channel as a joke.
+              Technical arguments are settled by evidence, not by who has committed more. Anyone who breaks this is first asked to leave the discussion, then handled by the maintainer group.
+            </div>
+          </div>
+          <div class="callout callout-ok" style="margin-top:16px">
+            <div>
+              <b>And</b>
+              If all you want is to quietly fix one typo, you are very welcome —
+              we have 4,000-odd typos waiting for you, 12 of them on the home page.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APPLICATION FORM ============ -->
+  <section class="section" id="apply">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Apply</span>
+        <h2>Tell us what you would like to do</h2>
+        <p class="lead">
+          This is a demo form, and submitting it sends no mail at all. The attachment-size meter below, however, is real —
+          you can find out for yourself what it feels like to be stopped at 20 MB.
+        </p>
+      </div>
+
+      <div class="grid grid-2" style="gap:36px; align-items:start">
+        <form class="card reveal" data-size-guard data-size-limit="20" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="name">What we call you <span class="muted">*</span></label>
+              <input id="name" name="name" type="text" required placeholder="Call me Old Chen">
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="muted">*</span></label>
+              <input id="email" name="email" type="email" required placeholder="you@example.com">
+              <div class="hint">Use a mailbox that takes attachments over 20 MB, otherwise our reply will hit the same wall.</div>
+            </div>
+            <div class="field">
+              <label for="role">What you would like to do</label>
+              <select id="role" name="role">
+                <option>Maintainer (reviews PRs)</option>
+                <option>Documentation writer</option>
+                <option>Localisation</option>
+                <option>Data verification (measuring limits)</option>
+                <option>Story collector</option>
+                <option>I don't know yet, just looking</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="story">Tell us about a time an attachment limit stopped you</label>
+              <textarea id="story" name="story" placeholder="March 2023, a 26 MB drawing…"></textarea>
+            </div>
+            <div>
+              <div class="meter-head">
+                <span>Attachment size (live)</span>
+                <span data-size-value>0.000 MB / 20.000 MB</span>
+              </div>
+              <div class="meter-track"><div class="meter-fill" data-size-bar style="width:0"></div></div>
+              <div class="meter-note" data-size-note></div>
+            </div>
+            <div class="field">
+              <label style="display:flex; gap:10px; align-items:flex-start; font-weight:400">
+                <input type="checkbox" required style="width:auto; margin-top:6px">
+                <span>I have read and agree to the code of conduct above.</span>
+              </label>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" type="submit">Submit application</button>
+              <span class="small muted">Typical reply time: 3 working days</span>
+            </div>
+          </div>
+        </form>
+
+        <div class="reveal">
+          <div class="callout callout-warn">
+            <div>
+              <b>If the form tells you the attachment is too large</b>
+              then your story really is long. Congratulations —
+              you have just reproduced, in your own browser, the first problem this project set out to solve.
+              Split it into a few messages, or email us instead.
+            </div>
+          </div>
+          <div class="terminal" style="margin-top:18px">
+            <div class="term-bar"><i></i><i></i><i></i><span class="term-title">Or skip the form</span></div>
+            <div class="term-body">
+              <div class="term-line"><span class="term-prompt">$</span> git clone https://example.org/att/splitter.git</div>
+              <div class="term-line term-dim">Then find one labelled good-first-issue in Issues</div>
+              <div class="term-line term-ok">✓ Starting with one line of documentation is a contribution too</div>
+            </div>
+          </div>
+          <div class="btn-row" style="margin-top:18px">
+            <button class="btn btn-sm" type="button" data-copy="git clone https://example.org/att/splitter.git">Copy clone command</button>
+            <a class="btn btn-sm btn-ghost" href="contact.html">Contact us directly</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="join.html#flow">Contribution flow</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html#faq">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hello@attachmenttoolarge.org">hello@attachmenttoolarge.org</a></li>
+          <li><a href="contact.html">Mailing list</a></li>
+          <li><a href="contact.html">Matrix channel</a></li>
+          <li><a href="404.html">Status page</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

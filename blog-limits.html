@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One message, three limits · attachmenttoolarge</title>
+<meta name="description" content="Outlook.com is 20 MB, Exchange Online defaults to 35 MB, on-premises Exchange ships at 10 MB: where each attachment limit comes from, and why the error code survives a config change.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head">
+    <div class="container">
+      <div class="breadcrumb"><a href="index.html">Home</a> / <a href="blog.html">Blog</a> / One message, three limits</div>
+      <div class="post-tags" style="margin-bottom:16px">
+        <span class="tag">Technical</span><span class="tag">Exchange</span><span class="tag">2025-10-02</span><span class="tag">11 min read</span>
+      </div>
+      <h1>One message, three limits</h1>
+      <p class="lead">
+        “What is the limit?” has one honest answer: it depends which link of the chain you are standing on.
+        This article takes those links apart, including the reason the same error code keeps appearing
+        right after you relax the configuration.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="prose reveal">
+        <h2 style="margin-top:0">The short answer first</h2>
+        <ul>
+          <li><b>Outlook.com (consumer)</b>: the attachment limit is normally <b>20 MB</b>.</li>
+          <li><b>Exchange Online (Microsoft 365)</b>: the organisational default is normally <b>35 MB</b>, adjustable by an administrator, and inbound and outbound can be two different values.</li>
+          <li><b>On-premises Exchange</b>: the factory default is commonly <b>10 MB</b>; the real value depends on the mood of your predecessor and that year's compliance requirements.</li>
+        </ul>
+        <p>
+          None of those three numbers is wrong. They are simply answering different questions.
+          And when a user presses Send, there is only one question in their head:
+          <em>will this message get through.</em>
+        </p>
+
+        <h2>How many gates one message has to pass</h2>
+        <p>Think of a message with an attachment as a journey. It passes at least five gates, and every gate has its own scale:</p>
+        <ol>
+          <li><b>The mail client</b>: usually no limit at all. It just encodes the file you dragged in as part of the message body.</li>
+          <li><b>Your submission server</b> (Outlook.com or Exchange): the first real line of defence.</li>
+          <li><b>Corporate outbound gateway / security scanning</b>: often the lowest gate of the lot, and almost nobody knows its limit.</li>
+          <li><b>The recipient's inbound gateway</b>: another company, another rulebook, another phone nobody answers.</li>
+          <li><b>The recipient's mailbox service</b>: the last gate, and the one you hear about least.</li>
+        </ol>
+        <p>
+          Which error code you see depends on which gate stopped you — and the wording differs completely
+          between products. That is where “one problem, ten descriptions” comes from.
+        </p>
+
+        <h2>Why relaxing the configuration does not help</h2>
+        <p>Three common causes, ordered by how often we see them:</p>
+        <h3>1. You changed outbound, and inbound is what stopped you</h3>
+        <p>
+          Raising the outbound limit from 25 MB to 50 MB only settles “can you send it”;
+          whether the other side can accept it is decided by the other side's policy. The bounce is usually a
+          recipient-side rejection such as <code>552 5.2.3</code>.
+        </p>
+        <h3>2. Encoding makes the message bigger</h3>
+        <p>
+          Attachments are Base64-encoded in transit, which inflates them by about <b>33%</b>.
+          A 24 MB file looks like roughly 32 MB to the server.
+          Most people count the file size; the server counts the encoded size. That is the whole gap.
+        </p>
+        <pre><code>File 24.0 MB
+After Base64 encoding ≈ 32.0 MB   ← this is the number you actually hit
+Headers + body + signature ≈ another +0.2 MB</code></pre>
+        <h3>3. Policy takes time to apply, or the layer you changed is overridden by a higher one</h3>
+        <p>
+          Mail flow rules, connector policies, tenant-level settings, user-level settings — they all have
+          precedence. Retrying immediately after the change makes it very easy to walk away convinced that
+          “changing it made no difference”.
+        </p>
+
+        <h2>A self-check list you can actually follow</h2>
+        <div class="table-wrap" style="margin:26px 0">
+          <table class="data">
+            <thead><tr><th>Symptom</th><th>Likely culprit</th><th>Check first</th></tr></thead>
+            <tbody>
+              <tr><td>550 5.3.4</td><td>Your submission server / outbound rules</td><td>Organisation-level message size limit and outbound connectors</td></tr>
+              <tr><td>552 5.2.3</td><td>The recipient's side</td><td>Their domain — not yours to change; you can only send less</td></tr>
+              <tr><td>0x80040610</td><td>Rejected at submission</td><td>Redo the arithmetic with the encoded size</td></tr>
+              <tr><td>0x8004210B</td><td>Send timed out</td><td>Attachment size + upload bandwidth; usually queuing rather than a rejection</td></tr>
+              <tr><td>Stuck at 99%, no message</td><td>The client is uploading / validating</td><td>When your patience runs out, switch to sharding</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Measure it once, then change it</h2>
+        <p>
+          Our advice is a single sentence: <b>before you change any configuration, measure the lowest gate on your chain.</b>
+          One binary-search run with <code>splitter</code> is enough — start at 5 MB and double the size,
+          and record the first size that bounces. That is your real limit.
+        </p>
+        <pre><code>$ att probe --to you@example.com --from 5MB --step double
+5 MB    ✓ ok
+10 MB   ✓ ok
+20 MB   ✓ ok
+40 MB   ✗ 550 5.3.4
+
+Verdict: your effective limit is between 20 and 40 MB. Base64 inflates payloads, so split at 20 MB.</code></pre>
+        <p>
+          Write it down, put it in your internal documentation, and date it.
+          Six months from now, when the product changes its default, that record will be the most useful thing
+          you have — and it is also exactly how our limits database works.
+      </p>
+
+        <hr>
+        <p class="small muted">
+          Defaults quoted here vary with product and tenant configuration; trust the official documentation and
+          your own measurements. Data on this page last verified 2025-11; method in the
+          <a href="projects.html#limits">limits database</a>.
+        </p>
+
+        <div class="btn-row" style="margin-top:32px">
+          <a class="btn btn-primary" href="projects.html#limits">View the limits database →</a>
+          <a class="btn btn-ghost" href="blog.html">← Back to the blog</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+          <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+        </a>
+        <p style="margin-top:14px">Real tools, fictional society. We treat attachment size limits as a public nuisance rather than a personal failure.</p>
+        <span class="badge badge-warn" style="margin-top:14px"><span class="dot dot-live"></span> Processing shard #8,388,609</span>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="join.html">Contribute</a></li>
+          <li><a href="register.html">Join</a></li>
+          <li><a href="members.html">Members</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="projects.html#limits">Limits database</a></li>
+          <li><a href="index.html#errors">Error translations</a></li>
+          <li><a href="join.html#flow">How to contribute</a></li>
+          <li><a href="rap.html">Theme song lyrics</a></li>
+          <li><a href="contact.html#faq">Contact &amp; FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hello@attachmenttoolarge.org">hello@attachmenttoolarge.org</a></li>
+          <li><a href="contact.html">Mailing list</a></li>
+          <li><a href="contact.html">Matrix channel</a></li>
+          <li><a href="404.html">Status page</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · the 20 MB monument is still maintained</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
