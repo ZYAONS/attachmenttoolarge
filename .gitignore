@@ -27,3 +27,7 @@ desktop.ini
 
 # ç‹¬ç«‹ä»“åº“ï¼Œä¸åµŒè¿›çˆ¶ä»“åº“
 att-tools/
+
+# Hugging Face ÁîÅÆ£¨¾ø²»Èë¿â£©
+tools/music-ai/.hf-token
+.hf-token
