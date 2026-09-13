@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    attachmenttoolarge — 附件过大组织
    设计方向：Persona 3 式的高对比排版
      · 纯黑 / 骨白 / 深蓝 三色为骨，红只留给「报错」本身（550 5.3.4）
@@ -8,7 +8,7 @@
    ========================================================================== */
 
 :root {
-  /* 骨白（白天） */
+  /* 骨白（白天）· 铜绿与黄金取自组织徽章 */
   --bg: #f2f1ec;
   --bg-soft: #e7e6df;
   --panel: #ffffff;
@@ -21,13 +21,13 @@
   --line: #0d0d10;
   --line-soft: #cfd0cc;
 
-  --accent: #1b4fd8;            /* P3 深蓝 */
-  --accent-soft: rgba(27, 79, 216, 0.12);
-  --gold: #1b4fd8;              /* 兼容旧变量名：原「烫金」位置也用蓝 */
-  --gold-soft: rgba(27, 79, 216, 0.1);
+  --accent: #1f6b56;            /* 铜绿：氧化青铜 */
+  --accent-soft: rgba(31, 107, 86, 0.13);
+  --gold: #b08f38;              /* 黄金：桂冠与铭文 */
+  --gold-soft: rgba(176, 143, 56, 0.14);
   --danger: #e0242b;            /* 红：只给报错与超限 */
   --danger-soft: rgba(224, 36, 43, 0.12);
-  --ok: #0f7a52;
+  --ok: #2f8f6a;
   --ok-soft: rgba(15, 122, 82, 0.12);
   --warn: #e0242b;
 
@@ -38,7 +38,7 @@
   --shadow-sm: 4px 4px 0 var(--ink);
 
   /* 终端永远是暗的 */
-  --term-bg: #0b0b0e;
+  --term-bg: #08100e;
   --term-bar: #17171c;
   --term-fg: #eef0f4;
   --term-dim: #8b90a0;
@@ -66,10 +66,10 @@
 
 html[data-theme="dark"] {
   /* 夜：黑底白字，蓝依旧是主色 */
-  --bg: #0d0d10;
-  --bg-soft: #141419;
-  --panel: #16161c;
-  --panel-2: #1d1d25;
+  --bg: #0b1211;
+  --bg-soft: #111a18;
+  --panel: #131d1b;
+  --panel-2: #1a2623;
 
   --text: #f2f1ec;
   --muted: #a6abb8;
@@ -78,10 +78,10 @@ html[data-theme="dark"] {
   --line: #f2f1ec;
   --line-soft: #2b2b34;
 
-  --accent: #5b8cff;
-  --accent-soft: rgba(91, 140, 255, 0.16);
-  --gold: #5b8cff;
-  --gold-soft: rgba(91, 140, 255, 0.14);
+  --accent: #4fd1a5;
+  --accent-soft: rgba(79, 209, 165, 0.16);
+  --gold: #d8b45c;
+  --gold-soft: rgba(216, 180, 92, 0.14);
   --danger: #ff4d4d;
   --danger-soft: rgba(255, 77, 77, 0.16);
   --ok: #3ddc97;
