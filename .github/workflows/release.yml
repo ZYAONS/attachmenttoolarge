@@ -1,0 +1,119 @@
+# attachment-too-large/attachmenttoolarge — self-checks, cross-platform build, tagged release.
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # ---------- the att CLI: split/join/corruption/double-click rebuild/ndr ----------
+  cli-test:
+    name: att CLI (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run cli-test (41 checks)
+        run: node tools/cli-test.mjs
+
+  # ---------- the membership backend: scrypt, sessions, CSRF, rate limits, leave ----------
+  server-test:
+    name: membership backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run server-test (44 checks)
+        run: node tools/server-test.mjs
+
+  # ---------- the site: 15 pages x desktop/mobile, driven over CDP ----------
+  browser-test:
+    name: browser checks (CDP + headless Edge)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run browser-check over every page
+        run: node tools/browser-check.mjs 全部
+
+  # ---------- single-file executable for each platform ----------
+  build-exe:
+    name: build att (${{ matrix.asset }})
+    needs: [cli-test]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            asset: att-win-x64.exe
+          - os: ubuntu-latest
+            asset: att-linux-x64
+          - os: macos-latest
+            asset: att-macos-arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build and self-test the executable
+        run: node tools/build-exe.mjs --out dist/${{ matrix.asset }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: dist/${{ matrix.asset }}
+          if-no-files-found: error
+
+  # ---------- attach everything to a release when a v* tag lands ----------
+  release:
+    name: publish release
+    needs: [build-exe, browser-test, server-test]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Collect the platform builds
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: |
+          cd dist
+          sha256sum * > SHA256SUMS.txt || true
+          ls -la
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "attachmenttoolarge ${GITHUB_REF_NAME}" \
+            --notes "The \`att\` command-line tool: the attachment too large problem, handled.
+
+          - \`att split <file> --limit 20MB\` — shards, a manifest, and a rebuild script the recipient can double-click
+          - \`att join <manifest>\` — verify every shard, then rebuild
+          - \`att info <file>\` — the Base64 arithmetic the server actually measures
+          - \`att limits\` — the limits database
+          - \`att ndr <bounce>\` — a rejection, translated into English
+
+          Every executable is verified by running it before it is uploaded. Checksums in \`SHA256SUMS.txt\`." \
+            dist/*
