@@ -60,6 +60,26 @@ the runtime; it needs nothing installed on the target machine.
 Tagging `v*` runs `.github/workflows/release.yml`, which builds Windows/Linux/macOS binaries,
 runs all three test suites and attaches the binaries plus `SHA256SUMS.txt` to a GitHub Release.
 
+## CI and releases
+
+The release workflow is committed as `tools/github-workflows/release.yml`. It cannot live in
+`.github/workflows/` yet, because the credential used to push this repository has no `workflow`
+scope. Two ways to enable it:
+
+1. **Web UI (no scope needed)** — on GitHub: *Add file → Create new file*, name it
+   `.github/workflows/release.yml`, paste the contents of `tools/github-workflows/release.yml`,
+   commit.
+2. **Command line** — create a token that includes the `workflow` scope, then:
+
+   ```bash
+   git mv tools/github-workflows/release.yml .github/workflows/release.yml
+   git commit -m "ci: add release workflow" && git push
+   ```
+
+Once in place it runs all three test suites on every push, cross-builds `att` for
+Windows/Linux/macOS, and attaches the binaries plus `SHA256SUMS.txt` to a GitHub Release on
+every `v*` tag.
+
 ## Membership backend
 
 Zero dependencies, Node built-ins only. `register.html`, `login.html`, `member.html`,
