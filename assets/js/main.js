@@ -324,3 +324,66 @@
     boot();
   }
 })();
+
+/* ==========================================================================
+   动效：滚动进度条 + 统计数字跳字（尊重 prefers-reduced-motion）
+   ========================================================================== */
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ① 顶部滚动进度：铜绿→黄金的细带 */
+  var bar = document.createElement("div");
+  bar.className = "scroll-progress";
+  document.body.appendChild(bar);
+  var ticking = false;
+  function update() {
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0).toFixed(2) + "%";
+    ticking = false;
+  }
+  window.addEventListener("scroll", function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  window.addEventListener("resize", update);
+  update();
+
+  /* ② 统计数字：进视口时从 0 跳到目标值 */
+  var nums = [].slice.call(document.querySelectorAll(".stat-num"));
+  if (!nums.length || reduce || !("IntersectionObserver" in window)) return;
+
+  function animate(el) {
+    var span = el.querySelector("span");
+    var suffix = span ? span.outerHTML : "";
+    var raw = (span ? el.textContent.replace(span.textContent, "") : el.textContent) || "";
+    var text = raw.replace(/[^0-9.]/g, "");
+    if (!text) return;
+    var target = parseFloat(text);
+    if (!isFinite(target)) return;
+    var decimals = (text.split(".")[1] || "").length;
+    var grouped = target >= 1000;
+    var final = decimals ? target.toFixed(decimals) : (grouped ? target.toLocaleString("en-US") : String(target));
+
+    var t0 = performance.now(), dur = 1100;
+    function frame(now) {
+      var p = Math.min(1, (now - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      var v = target * e;
+      var txt = decimals ? v.toFixed(decimals) : String(Math.round(v));
+      if (grouped) txt = Number(txt).toLocaleString("en-US");
+      el.innerHTML = txt + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+      else el.innerHTML = final + suffix;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      animate(en.target);
+      io.unobserve(en.target);
+    });
+  }, { threshold: 0.35 });
+  nums.forEach(function (n) { io.observe(n); });
+})();

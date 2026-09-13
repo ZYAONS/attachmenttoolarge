@@ -1243,298 +1243,103 @@ table.data th { box-shadow: inset 0 5px 0 var(--gold-2), inset 0 -1px 0 var(--go
 .site-header::after { box-shadow: inset 0 1px 0 var(--gold-2), inset 0 -1px 0 var(--gold-2); }
 .section + .section::before { filter: drop-shadow(0 1px 0 rgba(184, 145, 47, 0.25)); }
 /* ==========================================================================
-   史诗层 —— 奥德修斯的航程
-   酒暗色海面（wine-dark sea）、黑绘陶浮雕带、多立克柱式边框、荷马星空、爱琴海光晕。
-   全部内联 SVG，离网可用。内容区一律保持低透明度，不能影响阅读。
+   美术与动效层 —— 不靠淡纹理，靠色块、活字与运动
+   仍然只用 CSS 与内联 SVG，离网可用；prefers-reduced-motion 下全部停下。
    ========================================================================== */
 :root {
-  --aegean: #1d5c63;
-  --wine-dark: #2a3f4d;
-  --terracotta: #b4553c;
-
-  /* 海浪：三层正弦，横向平铺 */
-  --sea: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='48' viewBox='0 0 240 48'%3E%3Cpath d='M0 26q30-14 60 0t60 0 60 0 60 0v22H0z' fill='%232a6b7c' fill-opacity='.55'/%3E%3Cpath d='M0 34q30-12 60 0t60 0 60 0 60 0v14H0z' fill='%231d5c63' fill-opacity='.75'/%3E%3Cpath d='M0 41q30-9 60 0t60 0 60 0 60 0v7H0z' fill='%2315404a' fill-opacity='.9'/%3E%3C/svg%3E");
-
-  /* 黑绘陶浮雕：重装步兵 · 战马 · 三层桨战船 · 双耳瓶 */
-  --frieze: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='72' viewBox='0 0 360 72'%3E%3Cg fill='%23231c14'%3E%3Ccircle cx='26' cy='20' r='7'/%3E%3Cpath d='M26 27l-9 20h18zM17 33h20v6H17z'/%3E%3Cpath d='M12 22l-8-8 3-3 9 8z'/%3E%3Ccircle cx='15' cy='36' r='9'/%3E%3Cpath d='M26 47l-4 22h5l3-16 3 16h5l-4-22z'/%3E%3Cellipse cx='120' cy='34' rx='26' ry='12'/%3E%3Cpath d='M138 26l14-12 5 5-10 12z'/%3E%3Cpath d='M152 14l8-6 3 4-6 7z'/%3E%3Cpath d='M98 44l-4 24h5l5-22M118 45l-3 23h5l4-22M136 44l4 24h-5l-5-22M150 43l6 25h-5l-7-23'/%3E%3Cpath d='M108 22l-8-14h6l7 13z' stroke='%23231c14' stroke-width='2'/%3E%3Cpath d='M196 50q46-26 92 0-8 8-46 8t-46-8z'/%3E%3Cpath d='M242 44V14h6v30z'/%3E%3Cpath d='M214 20h56v16h-56z' fill='%23b4553c'/%3E%3Cpath d='M212 38l-8 6M272 38l8 6' stroke='%23231c14' stroke-width='3'/%3E%3Cpath d='M206 52l-6 10M222 54l-4 10M318 52l6 10M302 54l4 10' stroke='%23231c14' stroke-width='3'/%3E%3Cpath d='M336 26c8-8 4-18 0-20-4 2-8 12 0 20z'/%3E%3Cpath d='M327 22h18l3 26h-24z'/%3E%3Cpath d='M327 22c-8 2-10 10-6 16M345 22c8 2 10 10 6 16' fill='none' stroke='%23231c14' stroke-width='4'/%3E%3C/g%3E%3C/svg%3E");
-
-  /* 多立克柱：竖向平铺，做页面两侧的柱廊 */
-  --column: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='220' viewBox='0 0 56 220'%3E%3Cg fill='%237a5f1d' fill-opacity='.35'%3E%3Crect x='6' y='0' width='44' height='10'/%3E%3Crect x='10' y='10' width='36' height='8'/%3E%3Crect x='12' y='18' width='32' height='184'/%3E%3Crect x='8' y='202' width='40' height='8'/%3E%3Crect x='4' y='210' width='48' height='10'/%3E%3C/g%3E%3Cg stroke='%23231c14' stroke-opacity='.22' stroke-width='2'%3E%3Cpath d='M18 26v168M24 26v168M32 26v168M38 26v168'/%3E%3C/g%3E%3C/svg%3E");
+  --art1: #1f6b56;   /* 铜绿 */
+  --art2: #b8912f;   /* 黄金 */
+  --art3: #b4553c;   /* 赤陶 */
+  --art4: #2a6b7c;   /* 深青 */
 }
-html[data-theme="dark"] {
-  --column: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='220' viewBox='0 0 56 220'%3E%3Cg fill='%23d8b45c' fill-opacity='.22'%3E%3Crect x='6' y='0' width='44' height='10'/%3E%3Crect x='10' y='10' width='36' height='8'/%3E%3Crect x='12' y='18' width='32' height='184'/%3E%3Crect x='8' y='202' width='40' height='8'/%3E%3Crect x='4' y='210' width='48' height='10'/%3E%3C/g%3E%3Cg stroke='%23000000' stroke-opacity='.3' stroke-width='2'%3E%3Cpath d='M18 26v168M24 26v168M32 26v168M38 26v168'/%3E%3C/g%3E%3C/svg%3E");
+html[data-theme="dark"] { --art1: #4fd1a5; --art2: #d8b45c; --art3: #e0775a; --art4: #5fb3c9; }
+
+/* ① 滚动进度：一条铜绿到黄金的细带，始终在顶上 */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 4px; width: 0;
+  z-index: 99; pointer-events: none;
+  background: linear-gradient(90deg, var(--art1), var(--art2), var(--art3));
+  box-shadow: 0 0 12px rgba(184, 145, 47, 0.5);
 }
 
-/* 背景第一层：爱琴海光晕 + 荷马星空 + 石灰岩 */
-body {
-  background-color: var(--stone);
-  background-image:
-    radial-gradient(1400px 720px at 50% -18%, rgba(31, 107, 86, 0.16), transparent 68%),
-    radial-gradient(900px 460px at 88% 4%, rgba(184, 145, 47, 0.10), transparent 70%),
-    radial-gradient(760px 420px at 8% 32%, rgba(42, 63, 77, 0.10), transparent 72%),
-    radial-gradient(circle at 22% 12%, rgba(184, 145, 47, 0.5) 1px, transparent 1.6px),
-    radial-gradient(circle at 68% 7%, rgba(184, 145, 47, 0.42) 1px, transparent 1.6px),
-    radial-gradient(circle at 84% 22%, rgba(184, 145, 47, 0.35) 1px, transparent 1.6px),
-    radial-gradient(circle at 42% 26%, rgba(184, 145, 47, 0.3) 1px, transparent 1.6px),
-    var(--halftone);
-  background-size: auto, auto, auto, 320px 320px, 240px 240px, 400px 400px, 180px 180px, 9px 9px;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat, repeat, repeat, repeat;
+/* ② 活字：大标题内部流动的铜绿—黄金渐变 */
+.hero h1, .page-head h1 {
+  background-image: linear-gradient(100deg, var(--text) 0%, var(--art1) 26%, var(--art2) 46%, var(--text) 78%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  animation: ink-flow 16s ease-in-out infinite alternate;
 }
+@keyframes ink-flow { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+.hero h1 .strike { color: var(--danger); -webkit-text-fill-color: var(--danger); }
 
-/* 背景第二层（固定）：两侧柱廊 + 顶部浮雕带 */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image: var(--column), var(--column), var(--frieze);
-  background-size: 56px 220px, 56px 220px, 360px 72px;
-  background-position: left top, right top, left 104px;
-  background-repeat: repeat-y, repeat-y, repeat-x;
-  opacity: 0.34;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0 88px, rgba(0, 0, 0, 0.55) 220px, rgba(0, 0, 0, 0.16) 60%, transparent 92%),
-              linear-gradient(90deg, transparent 0, #000 120px, #000 calc(100% - 120px), transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0 88px, rgba(0, 0, 0, 0.55) 220px, rgba(0, 0, 0, 0.16) 60%, transparent 92%),
-              linear-gradient(90deg, transparent 0, #000 120px, #000 calc(100% - 120px), transparent 100%);
-  -webkit-mask-composite: source-in;
+/* ③ 整页网点缓慢漂移：像老印刷机在走纸 */
+html::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: var(--halftone); background-size: 9px 9px; opacity: 0.55;
+  animation: grain-drift 90s linear infinite;
 }
+@keyframes grain-drift { from { background-position: 0 0; } to { background-position: 180px 360px; } }
 
-/* 背景第三层（固定）：酒暗色海面压在视口下缘 */
-body::after {
-  content: "";
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: 132px;
-  pointer-events: none;
-  z-index: 0;
-  background-image: var(--sea);
-  background-size: 240px 48px;
-  background-repeat: repeat-x;
-  background-position: left bottom;
-  opacity: 0.55;
-  mask-image: linear-gradient(180deg, transparent, #000 46%);
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 46%);
-}
+/* ④ 回纹横楣缓慢流动 */
+.site-header::after { animation: meander-drift 16s linear infinite; }
+@keyframes meander-drift { from { background-position-x: 0; } to { background-position-x: 28px; } }
+.site-footer::before { animation: meander-drift 22s linear infinite reverse; }
 
-/* 浮雕带：页脚顶缘改用黑绘陶（比回纹更史诗），保留一条金线 */
-.site-footer::before {
-  background-image: var(--frieze);
-  background-size: 360px 72px;
-  background-repeat: repeat-x;
-  background-position: left bottom;
-  height: 72px;
-  top: -36px;
-  opacity: 0.75;
-  box-shadow: none;
+/* ⑤ 段落头：一整块斜切色板，把留白填掉 */
+.section-head { position: relative; padding: 24px 30px 24px 34px; }
+.section-head::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 12px;
+  background: var(--art1); transform: skewX(-8deg);
 }
+.section-head::after {
+  content: ""; position: absolute; right: 0; top: 0; width: 96px; height: 8px;
+  background: var(--art2); transform: skewX(-24deg);
+}
+.section:nth-of-type(4n+2) .section-head::before { background: var(--art2); }
+.section:nth-of-type(4n+2) .section-head::after { background: var(--art1); }
+.section:nth-of-type(4n+3) .section-head::before { background: var(--art4); }
+.section:nth-of-type(4n+3) .section-head::after { background: var(--art3); }
+.section:nth-of-type(4n+4) .section-head::before { background: var(--art3); }
+.section:nth-of-type(4n+4) .section-head::after { background: var(--art4); }
+.section-head.center { padding-top: 18px; }
 
-/* 首屏：给史诗留出呼吸，别被固定层盖住正文 */
-.hero { padding-bottom: 96px; }
-.page-head { padding-bottom: 88px; }
+/* ⑥ 奖章缓慢自转（页眉与首屏各一枚） */
+.brand-emblem, .hero-crest img { animation: medal-spin 28s linear infinite; }
+.hero-crest img { animation-duration: 34s; }
+@keyframes medal-spin { to { transform: rotate(360deg); } }
 
-/* ==========================================================================
-   史诗层 · 精修 —— 手绘级浮雕带、战船水印、月光碎金、火炬光晕
-   ========================================================================== */
-:root {
-  /* 黑绘陶浮雕带 v2：重装步兵 · 战马 · 三层桨战船 · 双耳瓶
-     用曲线勾勒轮廓（头盔冠羽、马颈弧线、船首撞角、瓶身收腰），不再用基本图形拼贴 */
-  --frieze2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='88' viewBox='0 0 640 88'%3E%3Cg fill='%23231c14'%3E%3Cpath d='M69 12c9-3 16 2 15 10 5-2 9 1 8 6l-6 3c1 10-4 16-13 16s-14-6-13-16l-6-3c-1-5 3-8 8-6 1-8 7-13 15-10z'/%3E%3Cpath d='M60 24c8-12 26-12 34 0l-4 6H64z'/%3E%3Cpath d='M62 47c8-5 22-5 30 0l5 30H57z'/%3E%3Cpath d='M92 8l6 4-34 62-5-3z'/%3E%3Cpath d='M96 8l6 4-4 6-6-4z'/%3E%3Ccircle cx='48' cy='58' r='17'/%3E%3Ccircle cx='48' cy='58' r='12' fill='%23b4553c'/%3E%3Ccircle cx='48' cy='58' r='4'/%3E%3Cpath d='M66 76l-4 10h8l4-10zM92 76l4 10h-8l-4-10z'/%3E%3C/g%3E%3Cg fill='%23231c14'%3E%3Cpath d='M186 48c6-14 30-20 54-14 16 4 26 12 30 22 4 8-2 14-14 15-22 2-44-2-58-8-10-4-14-9-12-15z'/%3E%3Cpath d='M232 36c8-12 20-18 30-18 8 0 13 5 13 12 0 8-6 14-16 16z'/%3E%3Cpath d='M262 20c8-2 13 1 14 7 1 5-2 9-8 10l-9-3z'/%3E%3Cpath d='M226 30c6-8 16-12 24-12l2 5c-8 1-16 5-22 12z'/%3E%3Cpath d='M190 46c-12 6-16 18-12 30l6 2c-2-10 2-20 10-26z'/%3E%3Cpath d='M196 60l-7 26h7l6-22zM214 64l-5 22h7l5-18zM258 64l5 22h-7l-5-18zM276 58l9 26h-7l-9-22z'/%3E%3C/g%3E%3Cg fill='%23231c14'%3E%3Cpath d='M360 58c40-16 84-18 124-8 22 6 44 8 62 4-4 14-14 22-30 24H380c-16-2-26-8-30-20z'/%3E%3Cpath d='M546 54c12 0 20 6 22 16-14 4-24 0-28-8z'/%3E%3Ccircle cx='548' cy='60' r='2.6' fill='%23b4553c'/%3E%3Cpath d='M540 16h6v44h-6z'/%3E%3Cpath d='M498 20h54v32h-54z' fill='%23b4553c'/%3E%3Cpath d='M498 20h54' stroke='%23231c14' stroke-width='3' fill='none'/%3E%3Cpath d='M512 20v32M530 20v32' stroke='%23231c14' stroke-width='2' fill='none'/%3E%3Cpath d='M543 18L566 66M543 18L520 62' stroke='%23231c14' stroke-width='2' fill='none'/%3E%3Cpath d='M376 74l-8 12M392 76l-8 12M408 78l-8 12M424 78l-8 12M440 78l-8 12M456 78l-8 12M472 76l-8 12M488 74l-8 12' stroke='%23231c14' stroke-width='3' fill='none'/%3E%3C/g%3E%3Cg fill='%23231c14'%3E%3Cpath d='M600 26c-14 16-14 34 2 44-6 8 0 14 12 14s18-6 12-14c16-10 16-28 2-44z'/%3E%3Cpath d='M602 26h20l-2 6h-16z'/%3E%3Cpath d='M600 26c-12 4-16 14-10 24l5-1c-3-8 0-15 8-19zM624 26c12 4 16 14 10 24l-5-1c3-8 0-15-8-19z'/%3E%3C/g%3E%3C/svg%3E");
+/* ⑦ 卡片：角标色块在悬停时张开 */
+.card::before { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s; }
+.card:hover::before { transform: scale(1.5); }
 
-  /* 首屏水印：三层桨战船 */
-  --trireme: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='340' viewBox='0 0 600 340'%3E%3Cg fill='none' stroke='%23b8912f' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M40 268c70-30 150-38 236-26 40 6 84 8 124 2-8 30-30 46-66 50H140c-46-2-84-10-100-26z' fill='%23b8912f' fill-opacity='.12'/%3E%3Cpath d='M524 246c26 2 44 14 48 34-30 8-52 0-60-18z' fill='%23b8912f' fill-opacity='.12'/%3E%3Ccircle cx='530' cy='262' r='6'/%3E%3Cpath d='M300 244V44'/%3E%3Cpath d='M180 60h240v120H180z' fill='%23b8912f' fill-opacity='.1'/%3E%3Cpath d='M180 60h240M180 180h240M300 44v136'/%3E%3Cpath d='M222 60v120M264 60v120M336 60v120M378 60v120' stroke-opacity='.55'/%3E%3Cpath d='M300 44L392 236M300 44L214 232' stroke-opacity='.5'/%3E%3C/g%3E%3Cg stroke='%23b8912f' stroke-width='3' stroke-opacity='.75' stroke-linecap='round'%3E%3Cpath d='M80 292l-16 26M120 298l-16 26M160 302l-16 26M200 304l-16 26M240 304l-16 26M280 304l-16 26M320 302l-16 26M360 298l-16 26M400 292l-16 26'/%3E%3C/g%3E%3C/svg%3E");
+/* ⑧ 导航：金线滑入 */
+.nav-links a { position: relative; }
+.nav-links a::after {
+  content: ""; position: absolute; left: 12px; right: 100%; bottom: 4px; height: 2px;
+  background: var(--art2); transition: right 0.25s ease;
+}
+.nav-links a:hover::after { right: 12px; }
 
-  /* 子页页头水印：桂冠 */
-  --laurelBig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23b8912f' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M130 236C74 226 36 178 40 116'/%3E%3Cpath d='M130 236c56-10 94-58 90-120'/%3E%3C/g%3E%3Cg fill='%23b8912f'%3E%3Cellipse cx='70' cy='186' rx='11' ry='24' transform='rotate(-38 70 186)'/%3E%3Cellipse cx='54' cy='150' rx='11' ry='24' transform='rotate(-52 54 150)'/%3E%3Cellipse cx='48' cy='110' rx='11' ry='23' transform='rotate(-66 48 110)'/%3E%3Cellipse cx='56' cy='72' rx='10' ry='21' transform='rotate(-80 56 72)'/%3E%3Cellipse cx='190' cy='186' rx='11' ry='24' transform='rotate(38 190 186)'/%3E%3Cellipse cx='206' cy='150' rx='11' ry='24' transform='rotate(52 206 150)'/%3E%3Cellipse cx='212' cy='110' rx='11' ry='23' transform='rotate(66 212 110)'/%3E%3Cellipse cx='204' cy='72' rx='10' ry='21' transform='rotate(80 204 72)'/%3E%3C/g%3E%3C/svg%3E");
+/* ⑨ 按钮：按下时色块推进 */
+.btn { position: relative; overflow: hidden; }
+.btn::after {
+  content: ""; position: absolute; inset: 0; background: var(--art2);
+  transform: translateX(-101%); transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
 }
-html[data-theme="dark"] {
-  --frieze2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='88' viewBox='0 0 640 88'%3E%3Cg fill='%23d8b45c' fill-opacity='.55'%3E%3Cpath d='M69 12c9-3 16 2 15 10 5-2 9 1 8 6l-6 3c1 10-4 16-13 16s-14-6-13-16l-6-3c-1-5 3-8 8-6 1-8 7-13 15-10z'/%3E%3Cpath d='M60 24c8-12 26-12 34 0l-4 6H64z'/%3E%3Cpath d='M62 47c8-5 22-5 30 0l5 30H57z'/%3E%3Cpath d='M92 8l6 4-34 62-5-3z'/%3E%3Ccircle cx='48' cy='58' r='17'/%3E%3Ccircle cx='48' cy='58' r='4' fill='%23131d1b'/%3E%3Cpath d='M66 76l-4 10h8l4-10zM92 76l4 10h-8l-4-10z'/%3E%3Cpath d='M186 48c6-14 30-20 54-14 16 4 26 12 30 22 4 8-2 14-14 15-22 2-44-2-58-8-10-4-14-9-12-15z'/%3E%3Cpath d='M232 36c8-12 20-18 30-18 8 0 13 5 13 12 0 8-6 14-16 16z'/%3E%3Cpath d='M262 20c8-2 13 1 14 7 1 5-2 9-8 10l-9-3z'/%3E%3Cpath d='M190 46c-12 6-16 18-12 30l6 2c-2-10 2-20 10-26z'/%3E%3Cpath d='M196 60l-7 26h7l6-22zM214 64l-5 22h7l5-18zM258 64l5 22h-7l-5-18zM276 58l9 26h-7l-9-22z'/%3E%3Cpath d='M360 58c40-16 84-18 124-8 22 6 44 8 62 4-4 14-14 22-30 24H380c-16-2-26-8-30-20z'/%3E%3Cpath d='M546 54c12 0 20 6 22 16-14 4-24 0-28-8z'/%3E%3Cpath d='M540 16h6v44h-6z'/%3E%3Cpath d='M498 20h54v32h-54z' fill-opacity='.7'/%3E%3Cpath d='M376 74l-8 12M392 76l-8 12M408 78l-8 12M424 78l-8 12M440 78l-8 12M456 78l-8 12M472 76l-8 12M488 74l-8 12'/%3E%3Cpath d='M600 26c-14 16-14 34 2 44-6 8 0 14 12 14s18-6 12-14c16-10 16-28 2-44z'/%3E%3C/g%3E%3C/svg%3E");
-  --trireme: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='340' viewBox='0 0 600 340'%3E%3Cg fill='none' stroke='%23d8b45c' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M40 268c70-30 150-38 236-26 40 6 84 8 124 2-8 30-30 46-66 50H140c-46-2-84-10-100-26z' fill='%23d8b45c' fill-opacity='.08'/%3E%3Cpath d='M524 246c26 2 44 14 48 34-30 8-52 0-60-18z' fill='%23d8b45c' fill-opacity='.08'/%3E%3Cpath d='M300 244V44'/%3E%3Cpath d='M180 60h240v120H180z' fill='%23d8b45c' fill-opacity='.07'/%3E%3Cpath d='M180 60h240M180 180h240M300 44v136'/%3E%3Cpath d='M300 44L392 236M300 44L214 232' stroke-opacity='.5'/%3E%3C/g%3E%3Cg stroke='%23d8b45c' stroke-width='3' stroke-opacity='.6' stroke-linecap='round'%3E%3Cpath d='M80 292l-16 26M120 298l-16 26M160 302l-16 26M200 304l-16 26M240 304l-16 26M280 304l-16 26M320 302l-16 26M360 298l-16 26M400 292l-16 26'/%3E%3C/g%3E%3C/svg%3E");
-  --laurelBig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23d8b45c' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M130 236C74 226 36 178 40 116'/%3E%3Cpath d='M130 236c56-10 94-58 90-120'/%3E%3C/g%3E%3Cg fill='%23d8b45c' fill-opacity='.7'%3E%3Cellipse cx='70' cy='186' rx='11' ry='24' transform='rotate(-38 70 186)'/%3E%3Cellipse cx='54' cy='150' rx='11' ry='24' transform='rotate(-52 54 150)'/%3E%3Cellipse cx='48' cy='110' rx='11' ry='23' transform='rotate(-66 48 110)'/%3E%3Cellipse cx='56' cy='72' rx='10' ry='21' transform='rotate(-80 56 72)'/%3E%3Cellipse cx='190' cy='186' rx='11' ry='24' transform='rotate(38 190 186)'/%3E%3Cellipse cx='206' cy='150' rx='11' ry='24' transform='rotate(52 206 150)'/%3E%3Cellipse cx='212' cy='110' rx='11' ry='23' transform='rotate(66 212 110)'/%3E%3Cellipse cx='204' cy='72' rx='10' ry='21' transform='rotate(80 204 72)'/%3E%3C/g%3E%3C/svg%3E");
-}
+.btn:hover::after { transform: translateX(0); }
+.btn, .btn:hover { z-index: 0; }
+.btn:hover { color: var(--ink); }
 
-/* ① 换上精修浮雕带（页眉下与页脚） */
-body::before {
-  background-image: var(--column), var(--column), var(--frieze2);
-  background-size: 56px 220px, 56px 220px, 640px 88px;
-  background-position: left top, right top, left 108px;
-  background-repeat: repeat-y, repeat-y, repeat-x;
-  opacity: 0.38;
-}
-.site-footer::before {
-  background-image: var(--frieze2);
-  background-size: 640px 88px;
-  background-position: left bottom;
-  height: 88px;
-  top: -44px;
-  opacity: 0.6;
-}
+/* ⑩ 统计数字：进视口时跳字（JS 驱动，这里只做样式） */
+.stat-num { font-variant-numeric: tabular-nums; }
 
-/* ② 首屏水印：三层桨战船；子页页头水印：桂冠 */
-.hero { position: relative; overflow: hidden; }
-.hero::before {
-  content: "";
-  position: absolute;
-  right: -60px; bottom: -30px;
-  width: min(680px, 62vw); height: 380px;
-  background: var(--trireme) no-repeat center / contain;
-  opacity: 0.16;
-  pointer-events: none;
-  z-index: 0;
-}
-.page-head { position: relative; overflow: hidden; }
-.page-head::before {
-  content: "";
-  position: absolute;
-  right: 2%; top: -20px;
-  width: 260px; height: 260px;
-  background: var(--laurelBig) no-repeat center / contain;
-  opacity: 0.14;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ③ 海面月光碎金：在浪尖上撒一层小金点，缓慢明灭 */
-body::after {
-  background-image:
-    radial-gradient(circle at 12% 74%, rgba(232, 205, 131, 0.9) 1.4px, transparent 2px),
-    radial-gradient(circle at 34% 66%, rgba(232, 205, 131, 0.7) 1.1px, transparent 1.7px),
-    radial-gradient(circle at 58% 78%, rgba(232, 205, 131, 0.85) 1.5px, transparent 2.1px),
-    radial-gradient(circle at 79% 68%, rgba(232, 205, 131, 0.65) 1px, transparent 1.6px),
-    radial-gradient(circle at 92% 80%, rgba(232, 205, 131, 0.8) 1.2px, transparent 1.8px),
-    var(--sea);
-  background-size: 313px 132px, 271px 132px, 367px 132px, 229px 132px, 401px 132px, 240px 48px;
-  background-repeat: repeat, repeat, repeat, repeat, repeat, repeat-x;
-  background-position: left bottom;
-  animation: sea-glint 7s ease-in-out infinite alternate;
-}
-@keyframes sea-glint {
-  from { filter: brightness(1); }
-  to { filter: brightness(1.35); }
-}
-
-/* ④ 夜间：火炬光晕，像在神庙里读碑 */
-html[data-theme="dark"] body {
-  background-image:
-    radial-gradient(760px 380px at 50% -6%, rgba(255, 168, 74, 0.16), transparent 66%),
-    radial-gradient(1400px 720px at 50% -18%, rgba(79, 209, 165, 0.10), transparent 70%),
-    radial-gradient(circle at 22% 12%, rgba(255, 210, 140, 0.5) 1px, transparent 1.6px),
-    radial-gradient(circle at 68% 7%, rgba(255, 210, 140, 0.42) 1px, transparent 1.6px),
-    var(--halftone);
-  background-size: auto, auto, 320px 320px, 240px 240px, 9px 9px;
-  background-repeat: no-repeat, no-repeat, repeat, repeat, repeat;
-}
-html[data-theme="dark"] .site-header {
-  box-shadow: 0 0 60px rgba(255, 168, 74, 0.12), inset 0 -1px 0 rgba(255, 200, 120, 0.25);
-}
-html[data-theme="dark"] .site-header::after, html[data-theme="dark"] .site-footer::before { filter: sepia(0.35) saturate(1.2) brightness(1.15); }
-
-@media (prefers-reduced-motion: reduce) { body::after { animation: none; } }
-
-/* ==========================================================================
-   史诗层 · 续 —— 陶红底浮雕带、随浪的战船、自转星图、神庙三角楣
-   ========================================================================== */
-:root {
-  /* 神庙三角楣（山花）：石面 + 鎏金檐口 + 顶饰 + 山花内的回纹 */
-  --pediment: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='96' viewBox='0 0 1200 96' preserveAspectRatio='none'%3E%3Cpath d='M0 92L600 8 1200 92z' fill='%23e3dbc6'/%3E%3Cpath d='M0 92L600 8 1200 92' fill='none' stroke='%23b8912f' stroke-width='5'/%3E%3Cpath d='M34 92L600 24 1166 92' fill='none' stroke='%23b8912f' stroke-width='1.6' opacity='.6'/%3E%3Ccircle cx='600' cy='12' r='8' fill='%23b8912f'/%3E%3Cpath d='M578 30h44v14h-44z' fill='none' stroke='%23b8912f' stroke-width='2'/%3E%3Cpath d='M584 36h8v4h-8zM608 36h8v4h-8z' fill='%23b8912f'/%3E%3Ccircle cx='520' cy='46' r='5' fill='%23b8912f' opacity='.7'/%3E%3Ccircle cx='680' cy='46' r='5' fill='%23b8912f' opacity='.7'/%3E%3C/svg%3E");
-
-  /* 星图：猎户座与北斗，暗色主题里缓慢自转 */
-  --stars: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 520 520'%3E%3Cg fill='none' stroke='%23e8cd83' stroke-width='1.4' stroke-opacity='.55'%3E%3Cpath d='M150 150L210 190 250 260 236 330M210 190L262 176M250 260L300 246'/%3E%3Cpath d='M360 300L392 344 460 356 470 300 412 286zM392 344L376 400'/%3E%3C/g%3E%3Cg fill='%23f0d894'%3E%3Ccircle cx='150' cy='150' r='4.5'/%3E%3Ccircle cx='210' cy='190' r='3'/%3E%3Ccircle cx='262' cy='176' r='2.6'/%3E%3Ccircle cx='250' cy='260' r='4'/%3E%3Ccircle cx='300' cy='246' r='2.6'/%3E%3Ccircle cx='236' cy='330' r='3.4'/%3E%3Ccircle cx='360' cy='300' r='3'/%3E%3Ccircle cx='392' cy='344' r='3.6'/%3E%3Ccircle cx='460' cy='356' r='3'/%3E%3Ccircle cx='470' cy='300' r='2.6'/%3E%3Ccircle cx='412' cy='286' r='3'/%3E%3Ccircle cx='376' cy='400' r='2.6'/%3E%3C/g%3E%3C/svg%3E");
-}
-html[data-theme="dark"] {
-  --pediment: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='96' viewBox='0 0 1200 96' preserveAspectRatio='none'%3E%3Cpath d='M0 92L600 8 1200 92z' fill='%2317231f'/%3E%3Cpath d='M0 92L600 8 1200 92' fill='none' stroke='%23d8b45c' stroke-width='5'/%3E%3Cpath d='M34 92L600 24 1166 92' fill='none' stroke='%23d8b45c' stroke-width='1.6' opacity='.5'/%3E%3Ccircle cx='600' cy='12' r='8' fill='%23d8b45c'/%3E%3Cpath d='M578 30h44v14h-44z' fill='none' stroke='%23d8b45c' stroke-width='2'/%3E%3Cpath d='M584 36h8v4h-8zM608 36h8v4h-8z' fill='%23d8b45c'/%3E%3C/svg%3E");
-}
-
-/* ⑤ 陶红底：黑绘陶是「黑figure 画在陶红地上」，所以给浮雕带垫一层陶土色
-   （在 body::before 的图层表里排在浮雕之后，于是浮雕画在陶红底上） */
-body::before {
-  background-image:
-    var(--column), var(--column), var(--frieze2),
-    linear-gradient(180deg, rgba(180, 85, 60, 0.20), rgba(180, 85, 60, 0.20)),
-    linear-gradient(180deg, rgba(180, 85, 60, 0.16), rgba(180, 85, 60, 0.16));
-  background-size: 56px 220px, 56px 220px, 640px 88px, 100% 88px, 100% 88px;
-  background-position: left top, right top, left 108px, left 108px, left 108px;
-  background-repeat: repeat-y, repeat-y, repeat-x, no-repeat, no-repeat;
-}
-/* 页脚那条浮雕带直接给陶红底 */
-.site-footer::before {
-  background-color: rgba(180, 85, 60, 0.18);
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
-}
-
-/* ⑥ 首屏的三层桨战船随浪起伏 */
-@keyframes trireme-bob {
-  0%, 100% { transform: translateY(0) rotate(-0.7deg); }
-  50%      { transform: translateY(-12px) rotate(0.7deg); }
-}
-.hero::before { animation: trireme-bob 9s ease-in-out infinite; transform-origin: 50% 90%; }
-
-/* ⑦ 夜间星图：缓慢自转，像抬头看了一夜 */
-html::before {
-  content: "";
-  position: fixed;
-  right: -90px; top: 40px;
-  width: 520px; height: 520px;
-  background: var(--stars) no-repeat center / contain;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-html[data-theme="dark"]::before { opacity: 0.22; animation: star-drift 300s linear infinite; }
-@keyframes star-drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* ⑧ 页脚之上：神庙三角楣（山花）收口 */
-.site-footer { position: relative; margin-top: 96px; }
-.site-footer::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; top: -92px;
-  height: 92px;
-  background: var(--pediment) no-repeat center / 100% 100%;
-  pointer-events: none;
-}
+/* ⑪ 分隔纹样：斜切色段依次滑入 */
+.rule-orn i { animation: block-slide 6s ease-in-out infinite; }
+@keyframes block-slide { 0%, 100% { transform: skewX(-24deg) scaleX(1); } 50% { transform: skewX(-24deg) scaleX(1.6); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero::before { animation: none; }
-  html[data-theme="dark"]::before { animation: none; }
-}
-
-/* ==========================================================================
-   壁画叙事带 —— 取代此前互相重叠的浮动装饰
-   一条不重复的长卷，从左到右讲同一件事：
-     传令兵出发 → 书吏捧册（那块 24.7 MB 的册子）→ 骑手接力 →
-     三层桨战船渡海 → 双耳瓶入库（收件人收到）
-   五个形象各占一段、彼此留白、共用一条地平线，船下才有海。
-   ========================================================================== */
-:root {
-  --mural: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='104' viewBox='0 0 1400 104'%3E%3Cg stroke='%23b8912f' stroke-width='2' stroke-opacity='.55'%3E%3Cpath d='M40 88h1320'/%3E%3C/g%3E%3Cg fill='%23231c14'%3E%3Cg transform='translate(60,14)'%3E%3Cpath d='M29 2c9-3 16 2 15 10 5-2 9 1 8 6l-6 3c1 10-4 16-13 16s-14-6-13-16l-6-3c-1-5 3-8 8-6 1-8 7-13 15-10z'/%3E%3Cpath d='M20 14c8-12 26-12 34 0l-4 6H24z'/%3E%3Cpath d='M22 37c8-5 22-5 30 0l5 30H17z'/%3E%3Cpath d='M52-2l6 4-34 62-5-3z'/%3E%3Ccircle cx='8' cy='48' r='16'/%3E%3Ccircle cx='8' cy='48' r='11' fill='%23b4553c'/%3E%3Ccircle cx='8' cy='48' r='3.5'/%3E%3Cpath d='M26 66l-4 10h8l4-10zM52 66l4 10h-8l-4-10z'/%3E%3C/g%3E%3Cg transform='translate(360,20)'%3E%3Cpath d='M26 4c7-3 13 1 13 8s-6 12-13 12-13-5-13-12 6-11 13-8z'/%3E%3Cpath d='M18 26c7-4 15-4 22 0l4 30H14z'/%3E%3Cpath d='M8 34h44v26H8z' stroke='%23231c14' stroke-width='2' fill='none'/%3E%3Cpath d='M14 40h32M14 48h32M28 34v26' stroke='%23231c14' stroke-width='1.6' stroke-opacity='.8'/%3E%3Cpath d='M20 56l-3 20h6l3-18zM40 56l3 20h-6l-3-18z'/%3E%3C/g%3E%3Cg transform='translate(660,6)'%3E%3Cpath d='M96 62c6-14 30-20 54-14 16 4 26 12 30 22 4 8-2 14-14 15-22 2-44-2-58-8-10-4-14-9-12-15z'/%3E%3Cpath d='M142 50c8-12 20-18 30-18 8 0 13 5 13 12 0 8-6 14-16 16z'/%3E%3Cpath d='M172 34c8-2 13 1 14 7 1 5-2 9-8 10l-9-3z'/%3E%3Cpath d='M136 44c6-8 16-12 24-12l2 5c-8 1-16 5-22 12z'/%3E%3Cpath d='M100 60c-12 6-16 18-12 30l6 2c-2-10 2-20 10-26z'/%3E%3Cpath d='M106 74l-7 20h7l6-17zM124 78l-5 16h7l5-13zM168 78l5 16h-7l-5-13zM186 72l9 22h-7l-9-18z'/%3E%3Cpath d='M118 20c10-8 22-8 30 0 6 6 6 14-2 18-10 4-22 2-30-4-6-5-6-10 2-14z'/%3E%3C/g%3E%3Cg transform='translate(930,26)'%3E%3Cpath d='M30 34c40-16 84-18 124-8 22 6 44 8 62 4-4 14-14 22-30 24H50c-16-2-26-8-30-20z'/%3E%3Cpath d='M216 30c12 0 20 6 22 16-14 4-24 0-28-8z'/%3E%3Ccircle cx='218' cy='36' r='2.6' fill='%23b4553c'/%3E%3Cpath d='M210-8h6v44h-6z'/%3E%3Cpath d='M168-4h54v32h-54z' fill='%23b4553c'/%3E%3Cpath d='M182 5v32M200 5v32' stroke='%23231c14' stroke-width='2' fill='none'/%3E%3Cpath d='M213-6L236 42M213-6L190 38' stroke='%23231c14' stroke-width='2' fill='none'/%3E%3Cpath d='M46 50l-8 12M62 52l-8 12M78 54l-8 12M94 54l-8 12M110 54l-8 12M126 54l-8 12M142 52l-8 12M158 50l-8 12' stroke='%23231c14' stroke-width='3' fill='none'/%3E%3C/g%3E%3Cg transform='translate(1230,30)'%3E%3Cpath d='M30-2c-14 16-14 34 2 44-6 8 0 14 12 14s18-6 12-14c16-10 16-28 2-44z'/%3E%3Cpath d='M32-2h20l-2 6H34z'/%3E%3Cpath d='M30-2c-12 4-16 14-10 24l5-1c-3-8 0-15 8-19zM52-2c12 4 16 14 10 24l-5-1c3-8 0-15-8-19z'/%3E%3C/g%3E%3C/g%3E%3Cg fill='none' stroke='%231d5c63' stroke-width='3' stroke-opacity='.8'%3E%3Cpath d='M960 86q16-8 32 0t32 0 32 0 32 0'/%3E%3C/g%3E%3C/svg%3E");
-}
-html[data-theme="dark"] {
-  --mural: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='104' viewBox='0 0 1400 104'%3E%3Cg stroke='%23d8b45c' stroke-width='2' stroke-opacity='.5'%3E%3Cpath d='M40 88h1320'/%3E%3C/g%3E%3Cg fill='%23d8b45c' fill-opacity='.62'%3E%3Cg transform='translate(60,14)'%3E%3Cpath d='M29 2c9-3 16 2 15 10 5-2 9 1 8 6l-6 3c1 10-4 16-13 16s-14-6-13-16l-6-3c-1-5 3-8 8-6 1-8 7-13 15-10z'/%3E%3Cpath d='M20 14c8-12 26-12 34 0l-4 6H24z'/%3E%3Cpath d='M22 37c8-5 22-5 30 0l5 30H17z'/%3E%3Cpath d='M52-2l6 4-34 62-5-3z'/%3E%3Ccircle cx='8' cy='48' r='16'/%3E%3Ccircle cx='8' cy='48' r='3.5' fill='%23131d1b'/%3E%3Cpath d='M26 66l-4 10h8l4-10zM52 66l4 10h-8l-4-10z'/%3E%3C/g%3E%3Cg transform='translate(360,20)'%3E%3Cpath d='M26 4c7-3 13 1 13 8s-6 12-13 12-13-5-13-12 6-11 13-8z'/%3E%3Cpath d='M18 26c7-4 15-4 22 0l4 30H14z'/%3E%3Cpath d='M8 34h44v26H8z' fill='none' stroke='%23d8b45c' stroke-width='2'/%3E%3Cpath d='M14 40h32M14 48h32M28 34v26' stroke='%23d8b45c' stroke-width='1.6' fill='none'/%3E%3Cpath d='M20 56l-3 20h6l3-18zM40 56l3 20h-6l-3-18z'/%3E%3C/g%3E%3Cg transform='translate(660,6)'%3E%3Cpath d='M96 62c6-14 30-20 54-14 16 4 26 12 30 22 4 8-2 14-14 15-22 2-44-2-58-8-10-4-14-9-12-15z'/%3E%3Cpath d='M142 50c8-12 20-18 30-18 8 0 13 5 13 12 0 8-6 14-16 16z'/%3E%3Cpath d='M172 34c8-2 13 1 14 7 1 5-2 9-8 10l-9-3z'/%3E%3Cpath d='M106 74l-7 20h7l6-17zM124 78l-5 16h7l5-13zM168 78l5 16h-7l-5-13zM186 72l9 22h-7l-9-18z'/%3E%3Cpath d='M118 20c10-8 22-8 30 0 6 6 6 14-2 18-10 4-22 2-30-4-6-5-6-10 2-14z'/%3E%3C/g%3E%3Cg transform='translate(930,26)'%3E%3Cpath d='M30 34c40-16 84-18 124-8 22 6 44 8 62 4-4 14-14 22-30 24H50c-16-2-26-8-30-20z'/%3E%3Cpath d='M216 30c12 0 20 6 22 16-14 4-24 0-28-8z'/%3E%3Cpath d='M210-8h6v44h-6z'/%3E%3Cpath d='M168-4h54v32h-54z' fill-opacity='.75'/%3E%3Cpath d='M46 50l-8 12M62 52l-8 12M78 54l-8 12M94 54l-8 12M110 54l-8 12M126 54l-8 12M142 52l-8 12M158 50l-8 12'/%3E%3C/g%3E%3Cg transform='translate(1230,30)'%3E%3Cpath d='M30-2c-14 16-14 34 2 44-6 8 0 14 12 14s18-6 12-14c16-10 16-28 2-44z'/%3E%3Cpath d='M32-2h20l-2 6H34z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-}
-
-/* ① 撤掉所有会互相重叠的浮动装饰 */
-.hero::before { content: none; animation: none; }        /* 首屏战船水印 → 进壁画 */
-body::before { background-image: var(--column), var(--column); opacity: 0.32; }  /* 页眉下不再平铺浮雕 */
-.site-footer::before { content: none; }                  /* 页脚不再平铺浮雕 */
-
-/* ② 星图从竖排铭牌后面挪开，别撞在一起 */
-html::before { top: 400px; right: -140px; width: 460px; height: 460px; }
-
-/* ③ 壁画带：页脚之上、山花之下，一整条不重复的长卷 */
-.site-footer { margin-top: 150px; padding-top: 150px; }
-.site-footer::before {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; top: 26px; height: 104px;
-  background: var(--mural) no-repeat center / contain;
-  opacity: 0.9;
-  pointer-events: none;
-  border: 0;
-}
-/* 壁画两侧收一条金线，像壁龛的边 */
-@media (min-width: 900px) {
-  .page-head::before { opacity: 0.1; }
+  .hero h1, .page-head h1, html::after, .site-header::after, .site-footer::before,
+  .brand-emblem, .hero-crest img, .rule-orn i { animation: none !important; }
 }

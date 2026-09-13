@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -25,14 +25,14 @@
 }
 .ms-left::after {           /* the diagonal edge that cuts into the blue */
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(102deg, transparent 74%, #7fe0ff 74.1% 80%, transparent 80.2%);
+  background: linear-gradient(102deg, transparent 74%, #559f86 74.1% 79.4%, #d8b45c 79.5% 80.4%, transparent 80.5%);
   pointer-events: none;
 }
 .ms-left img { width: min(560px, 92%); mix-blend-mode: multiply; }
 
 .ms-right {
-  background: linear-gradient(118deg, #35c6f2 0%, #1567cf 34%, #0b3f9e 62%, #062a76 100%);
-  color: #d8f0ff;
+  background: linear-gradient(118deg, #559f86 0%, #2f6d59 32%, #1d4a3c 62%, #102b23 100%);
+  color: #f2e9cf;
   padding: 76px 6vw 60px;
   display: flex; flex-direction: column; justify-content: center;
   position: relative;
@@ -41,48 +41,48 @@
 
 .ms-label {
   font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.34em;
-  text-transform: uppercase; color: rgba(216, 240, 255, 0.65); margin-bottom: 26px;
+  text-transform: uppercase; color: #d8b45c; margin-bottom: 26px;
 }
 .ms-title {
   font-family: var(--display); font-weight: 900; text-transform: uppercase;
   font-size: clamp(1.5rem, 3.2vw, 2.4rem); line-height: 1.05;
-  color: #ffffff; margin: 0 0 30px;
+  color: #fdf8ee; margin: 0 0 30px;
 }
 .ms-tracks { list-style: none; margin: 0; padding: 0; }
 .ms-track {
   display: grid; grid-template-columns: 34px 1fr auto; align-items: baseline;
   gap: 10px 14px;
   padding: 16px 14px 16px 6px;
-  border-bottom: 1px solid rgba(216, 240, 255, 0.18);
+  border-bottom: 1px solid rgba(201, 169, 97, 0.26);
   cursor: pointer;
   transition: background 0.18s, transform 0.18s, color 0.18s;
 }
-.ms-track:hover { background: rgba(255, 255, 255, 0.09); transform: translateX(4px); }
-.ms-track.is-playing { background: rgba(255, 255, 255, 0.16); }
-.ms-num { font-family: var(--mono); font-size: 0.8rem; color: rgba(216, 240, 255, 0.55); }
+.ms-track:hover { background: rgba(201, 169, 97, 0.12); transform: translateX(4px); }
+.ms-track.is-playing { background: rgba(201, 169, 97, 0.2); }
+.ms-num { font-family: var(--mono); font-size: 0.8rem; color: rgba(201, 169, 97, 0.75); }
 .ms-name {
   font-family: var(--sans); font-weight: 600; letter-spacing: 0.01em;
-  font-size: clamp(1.05rem, 2.1vw, 1.55rem); color: #eaf7ff;
+  font-size: clamp(1.05rem, 2.1vw, 1.55rem); color: #f6efd8;
 }
-.ms-track.is-playing .ms-name { color: #fff; text-shadow: 0 0 18px rgba(180, 235, 255, 0.55); }
-.ms-sub { grid-column: 2; font-family: var(--mono); font-size: 0.74rem; color: rgba(216, 240, 255, 0.6); }
-.ms-time { font-family: var(--mono); font-size: 0.8rem; color: rgba(216, 240, 255, 0.7); }
-.ms-track.is-playing .ms-time::before { content: "▶ "; color: #bdf0ff; }
+.ms-track.is-playing .ms-name { color: #f3dc9c; text-shadow: 0 0 18px rgba(216, 180, 92, 0.5); }
+.ms-sub { grid-column: 2; font-family: var(--mono); font-size: 0.74rem; color: rgba(242, 233, 207, 0.62); }
+.ms-time { font-family: var(--mono); font-size: 0.8rem; color: #d8b45c; }
+.ms-track.is-playing .ms-time::before { content: "▶ "; color: #e0c179; }
 
 .ms-bar {
   margin-top: 34px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  font-family: var(--mono); font-size: 0.78rem; color: rgba(216, 240, 255, 0.75);
+  font-family: var(--mono); font-size: 0.78rem; color: rgba(242, 233, 207, 0.78);
 }
 .ms-bar button {
   font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.12); color: #eaf7ff;
-  border: 1px solid rgba(216, 240, 255, 0.4); border-radius: 999px; padding: 9px 18px; cursor: pointer;
+  background: rgba(201, 169, 97, 0.18); color: #f3dc9c;
+  border: 1px solid rgba(216, 180, 92, 0.55); border-radius: 999px; padding: 9px 18px; cursor: pointer;
 }
-.ms-bar button:hover { background: #ffffff; color: #062a76; }
-.ms-progress { flex: 1; min-width: 140px; height: 4px; background: rgba(216, 240, 255, 0.22); border-radius: 999px; overflow: hidden; }
-.ms-progress span { display: block; height: 100%; width: 0; background: #bdf0ff; }
-.ms-note { margin-top: 26px; font-size: 0.86rem; color: rgba(216, 240, 255, 0.72); max-width: 56ch; }
-.ms-note a { color: #ffffff; text-decoration: underline; text-underline-offset: 3px; }
+.ms-bar button:hover { background: #e0c179; color: #102b23; }
+.ms-progress { flex: 1; min-width: 140px; height: 4px; background: rgba(201, 169, 97, 0.28); border-radius: 999px; overflow: hidden; }
+.ms-progress span { display: block; height: 100%; width: 0; background: #e0c179; }
+.ms-note { margin-top: 26px; font-size: 0.86rem; color: rgba(242, 233, 207, 0.78); max-width: 56ch; }
+.ms-note a { color: #e0c179; text-decoration: underline; text-underline-offset: 3px; }
 </style>
 </head>
 <body>
