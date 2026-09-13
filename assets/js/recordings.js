@@ -1,97 +1,108 @@
 /* ==========================================================================
-   attachmenttoolarge — alternate recordings of the same story
+   attachmenttoolarge — alternate recordings
 
-   The single "Attachment Too Large" started as a boom-bap rap (assets/js/lyrics.js).
-   These are two more treatments of the same complaint, each written in the form the
-   genre actually uses, because a blues that is not AAB is just a rap with a guitar:
+   These are NOT re-tellings of the rap. Each is its own song: its own words, its
+   own arrangement, its own name. They share only the subject — a file that will
+   not fit, and a person waiting on it.
 
-     blues — twelve-bar AAB. First line stated, second line repeated, third line
-             answers it. That repetition is the form, not laziness.
-     pop   — verse / pre-chorus / chorus with a gang-vocal hook, a bridge, and a
-             key-lift in the last chorus. Built to be shouted, not studied.
+     wire        — electric Memphis soul-blues. Twelve-bar AAB throughout, tremolo
+                   guitar and Hammond organ, horn stabs, gospel backing voices,
+                   deep baritone. Rain, a wire that will not carry, an office girl
+                   who says call again.
+     ninetynine  — 80s neon synth-pop. Gated-reverb drums, arpeggiated analog
+                   synths, fretless bass, falsetto hook. About the progress bar
+                   itself, the one that stops at ninety-nine and stays there.
 
-   Generated the same way as the rap: tools/music-ai/generate-version.mjs.
+   Rendered by tools/music-ai/generate-version.mjs — nothing is downloaded locally.
    ========================================================================== */
 window.ATTRECORDINGS = [
   {
-    id: "blues",
-    title: "Attachment Too Large (Blues)",
-    style: "delta blues turned Chicago, twelve-bar in A, slide guitar and harmonica, " +
-           "walking upright bass, shuffled brushes, gravelly male lead, call and response, " +
-           "warm tube amp, juke-joint room, recorded late",
-    note: "The same story told the way it would be told on a porch: twelve bars, AAB, " +
-          "and the mailman carrying the shards one at a time.",
+    id: "wire",
+    title: "Wrong Side of the Wire",
+    style: "electric Memphis soul-blues, twelve-bar in E, tremolo guitar, Hammond organ, " +
+           "horn section stabs, gospel backing voices, swinging shuffle, deep male baritone, " +
+           "room mics, late-night studio, warm and wide",
+    note: "Not a retelling — a different night entirely. Rain, a wire that will not carry, " +
+          "and a man being politely told to call again.",
     sections: [
       { label: "INTRO", lines: [
-        "Woke up this mornin', that progress bar was still at ninety-nine"
+        "Rain on the window, and the wire don't carry me tonight"
       ]},
       { label: "VERSE 1", lines: [
-        "Woke up this mornin', that progress bar was still at ninety-nine",
-        "I been waitin' on a spreadsheet, Lord, since seven fifty-nine",
-        "Postmaster wrote me a letter, said son your file's too fat",
-        "Said put it in a shared location — but my buyer ain't got that"
-      ]},
-      { label: "CHORUS", lines: [
-        "Twenty megabytes of trouble, thirty-three when you count the code",
-        "Twenty megabytes of trouble, thirty-three when you count the code",
-        "So I cut it into pieces, and I carried that heavy load"
+        "Rain on the window, and the wire don't carry me tonight",
+        "Rain on the window, and the wire don't carry me tonight",
+        "I got a whole lot of nothin' that I'm tryin' to send outright"
       ]},
       { label: "VERSE 2", lines: [
-        "Every name in my folder, it say final, final-two",
-        "Every name in my folder, it say final, final-two",
-        "And every single one of 'em got edited — same as me and you"
+        "The machine in the basement, it hums like a tired man",
+        "The machine in the basement, it hums like a tired man",
+        "It counted every byte I gave it, and it told me what it can't"
+      ]},
+      { label: "CHORUS", lines: [
+        "Wrong side of the wire, wrong side of the line",
+        "Wrong side of the wire, wrong side of the line",
+        "Ain't no use in knockin' — that door was built too fine"
+      ]},
+      { label: "VERSE 3", lines: [
+        "I called up the office, the girl said call again",
+        "I called up the office, the girl said call again",
+        "So I'm standin' in the weather with a number and a name"
+      ]},
+      { label: "VERSE 4", lines: [
+        "Somewhere there's a man who could open up that gate",
+        "Somewhere there's a man who could open up that gate",
+        "He's gone on vacation, baby, and I ain't got time to wait"
       ]},
       { label: "OUTRO", lines: [
-        "So mailman, take my shards now, one by one and slow",
-        "Mailman, take my shards now, one by one and slow",
-        "'Cause a big file ain't a bad man, he just got nowhere to go"
+        "So I fold it in my pocket, and I walk it down the street",
+        "Fold it in my pocket, walk it down the street",
+        "'Cause a wire ain't a river, and a limit ain't a sea"
       ]}
     ]
   },
   {
-    id: "pop",
-    title: "Attachment Too Large (Anthem)",
-    style: "anthemic arena pop rock, stomp-and-clap drums, huge gang-vocal whoa-ohs, " +
-           "punchy synth bass, bright chugging guitars, soaring male lead, " +
-           "stadium chorus, modern radio production, key lift on the final chorus",
-    note: "The same complaint, built for a stadium: stomps, claps, a hook the whole " +
-          "room can shout, and one last chorus a step higher.",
+    id: "ninetynine",
+    title: "Ninety-Nine Forever",
+    style: "80s neon synth-pop, gated reverb drums, sparkly arpeggiated analog synths, " +
+           "fretless bass, glassy electric piano, falsetto male hook, wide chorused guitars, " +
+           "night-drive production, big 1985 chorus",
+    note: "About the progress bar itself: the one that reaches ninety-nine, stops, and stays " +
+          "there while you rearrange your whole evening around it.",
     sections: [
       { label: "INTRO", lines: [
-        "(Whoa-oh, whoa-oh)"
+        "(Ninety-nine, ninety-nine)"
       ]},
       { label: "VERSE 1", lines: [
-        "Nineteen fifty-nine and the cursor's still blinking",
-        "Twenty-four point seven and the whole room's sinking",
-        "Postmaster's letter with a polite little lie",
-        "Put it in a shared location — well, I won't say goodbye"
+        "Midnight in the office and the lights are on for no one",
+        "I'm watching a rectangle lie to me in slow motion",
+        "It says ninety-nine, it says ninety-nine",
+        "It's been saying ninety-nine since I was twenty-five"
       ]},
       { label: "PRE-CHORUS", lines: [
-        "I count the megabytes, I count 'em all night",
-        "Thirty-three when the code is done — that's the number I fight"
+        "Tell me something true, tell me something true",
+        "Is it you that's tired, or is it me that's holding on?"
       ]},
       { label: "CHORUS", lines: [
-        "So cut it up! Cut it up! I'm not giving in",
-        "Send it out in pieces till the other side wins",
-        "Cut it up! Cut it up! Let the pieces fly",
-        "A big file's not a crime — it's just a bigger sky",
-        "(Whoa-oh, whoa-oh)"
+        "Ninety-nine forever, never a hundred",
+        "Ninety-nine forever, don't you leave me hanging here",
+        "I'll wait until the morning, I'll wait until the wire is clear",
+        "Ninety-nine forever, and I'm still right here"
       ]},
       { label: "VERSE 2", lines: [
-        "Every folder in the city says final, final-two",
-        "Stomp your feet on the floor, that's what editors do",
-        "I learned me a trick: six shards and a hash",
-        "They double-click on the other side — no cloud, no cash"
+        "I bought a bigger mailbox, I paid a man to raise the ceiling",
+        "I asked that man politely: is there any room for feeling?",
+        "He said the policy's from long ago, the policy is a stone",
+        "And what a stone decides is what a stone decides alone"
       ]},
       { label: "BRIDGE", lines: [
-        "When the bar hits ninety-nine",
-        "And you're running out of time",
-        "You don't need a link tonight",
-        "You just need to split the light"
+        "(If it never lands, if it never lands)",
+        "I'll cut it into six and I will carry it in my hands",
+        "(If it never lands, if it never lands)",
+        "I'll carry it in pieces to the far end of the land"
       ]},
       { label: "OUTRO", lines: [
-        "Too large? Then cut it. Piece by piece. Send it. Go!",
-        "(Whoa-oh, whoa-oh)"
+        "Ninety-nine, ninety-nine — never a hundred",
+        "(Ninety-nine, ninety-nine)"
       ]}
     ]
   }

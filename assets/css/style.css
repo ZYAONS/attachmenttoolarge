@@ -1431,3 +1431,72 @@ html[data-theme="dark"] .site-header {
 html[data-theme="dark"] .site-header::after, html[data-theme="dark"] .site-footer::before { filter: sepia(0.35) saturate(1.2) brightness(1.15); }
 
 @media (prefers-reduced-motion: reduce) { body::after { animation: none; } }
+
+/* ==========================================================================
+   史诗层 · 续 —— 陶红底浮雕带、随浪的战船、自转星图、神庙三角楣
+   ========================================================================== */
+:root {
+  /* 神庙三角楣（山花）：石面 + 鎏金檐口 + 顶饰 + 山花内的回纹 */
+  --pediment: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='96' viewBox='0 0 1200 96' preserveAspectRatio='none'%3E%3Cpath d='M0 92L600 8 1200 92z' fill='%23e3dbc6'/%3E%3Cpath d='M0 92L600 8 1200 92' fill='none' stroke='%23b8912f' stroke-width='5'/%3E%3Cpath d='M34 92L600 24 1166 92' fill='none' stroke='%23b8912f' stroke-width='1.6' opacity='.6'/%3E%3Ccircle cx='600' cy='12' r='8' fill='%23b8912f'/%3E%3Cpath d='M578 30h44v14h-44z' fill='none' stroke='%23b8912f' stroke-width='2'/%3E%3Cpath d='M584 36h8v4h-8zM608 36h8v4h-8z' fill='%23b8912f'/%3E%3Ccircle cx='520' cy='46' r='5' fill='%23b8912f' opacity='.7'/%3E%3Ccircle cx='680' cy='46' r='5' fill='%23b8912f' opacity='.7'/%3E%3C/svg%3E");
+
+  /* 星图：猎户座与北斗，暗色主题里缓慢自转 */
+  --stars: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520' viewBox='0 0 520 520'%3E%3Cg fill='none' stroke='%23e8cd83' stroke-width='1.4' stroke-opacity='.55'%3E%3Cpath d='M150 150L210 190 250 260 236 330M210 190L262 176M250 260L300 246'/%3E%3Cpath d='M360 300L392 344 460 356 470 300 412 286zM392 344L376 400'/%3E%3C/g%3E%3Cg fill='%23f0d894'%3E%3Ccircle cx='150' cy='150' r='4.5'/%3E%3Ccircle cx='210' cy='190' r='3'/%3E%3Ccircle cx='262' cy='176' r='2.6'/%3E%3Ccircle cx='250' cy='260' r='4'/%3E%3Ccircle cx='300' cy='246' r='2.6'/%3E%3Ccircle cx='236' cy='330' r='3.4'/%3E%3Ccircle cx='360' cy='300' r='3'/%3E%3Ccircle cx='392' cy='344' r='3.6'/%3E%3Ccircle cx='460' cy='356' r='3'/%3E%3Ccircle cx='470' cy='300' r='2.6'/%3E%3Ccircle cx='412' cy='286' r='3'/%3E%3Ccircle cx='376' cy='400' r='2.6'/%3E%3C/g%3E%3C/svg%3E");
+}
+html[data-theme="dark"] {
+  --pediment: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='96' viewBox='0 0 1200 96' preserveAspectRatio='none'%3E%3Cpath d='M0 92L600 8 1200 92z' fill='%2317231f'/%3E%3Cpath d='M0 92L600 8 1200 92' fill='none' stroke='%23d8b45c' stroke-width='5'/%3E%3Cpath d='M34 92L600 24 1166 92' fill='none' stroke='%23d8b45c' stroke-width='1.6' opacity='.5'/%3E%3Ccircle cx='600' cy='12' r='8' fill='%23d8b45c'/%3E%3Cpath d='M578 30h44v14h-44z' fill='none' stroke='%23d8b45c' stroke-width='2'/%3E%3Cpath d='M584 36h8v4h-8zM608 36h8v4h-8z' fill='%23d8b45c'/%3E%3C/svg%3E");
+}
+
+/* ⑤ 陶红底：黑绘陶是「黑figure 画在陶红地上」，所以给浮雕带垫一层陶土色
+   （在 body::before 的图层表里排在浮雕之后，于是浮雕画在陶红底上） */
+body::before {
+  background-image:
+    var(--column), var(--column), var(--frieze2),
+    linear-gradient(180deg, rgba(180, 85, 60, 0.20), rgba(180, 85, 60, 0.20)),
+    linear-gradient(180deg, rgba(180, 85, 60, 0.16), rgba(180, 85, 60, 0.16));
+  background-size: 56px 220px, 56px 220px, 640px 88px, 100% 88px, 100% 88px;
+  background-position: left top, right top, left 108px, left 108px, left 108px;
+  background-repeat: repeat-y, repeat-y, repeat-x, no-repeat, no-repeat;
+}
+/* 页脚那条浮雕带直接给陶红底 */
+.site-footer::before {
+  background-color: rgba(180, 85, 60, 0.18);
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+/* ⑥ 首屏的三层桨战船随浪起伏 */
+@keyframes trireme-bob {
+  0%, 100% { transform: translateY(0) rotate(-0.7deg); }
+  50%      { transform: translateY(-12px) rotate(0.7deg); }
+}
+.hero::before { animation: trireme-bob 9s ease-in-out infinite; transform-origin: 50% 90%; }
+
+/* ⑦ 夜间星图：缓慢自转，像抬头看了一夜 */
+html::before {
+  content: "";
+  position: fixed;
+  right: -90px; top: 40px;
+  width: 520px; height: 520px;
+  background: var(--stars) no-repeat center / contain;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+html[data-theme="dark"]::before { opacity: 0.22; animation: star-drift 300s linear infinite; }
+@keyframes star-drift { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ⑧ 页脚之上：神庙三角楣（山花）收口 */
+.site-footer { position: relative; margin-top: 96px; }
+.site-footer::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: -92px;
+  height: 92px;
+  background: var(--pediment) no-repeat center / 100% 100%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before { animation: none; }
+  html[data-theme="dark"]::before { animation: none; }
+}
