@@ -153,21 +153,34 @@ console.log(`    → ${OUT.replace(ROOT + (isWin ? "\\" : "/"), "")}  ${(statSyn
 
 /* ---------- 5. 注入 ---------- */
 step(5, "用 postject 注入 blob");
-const inject = run(NODE_BIN, [
+// macOS needs the mach-o segment name spelled out, otherwise the SEA loader cannot find
+// the blob and the binary silently behaves like a plain `node`.
+const injectArgs = [
   postjectBin, OUT, "NODE_SEA_BLOB", BLOB,
   "--sentinel-fuse", SENTINEL
-]);
+];
+if (process.platform === "darwin") injectArgs.push("--macho-segment-name", "NODE_SEA");
+const inject = run(NODE_BIN, injectArgs);
 if (inject.status !== 0) {
   console.error(c(31, "    注入失败："));
   console.error("    " + (inject.stderr || inject.stdout || "").trim().split("\n").slice(-6).join("\n    "));
   process.exit(1);
 }
-// macOS, step 3 of the SEA recipe: after injection the binary is unsigned and the
-  // kernel refuses to run it, so it has to be signed ad-hoc.
-  if (process.platform === "darwin") {
-    const sg = run("codesign", ["--sign", "-", "--force", OUT]);
-    if (sg.status !== 0) console.log("    (ad-hoc codesign failed; the binary may not run)");
+// macOS: injection leaves the binary unsigned, and the kernel kills unsigned executables.
+// Re-sign ad-hoc, but keep Node's own entitlements — V8 needs the JIT entitlement to map
+// executable memory, and without it the process dies at startup printing nothing at all.
+if (process.platform === "darwin") {
+  const sg = run("codesign", [
+    "--sign", "-", "--force",
+    "--preserve-metadata=entitlements,requirements,flags,runtime",
+    OUT
+  ]);
+  if (sg.status !== 0) {
+    console.error(c(31, "    ad-hoc 重签失败，macOS 产物不可用："));
+    console.error("    " + (sg.stderr || sg.stdout || "").trim());
+    process.exit(1);
   }
+}
 console.log("    完成");
 
 /* ---------- 6. 产物自检 ---------- */
