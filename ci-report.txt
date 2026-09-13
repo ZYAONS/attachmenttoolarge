@@ -1,28 +1,14 @@
 
 === attachment-too-large/attachmenttoolarge ===
-  run #21 · 70aa286 · completed/failure
-  https://github.com/attachment-too-large/attachmenttoolarge/actions/runs/34771759232
+  run #24 · 1a14548 · completed/success
+  https://github.com/attachment-too-large/attachmenttoolarge/actions/runs/34772161512
     OK  membership backend  [success]
     OK  att CLI (windows-latest)  [success]
-    OK  att CLI (ubuntu-latest)  [success]
     OK  browser checks (CDP + headless Edge)  [success]
-    BAD build att (att-win-x64.exe)  [failure]
-    BAD build att (att-linux-x64)  [failure]
+    OK  att CLI (ubuntu-latest)  [success]
+    OK  build att (att-linux-x64)  [success]
+    OK  build att (att-win-x64.exe)  [success]
     -   publish release  [skipped]
-  --- failing log: build att (att-win-x64.exe) ---
-      FAIL  att.exe --version          v22.23.2
-      FAIL  att.exe limits outlook     —
-      FAIL  att.exe split              失败
-      FAIL  att.exe join 哈希一致          失败
-      FAIL  att.exe ndr                识别 550 5.3.4
-      ##[error]Process completed with exit code 1.
-  --- failing log: build att (att-linux-x64) ---
-      FAIL  att.exe --version          v22.23.2
-      FAIL  att.exe limits outlook     —
-      FAIL  att.exe split              失败
-      FAIL  att.exe join 哈希一致          失败
-      FAIL  att.exe ndr                识别 550 5.3.4
-      ##[error]Process completed with exit code 1.
 
 === attachment-too-large/att-tools ===
   run #11 · b6671ee · completed/success
