@@ -105,5 +105,52 @@ window.ATTRECORDINGS = [
         "(Ninety-nine, ninety-nine)"
       ]}
     ]
+  },
+  {
+    id: "folk",
+    title: "The Twenty-Megabyte Line",
+    style: "American folk ballad, front-porch recording, fingerpicked acoustic guitar, " +
+           "five-string banjo, fiddle, upright bass, harmonica, close two-part harmony on the " +
+           "refrain, plainspoken male lead, 1960s Greenwich Village folk revival, singalong chorus",
+    note: "The folk treatment: no metaphor, no irony, just a man, a fence he cannot climb, and a " +
+          "refrain the whole room can join in on. Every verse is something that actually happens.",
+    sections: [
+      { label: "VERSE 1", lines: [
+        "My name is on the payroll and my desk is by the door",
+        "I've been sending out my paperwork since nineteen eighty-four",
+        "But the company she built herself a fence I cannot climb",
+        "And the fence is twenty megabytes, and it's been there all this time"
+      ]},
+      { label: "CHORUS", lines: [
+        "So sing me down the wire, boys, and sing me down the line",
+        "There's a hundred miles of copper and a fence I cannot climb",
+        "I never asked for rivers, I never asked for sea",
+        "I only asked to send a letter to the man who's waiting on me"
+      ]},
+      { label: "VERSE 2", lines: [
+        "I took it to the young man who sits behind the screen",
+        "He said the policy's a stone, son, and stones don't come between",
+        "I asked him who had written it, he pointed down the hall",
+        "And every door I knocked upon said: that was not my call"
+      ]},
+      { label: "VERSE 3", lines: [
+        "So I cut my paper into five and numbered every one",
+        "I mailed them out on Monday, and I mailed them one by one",
+        "The first one went to Denver and the last one went to Maine",
+        "And the man put them together in the falling rain"
+      ]},
+      { label: "CHORUS", lines: [
+        "So sing me down the wire, boys, and sing me down the line",
+        "There's a hundred miles of copper and a fence I cannot climb",
+        "I never asked for rivers, I never asked for sea",
+        "I only asked to send a letter to the man who's waiting on me"
+      ]},
+      { label: "OUTRO", lines: [
+        "So if you've got a heavy thing and nowhere you can send it",
+        "Don't you curse the copper wire and don't you try to bend it",
+        "Just cut it into pieces, boys, and send it down the line",
+        "For a file is not a fortune, and a limit's not a crime"
+      ]}
+    ]
   }
 ];
