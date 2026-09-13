@@ -158,6 +158,15 @@ console.log(`    → ${OUT.replace(ROOT + (isWin ? "\\" : "/"), "")}  ${(statSyn
 
 /* ---------- 5. 注入 ---------- */
 step(5, "用 postject 注入 blob");
+const inject = run(NODE_BIN, [
+  postjectBin, OUT, "NODE_SEA_BLOB", BLOB,
+  "--sentinel-fuse", SENTINEL
+]);
+if (inject.status !== 0) {
+  console.error(c(31, "    注入失败："));
+  console.error("    " + (inject.stderr || inject.stdout || "").trim().split("\n").slice(-6).join("\n    "));
+  process.exit(1);
+}
 console.log("    完成");
 
 /* ---------- 6. 产物自检 ---------- */
