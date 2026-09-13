@@ -1,29 +1,16 @@
 
 === attachment-too-large/attachmenttoolarge ===
-  run #11 · fd20443 · completed/failure
-  https://github.com/attachment-too-large/attachmenttoolarge/actions/runs/34770451973
-    BAD browser checks (CDP + headless Edge)  [failure]
-    OK  membership backend  [success]
-    OK  att CLI (ubuntu-latest)  [success]
+  run #14 · 735dd94 · completed/failure
+  https://github.com/attachment-too-large/attachmenttoolarge/actions/runs/34770745800
     OK  att CLI (windows-latest)  [success]
     OK  att CLI (macos-latest)  [success]
+    OK  att CLI (ubuntu-latest)  [success]
+    OK  browser checks (CDP + headless Edge)  [success]
+    OK  membership backend  [success]
     BAD build att (att-macos-arm64)  [failure]
-    OK  build att (att-win-x64.exe)  [success]
     OK  build att (att-linux-x64)  [success]
-    -   publish release  [skipped]
-  --- failing log: browser checks (CDP + headless Edge) ---
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      FAIL  未横向溢出视口                1446 / 1360
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      PASS  播放器曲目固定为器乐             Failed at 19:59
-      ##[error]Process completed with exit code 1.
+    OK  build att (att-win-x64.exe)  [success]
+    BAD publish release  [failure]
   --- failing log: build att (att-macos-arm64) ---
       FAIL  att.exe --version
       FAIL  att.exe --help             prints usage
@@ -32,22 +19,28 @@
       FAIL  att.exe join 哈希一致          失败
       FAIL  att.exe ndr                识别 550 5.3.4
       ##[error]Process completed with exit code 1.
+  --- failing log: publish release ---
+      ##[error]Process completed with exit code 1.
 
 === attachment-too-large/att-tools ===
-  run #4 · 246efe5 · completed/failure
-  https://github.com/attachment-too-large/att-tools/actions/runs/34770145464
+  run #7 · c91a75a · completed/failure
+  https://github.com/attachment-too-large/att-tools/actions/runs/34770750380
     OK  test suite (windows-latest)  [success]
-    OK  test suite (macos-latest)  [success]
     OK  test suite (ubuntu-latest)  [success]
+    OK  test suite (macos-latest)  [success]
     OK  build (windows-latest)  [success]
     OK  build (ubuntu-latest)  [success]
     BAD build (macos-latest)  [failure]
-    -   publish release  [skipped]
+    BAD publish release  [failure]
   --- failing log: build (macos-latest) ---
+      HEAD is now at c91a75a ci: treat the macOS build as experimental so it cannot block a release
       FAIL
       FAIL
       FAIL
       FAIL
       FAIL
       FAIL
+      ##[error]Process completed with exit code 1.
+  --- failing log: publish release ---
+      HEAD is now at c91a75a ci: treat the macOS build as experimental so it cannot block a release
       ##[error]Process completed with exit code 1.
