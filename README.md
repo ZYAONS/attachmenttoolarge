@@ -9,7 +9,8 @@ The name comes from what Outlook actually says:
 > *The file you're attaching is bigger than the server allows.*
 > *Try putting the file in a shared location and sending a link instead.*
 
-Live site: `https://ZYAONS.github.io/attachmenttoolarge/` (enable Pages to serve it — see below).
+Live site: **https://attachment-too-large.github.io/attachmenttoolarge/** (GitHub Pages, branch `main`).
+Repository: **https://github.com/attachment-too-large/attachmenttoolarge**
 
 ---
 
