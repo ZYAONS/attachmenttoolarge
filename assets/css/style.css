@@ -1333,3 +1333,101 @@ body::after {
 /* 首屏：给史诗留出呼吸，别被固定层盖住正文 */
 .hero { padding-bottom: 96px; }
 .page-head { padding-bottom: 88px; }
+
+/* ==========================================================================
+   史诗层 · 精修 —— 手绘级浮雕带、战船水印、月光碎金、火炬光晕
+   ========================================================================== */
+:root {
+  /* 黑绘陶浮雕带 v2：重装步兵 · 战马 · 三层桨战船 · 双耳瓶
+     用曲线勾勒轮廓（头盔冠羽、马颈弧线、船首撞角、瓶身收腰），不再用基本图形拼贴 */
+  --frieze2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='88' viewBox='0 0 640 88'%3E%3Cg fill='%23231c14'%3E%3Cpath d='M69 12c9-3 16 2 15 10 5-2 9 1 8 6l-6 3c1 10-4 16-13 16s-14-6-13-16l-6-3c-1-5 3-8 8-6 1-8 7-13 15-10z'/%3E%3Cpath d='M60 24c8-12 26-12 34 0l-4 6H64z'/%3E%3Cpath d='M62 47c8-5 22-5 30 0l5 30H57z'/%3E%3Cpath d='M92 8l6 4-34 62-5-3z'/%3E%3Cpath d='M96 8l6 4-4 6-6-4z'/%3E%3Ccircle cx='48' cy='58' r='17'/%3E%3Ccircle cx='48' cy='58' r='12' fill='%23b4553c'/%3E%3Ccircle cx='48' cy='58' r='4'/%3E%3Cpath d='M66 76l-4 10h8l4-10zM92 76l4 10h-8l-4-10z'/%3E%3C/g%3E%3Cg fill='%23231c14'%3E%3Cpath d='M186 48c6-14 30-20 54-14 16 4 26 12 30 22 4 8-2 14-14 15-22 2-44-2-58-8-10-4-14-9-12-15z'/%3E%3Cpath d='M232 36c8-12 20-18 30-18 8 0 13 5 13 12 0 8-6 14-16 16z'/%3E%3Cpath d='M262 20c8-2 13 1 14 7 1 5-2 9-8 10l-9-3z'/%3E%3Cpath d='M226 30c6-8 16-12 24-12l2 5c-8 1-16 5-22 12z'/%3E%3Cpath d='M190 46c-12 6-16 18-12 30l6 2c-2-10 2-20 10-26z'/%3E%3Cpath d='M196 60l-7 26h7l6-22zM214 64l-5 22h7l5-18zM258 64l5 22h-7l-5-18zM276 58l9 26h-7l-9-22z'/%3E%3C/g%3E%3Cg fill='%23231c14'%3E%3Cpath d='M360 58c40-16 84-18 124-8 22 6 44 8 62 4-4 14-14 22-30 24H380c-16-2-26-8-30-20z'/%3E%3Cpath d='M546 54c12 0 20 6 22 16-14 4-24 0-28-8z'/%3E%3Ccircle cx='548' cy='60' r='2.6' fill='%23b4553c'/%3E%3Cpath d='M540 16h6v44h-6z'/%3E%3Cpath d='M498 20h54v32h-54z' fill='%23b4553c'/%3E%3Cpath d='M498 20h54' stroke='%23231c14' stroke-width='3' fill='none'/%3E%3Cpath d='M512 20v32M530 20v32' stroke='%23231c14' stroke-width='2' fill='none'/%3E%3Cpath d='M543 18L566 66M543 18L520 62' stroke='%23231c14' stroke-width='2' fill='none'/%3E%3Cpath d='M376 74l-8 12M392 76l-8 12M408 78l-8 12M424 78l-8 12M440 78l-8 12M456 78l-8 12M472 76l-8 12M488 74l-8 12' stroke='%23231c14' stroke-width='3' fill='none'/%3E%3C/g%3E%3Cg fill='%23231c14'%3E%3Cpath d='M600 26c-14 16-14 34 2 44-6 8 0 14 12 14s18-6 12-14c16-10 16-28 2-44z'/%3E%3Cpath d='M602 26h20l-2 6h-16z'/%3E%3Cpath d='M600 26c-12 4-16 14-10 24l5-1c-3-8 0-15 8-19zM624 26c12 4 16 14 10 24l-5-1c3-8 0-15-8-19z'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* 首屏水印：三层桨战船 */
+  --trireme: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='340' viewBox='0 0 600 340'%3E%3Cg fill='none' stroke='%23b8912f' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M40 268c70-30 150-38 236-26 40 6 84 8 124 2-8 30-30 46-66 50H140c-46-2-84-10-100-26z' fill='%23b8912f' fill-opacity='.12'/%3E%3Cpath d='M524 246c26 2 44 14 48 34-30 8-52 0-60-18z' fill='%23b8912f' fill-opacity='.12'/%3E%3Ccircle cx='530' cy='262' r='6'/%3E%3Cpath d='M300 244V44'/%3E%3Cpath d='M180 60h240v120H180z' fill='%23b8912f' fill-opacity='.1'/%3E%3Cpath d='M180 60h240M180 180h240M300 44v136'/%3E%3Cpath d='M222 60v120M264 60v120M336 60v120M378 60v120' stroke-opacity='.55'/%3E%3Cpath d='M300 44L392 236M300 44L214 232' stroke-opacity='.5'/%3E%3C/g%3E%3Cg stroke='%23b8912f' stroke-width='3' stroke-opacity='.75' stroke-linecap='round'%3E%3Cpath d='M80 292l-16 26M120 298l-16 26M160 302l-16 26M200 304l-16 26M240 304l-16 26M280 304l-16 26M320 302l-16 26M360 298l-16 26M400 292l-16 26'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* 子页页头水印：桂冠 */
+  --laurelBig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23b8912f' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M130 236C74 226 36 178 40 116'/%3E%3Cpath d='M130 236c56-10 94-58 90-120'/%3E%3C/g%3E%3Cg fill='%23b8912f'%3E%3Cellipse cx='70' cy='186' rx='11' ry='24' transform='rotate(-38 70 186)'/%3E%3Cellipse cx='54' cy='150' rx='11' ry='24' transform='rotate(-52 54 150)'/%3E%3Cellipse cx='48' cy='110' rx='11' ry='23' transform='rotate(-66 48 110)'/%3E%3Cellipse cx='56' cy='72' rx='10' ry='21' transform='rotate(-80 56 72)'/%3E%3Cellipse cx='190' cy='186' rx='11' ry='24' transform='rotate(38 190 186)'/%3E%3Cellipse cx='206' cy='150' rx='11' ry='24' transform='rotate(52 206 150)'/%3E%3Cellipse cx='212' cy='110' rx='11' ry='23' transform='rotate(66 212 110)'/%3E%3Cellipse cx='204' cy='72' rx='10' ry='21' transform='rotate(80 204 72)'/%3E%3C/g%3E%3C/svg%3E");
+}
+html[data-theme="dark"] {
+  --frieze2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='88' viewBox='0 0 640 88'%3E%3Cg fill='%23d8b45c' fill-opacity='.55'%3E%3Cpath d='M69 12c9-3 16 2 15 10 5-2 9 1 8 6l-6 3c1 10-4 16-13 16s-14-6-13-16l-6-3c-1-5 3-8 8-6 1-8 7-13 15-10z'/%3E%3Cpath d='M60 24c8-12 26-12 34 0l-4 6H64z'/%3E%3Cpath d='M62 47c8-5 22-5 30 0l5 30H57z'/%3E%3Cpath d='M92 8l6 4-34 62-5-3z'/%3E%3Ccircle cx='48' cy='58' r='17'/%3E%3Ccircle cx='48' cy='58' r='4' fill='%23131d1b'/%3E%3Cpath d='M66 76l-4 10h8l4-10zM92 76l4 10h-8l-4-10z'/%3E%3Cpath d='M186 48c6-14 30-20 54-14 16 4 26 12 30 22 4 8-2 14-14 15-22 2-44-2-58-8-10-4-14-9-12-15z'/%3E%3Cpath d='M232 36c8-12 20-18 30-18 8 0 13 5 13 12 0 8-6 14-16 16z'/%3E%3Cpath d='M262 20c8-2 13 1 14 7 1 5-2 9-8 10l-9-3z'/%3E%3Cpath d='M190 46c-12 6-16 18-12 30l6 2c-2-10 2-20 10-26z'/%3E%3Cpath d='M196 60l-7 26h7l6-22zM214 64l-5 22h7l5-18zM258 64l5 22h-7l-5-18zM276 58l9 26h-7l-9-22z'/%3E%3Cpath d='M360 58c40-16 84-18 124-8 22 6 44 8 62 4-4 14-14 22-30 24H380c-16-2-26-8-30-20z'/%3E%3Cpath d='M546 54c12 0 20 6 22 16-14 4-24 0-28-8z'/%3E%3Cpath d='M540 16h6v44h-6z'/%3E%3Cpath d='M498 20h54v32h-54z' fill-opacity='.7'/%3E%3Cpath d='M376 74l-8 12M392 76l-8 12M408 78l-8 12M424 78l-8 12M440 78l-8 12M456 78l-8 12M472 76l-8 12M488 74l-8 12'/%3E%3Cpath d='M600 26c-14 16-14 34 2 44-6 8 0 14 12 14s18-6 12-14c16-10 16-28 2-44z'/%3E%3C/g%3E%3C/svg%3E");
+  --trireme: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='340' viewBox='0 0 600 340'%3E%3Cg fill='none' stroke='%23d8b45c' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M40 268c70-30 150-38 236-26 40 6 84 8 124 2-8 30-30 46-66 50H140c-46-2-84-10-100-26z' fill='%23d8b45c' fill-opacity='.08'/%3E%3Cpath d='M524 246c26 2 44 14 48 34-30 8-52 0-60-18z' fill='%23d8b45c' fill-opacity='.08'/%3E%3Cpath d='M300 244V44'/%3E%3Cpath d='M180 60h240v120H180z' fill='%23d8b45c' fill-opacity='.07'/%3E%3Cpath d='M180 60h240M180 180h240M300 44v136'/%3E%3Cpath d='M300 44L392 236M300 44L214 232' stroke-opacity='.5'/%3E%3C/g%3E%3Cg stroke='%23d8b45c' stroke-width='3' stroke-opacity='.6' stroke-linecap='round'%3E%3Cpath d='M80 292l-16 26M120 298l-16 26M160 302l-16 26M200 304l-16 26M240 304l-16 26M280 304l-16 26M320 302l-16 26M360 298l-16 26M400 292l-16 26'/%3E%3C/g%3E%3C/svg%3E");
+  --laurelBig: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='none' stroke='%23d8b45c' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M130 236C74 226 36 178 40 116'/%3E%3Cpath d='M130 236c56-10 94-58 90-120'/%3E%3C/g%3E%3Cg fill='%23d8b45c' fill-opacity='.7'%3E%3Cellipse cx='70' cy='186' rx='11' ry='24' transform='rotate(-38 70 186)'/%3E%3Cellipse cx='54' cy='150' rx='11' ry='24' transform='rotate(-52 54 150)'/%3E%3Cellipse cx='48' cy='110' rx='11' ry='23' transform='rotate(-66 48 110)'/%3E%3Cellipse cx='56' cy='72' rx='10' ry='21' transform='rotate(-80 56 72)'/%3E%3Cellipse cx='190' cy='186' rx='11' ry='24' transform='rotate(38 190 186)'/%3E%3Cellipse cx='206' cy='150' rx='11' ry='24' transform='rotate(52 206 150)'/%3E%3Cellipse cx='212' cy='110' rx='11' ry='23' transform='rotate(66 212 110)'/%3E%3Cellipse cx='204' cy='72' rx='10' ry='21' transform='rotate(80 204 72)'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ① 换上精修浮雕带（页眉下与页脚） */
+body::before {
+  background-image: var(--column), var(--column), var(--frieze2);
+  background-size: 56px 220px, 56px 220px, 640px 88px;
+  background-position: left top, right top, left 108px;
+  background-repeat: repeat-y, repeat-y, repeat-x;
+  opacity: 0.38;
+}
+.site-footer::before {
+  background-image: var(--frieze2);
+  background-size: 640px 88px;
+  background-position: left bottom;
+  height: 88px;
+  top: -44px;
+  opacity: 0.6;
+}
+
+/* ② 首屏水印：三层桨战船；子页页头水印：桂冠 */
+.hero { position: relative; overflow: hidden; }
+.hero::before {
+  content: "";
+  position: absolute;
+  right: -60px; bottom: -30px;
+  width: min(680px, 62vw); height: 380px;
+  background: var(--trireme) no-repeat center / contain;
+  opacity: 0.16;
+  pointer-events: none;
+  z-index: 0;
+}
+.page-head { position: relative; overflow: hidden; }
+.page-head::before {
+  content: "";
+  position: absolute;
+  right: 2%; top: -20px;
+  width: 260px; height: 260px;
+  background: var(--laurelBig) no-repeat center / contain;
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ③ 海面月光碎金：在浪尖上撒一层小金点，缓慢明灭 */
+body::after {
+  background-image:
+    radial-gradient(circle at 12% 74%, rgba(232, 205, 131, 0.9) 1.4px, transparent 2px),
+    radial-gradient(circle at 34% 66%, rgba(232, 205, 131, 0.7) 1.1px, transparent 1.7px),
+    radial-gradient(circle at 58% 78%, rgba(232, 205, 131, 0.85) 1.5px, transparent 2.1px),
+    radial-gradient(circle at 79% 68%, rgba(232, 205, 131, 0.65) 1px, transparent 1.6px),
+    radial-gradient(circle at 92% 80%, rgba(232, 205, 131, 0.8) 1.2px, transparent 1.8px),
+    var(--sea);
+  background-size: 313px 132px, 271px 132px, 367px 132px, 229px 132px, 401px 132px, 240px 48px;
+  background-repeat: repeat, repeat, repeat, repeat, repeat, repeat-x;
+  background-position: left bottom;
+  animation: sea-glint 7s ease-in-out infinite alternate;
+}
+@keyframes sea-glint {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.35); }
+}
+
+/* ④ 夜间：火炬光晕，像在神庙里读碑 */
+html[data-theme="dark"] body {
+  background-image:
+    radial-gradient(760px 380px at 50% -6%, rgba(255, 168, 74, 0.16), transparent 66%),
+    radial-gradient(1400px 720px at 50% -18%, rgba(79, 209, 165, 0.10), transparent 70%),
+    radial-gradient(circle at 22% 12%, rgba(255, 210, 140, 0.5) 1px, transparent 1.6px),
+    radial-gradient(circle at 68% 7%, rgba(255, 210, 140, 0.42) 1px, transparent 1.6px),
+    var(--halftone);
+  background-size: auto, auto, 320px 320px, 240px 240px, 9px 9px;
+  background-repeat: no-repeat, no-repeat, repeat, repeat, repeat;
+}
+html[data-theme="dark"] .site-header {
+  box-shadow: 0 0 60px rgba(255, 168, 74, 0.12), inset 0 -1px 0 rgba(255, 200, 120, 0.25);
+}
+html[data-theme="dark"] .site-header::after, html[data-theme="dark"] .site-footer::before { filter: sepia(0.35) saturate(1.2) brightness(1.15); }
+
+@media (prefers-reduced-motion: reduce) { body::after { animation: none; } }

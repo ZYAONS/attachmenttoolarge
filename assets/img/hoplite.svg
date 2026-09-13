@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 820" role="img" aria-label="A Greek hoplite in a Corinthian helmet">
+  <title>Hoplite — Corinthian helmet, front view, crest swept to one side</title>
+  <defs>
+    <linearGradient id="plume" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9fe9ff"/>
+      <stop offset="0.55" stop-color="#38b3ea"/>
+      <stop offset="1" stop-color="#0b57b8"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.62" stop-color="#eef4f9"/>
+      <stop offset="1" stop-color="#cfdce8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 盔冠：向一侧扬起的一整片鬃毛 -->
+  <path d="M 296 60
+           C 404 66 486 132 520 226
+           C 534 268 536 306 528 336
+           C 496 286 452 246 398 222
+           C 356 202 320 168 296 60 Z"
+        fill="url(#plume)" stroke="#0a0a0c" stroke-width="6" stroke-linejoin="round"/>
+  <g stroke="#0a0a0c" stroke-width="4" opacity="0.5" fill="none">
+    <path d="M 336 92 C 412 108 470 158 500 232"/>
+    <path d="M 352 140 C 420 160 468 202 494 262"/>
+    <path d="M 340 196 C 396 214 440 248 466 296"/>
+  </g>
+
+  <!-- 盔冠座 -->
+  <path d="M 214 214 C 222 166 258 132 310 132 C 362 132 398 166 406 214
+           C 372 196 340 188 310 188 C 280 188 248 196 214 214 Z"
+        fill="#0a0a0c" stroke="#0a0a0c" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- 盔体：圆顶 + 前额下沿 + 护颊 + 后颈 -->
+  <path d="M 310 168
+           C 208 168 150 246 150 344
+           C 150 420 172 486 210 536
+           L 210 640
+           C 210 686 236 716 268 716
+           L 352 716
+           C 384 716 410 686 410 640
+           L 410 536
+           C 448 486 470 420 470 344
+           C 470 246 412 168 310 168 Z"
+        fill="url(#steel)" stroke="#0a0a0c" stroke-width="7" stroke-linejoin="round"/>
+
+  <!-- 面甲：两侧黑色的开阔切口（眼睛与呼吸孔），中间留出鼻梁 -->
+  <path d="M 196 356
+           C 232 330 276 326 298 340
+           C 296 396 268 442 236 462
+           C 208 452 194 408 196 356 Z"
+        fill="#0a0a0c"/>
+  <path d="M 424 356
+           C 388 330 344 326 322 340
+           C 324 396 352 442 384 462
+           C 412 452 426 408 424 356 Z"
+        fill="#0a0a0c"/>
+
+  <!-- 鼻梁护条（白色，压在两块黑色切口之间） -->
+  <path d="M 300 330 L 320 330 L 320 508 C 310 528 300 528 290 508 L 290 330 Z"
+        fill="#ffffff" stroke="#0a0a0c" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- 盔体棱线：让它有金属转折，而不是一块白板 -->
+  <g stroke="#0a0a0c" stroke-width="4" opacity="0.35" fill="none">
+    <path d="M 190 300 C 208 268 246 248 288 244"/>
+    <path d="M 430 300 C 412 268 374 248 332 244"/>
+    <path d="M 214 520 C 244 552 276 566 310 566 C 344 566 376 552 406 520"/>
+  </g>
+
+  <!-- 盔顶高光 -->
+  <path d="M 236 232 C 268 200 320 190 366 204" fill="none" stroke="#ffffff" stroke-width="9" opacity="0.85" stroke-linecap="round"/>
+</svg>

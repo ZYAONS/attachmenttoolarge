@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recordings · attachmenttoolarge — the Attachment Too Large Society</title>
+<meta name="description" content="Four recordings of one complaint: a live-synthesised instrumental, a boom-bap rap, a twelve-bar blues and an arena-pop anthem — each generated from its own lyrics.">
+<link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.className += " js";</script>
+<style>
+/* ==========================================================================
+   The recordings screen. The rest of the site keeps the medallion's verdigris
+   and gold; this page borrows the blue of a late-night menu instead: white on
+   one side, cyan falling into navy on the other, big airy type for the list.
+   ========================================================================== */
+.ms { display: grid; grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr); min-height: calc(100vh - var(--header-h)); }
+@media (max-width: 900px) { .ms { grid-template-columns: 1fr; min-height: 0; } }
+
+.ms-left {
+  position: relative; overflow: hidden;
+  background: #f4fbff;
+  display: grid; align-items: end; justify-items: center;
+  padding-top: 30px;
+}
+.ms-left::after {           /* the diagonal edge that cuts into the blue */
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(102deg, transparent 74%, #7fe0ff 74.1% 80%, transparent 80.2%);
+  pointer-events: none;
+}
+.ms-left img { width: min(430px, 78%); filter: drop-shadow(0 24px 40px rgba(6, 40, 90, 0.28)); }
+
+.ms-right {
+  background: linear-gradient(118deg, #35c6f2 0%, #1567cf 34%, #0b3f9e 62%, #062a76 100%);
+  color: #d8f0ff;
+  padding: 76px 6vw 60px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative;
+}
+@media (max-width: 900px) { .ms-right { padding: 48px 22px 54px; } }
+
+.ms-label {
+  font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.34em;
+  text-transform: uppercase; color: rgba(216, 240, 255, 0.65); margin-bottom: 26px;
+}
+.ms-title {
+  font-family: var(--display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem); line-height: 1.05;
+  color: #ffffff; margin: 0 0 30px;
+}
+.ms-tracks { list-style: none; margin: 0; padding: 0; }
+.ms-track {
+  display: grid; grid-template-columns: 34px 1fr auto; align-items: baseline;
+  gap: 10px 14px;
+  padding: 16px 14px 16px 6px;
+  border-bottom: 1px solid rgba(216, 240, 255, 0.18);
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s, color 0.18s;
+}
+.ms-track:hover { background: rgba(255, 255, 255, 0.09); transform: translateX(4px); }
+.ms-track.is-playing { background: rgba(255, 255, 255, 0.16); }
+.ms-num { font-family: var(--mono); font-size: 0.8rem; color: rgba(216, 240, 255, 0.55); }
+.ms-name {
+  font-family: var(--sans); font-weight: 600; letter-spacing: 0.01em;
+  font-size: clamp(1.05rem, 2.1vw, 1.55rem); color: #eaf7ff;
+}
+.ms-track.is-playing .ms-name { color: #fff; text-shadow: 0 0 18px rgba(180, 235, 255, 0.55); }
+.ms-sub { grid-column: 2; font-family: var(--mono); font-size: 0.74rem; color: rgba(216, 240, 255, 0.6); }
+.ms-time { font-family: var(--mono); font-size: 0.8rem; color: rgba(216, 240, 255, 0.7); }
+.ms-track.is-playing .ms-time::before { content: "▶ "; color: #bdf0ff; }
+
+.ms-bar {
+  margin-top: 34px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 0.78rem; color: rgba(216, 240, 255, 0.75);
+}
+.ms-bar button {
+  font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.12); color: #eaf7ff;
+  border: 1px solid rgba(216, 240, 255, 0.4); border-radius: 999px; padding: 9px 18px; cursor: pointer;
+}
+.ms-bar button:hover { background: #ffffff; color: #062a76; }
+.ms-progress { flex: 1; min-width: 140px; height: 4px; background: rgba(216, 240, 255, 0.22); border-radius: 999px; overflow: hidden; }
+.ms-progress span { display: block; height: 100%; width: 0; background: #bdf0ff; }
+.ms-note { margin-top: 26px; font-size: 0.86rem; color: rgba(216, 240, 255, 0.72); max-width: 56ch; }
+.ms-note a { color: #ffffff; text-decoration: underline; text-underline-offset: 3px; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-emblem" src="assets/img/emblem.svg" alt="" width="40" height="40">
+      <span class="brand-text">attachmenttoolarge<span class="tld">.org</span></span>
+    </a>
+    <ul class="nav-links" data-nav-links>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="members.html">Members</a></li>
+      <li><a href="register.html">Join</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">☀</button>
+      <button class="nav-toggle" type="button" data-nav-toggle aria-label="Open navigation" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="ms">
+    <div class="ms-left">
+      <img src="assets/img/hoplite.svg" alt="A hoplite in a Corinthian helmet, crest swept back" width="620" height="820">
+    </div>
+
+    <div class="ms-right">
+      <div class="ms-label">Recordings</div>
+      <h1 class="ms-title">One complaint,<br>four arrangements</h1>
+
+      <ol class="ms-tracks" data-ms-tracks>
+        <li class="ms-track" data-track="lofi" data-kind="synth">
+          <span class="ms-num">01</span>
+          <span class="ms-name">Failed at 19:59</span>
+          <span class="ms-time">loop</span>
+          <span class="ms-sub">instrumental · synthesised live in the browser, no file at all</span>
+        </li>
+        <li class="ms-track" data-track="rap" data-kind="file" data-src="assets/audio/rap.mp3" data-seconds="170">
+          <span class="ms-num">02</span>
+          <span class="ms-name">Attachment Too Large</span>
+          <span class="ms-time">2:50</span>
+          <span class="ms-sub">boom-bap rap · male vocal · <a href="rap.html">lyrics</a></span>
+        </li>
+        <li class="ms-track" data-track="blues" data-kind="file" data-src="assets/audio/blues.mp3" data-seconds="168">
+          <span class="ms-num">03</span>
+          <span class="ms-name">Attachment Too Large (Blues)</span>
+          <span class="ms-time">2:48</span>
+          <span class="ms-sub">twelve-bar AAB · slide guitar, harmonica, gravel voice</span>
+        </li>
+        <li class="ms-track" data-track="pop" data-kind="file" data-src="assets/audio/pop.mp3" data-seconds="168">
+          <span class="ms-num">04</span>
+          <span class="ms-name">Attachment Too Large (Anthem)</span>
+          <span class="ms-time">2:48</span>
+          <span class="ms-sub">arena pop · stomp-and-clap, gang vocals, key lift</span>
+        </li>
+      </ol>
+
+      <div class="ms-bar">
+        <button type="button" data-ms-toggle>▶ Play</button>
+        <span data-ms-state>nothing playing</span>
+        <span class="ms-progress"><span data-ms-progress></span></span>
+        <span data-ms-clock>0:00</span>
+      </div>
+
+      <p class="ms-note">
+        Three of these are real recordings, generated from their own lyrics by the open-source
+        ACE-Step model running remotely — prompts and parameters are stored next to each mp3.
+        The first is not a file at all: it is the site's background music, built note by note in
+        the browser every time it plays, with no percussion and no hiss, made to loop forever.
+        <a href="rap.html">Read the lyrics</a> ·
+        <a href="assets/audio/rap.mp3" download>download the rap</a>
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <span class="mono" data-egg>attachmenttoolarge v20.35.0 · MIT · demo site for a fictional society, not affiliated with Microsoft</span>
+      <span class="mono">© <span data-year>2025</span> The Attachment Too Large Society · founded 13 September 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/lyrics.js"></script>
+<script src="assets/js/recordings.js"></script>
+<script src="assets/js/music.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+/* The menu: one audio element, four rows. Row 01 is not a file — it starts the
+   site's own synth instead, and the row highlights for as long as it runs. */
+(function () {
+  "use strict";
+  var rows = [].slice.call(document.querySelectorAll("[data-ms-tracks] .ms-track"));
+  var audio = new Audio();
+  audio.preload = "metadata";
+  var state = document.querySelector("[data-ms-state]");
+  var prog = document.querySelector("[data-ms-progress]");
+  var clock = document.querySelector("[data-ms-clock]");
+  var toggle = document.querySelector("[data-ms-toggle]");
+  var current = null;
+
+  function fmt(s) {
+    if (!isFinite(s)) return "0:00";
+    var m = Math.floor(s / 60), r = Math.floor(s % 60);
+    return m + ":" + (r < 10 ? "0" : "") + r;
+  }
+  function mark(row) {
+    rows.forEach(function (r) { r.classList.toggle("is-playing", r === row); });
+  }
+  function stopAll() {
+    audio.pause();
+    if (window.ATTMusic && window.ATTMusic.isOn()) window.ATTMusic.stop();
+    current = null; mark(null);
+    if (state) state.textContent = "nothing playing";
+    if (prog) prog.style.width = "0%";
+  }
+  function play(row) {
+    stopAll();
+    current = row;
+    mark(row);
+    if (row.getAttribute("data-kind") === "synth") {
+      if (window.ATTMusic) window.ATTMusic.start();
+      if (state) state.textContent = "playing: " + row.querySelector(".ms-name").textContent + " (synthesised live)";
+      if (toggle) toggle.textContent = "■ Stop";
+      return;
+    }
+    audio.src = row.getAttribute("data-src");
+    audio.volume = 0.9;
+    audio.play();
+    if (state) state.textContent = "playing: " + row.querySelector(".ms-name").textContent;
+    if (toggle) toggle.textContent = "■ Stop";
+  }
+
+  rows.forEach(function (row, i) {
+    row.addEventListener("click", function (e) {
+      if (e.target.tagName === "A") return;                 // let the lyrics link work
+      if (current === row) { stopAll(); if (toggle) toggle.textContent = "▶ Play"; return; }
+      play(row);
+    });
+    row.setAttribute("tabindex", "0");
+    row.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); row.click(); }
+    });
+  });
+
+  audio.addEventListener("timeupdate", function () {
+    if (prog && audio.duration) prog.style.width = (audio.currentTime / audio.duration * 100) + "%";
+    if (clock) clock.textContent = fmt(audio.currentTime);
+  });
+  audio.addEventListener("ended", function () {
+    var i = rows.indexOf(current);
+    if (i >= 0 && i + 1 < rows.length) play(rows[i + 1]);   // keep the record playing
+    else { stopAll(); if (toggle) toggle.textContent = "▶ Play"; }
+  });
+
+  if (toggle) {
+    toggle.addEventListener("click", function () {
+      if (current) { stopAll(); toggle.textContent = "▶ Play"; }
+      else play(rows[1]);                                   // start with the rap, not the loop
+    });
+  }
+
+  // leaving the page must not leave the synth running
+  window.addEventListener("pagehide", stopAll);
+})();
+</script>
+</body>
+</html>
