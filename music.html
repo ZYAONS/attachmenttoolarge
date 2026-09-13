@@ -130,7 +130,7 @@
           <span class="ms-num">02</span>
           <span class="ms-name">Attachment Too Large</span>
           <span class="ms-time">2:50</span>
-          <span class="ms-sub">boom-bap rap · male vocal · <a href="rap.html">lyrics</a></span>
+          <span class="ms-sub">boom-bap rap · male vocal · <a href="#lyrics">lyrics</a></span>
         </li>
         <li class="ms-track" data-track="blues" data-kind="file" data-src="assets/audio/blues.mp3" data-seconds="168">
           <span class="ms-num">03</span>
@@ -158,9 +158,24 @@
         ACE-Step model running remotely — prompts and parameters are stored next to each mp3.
         The first is not a file at all: it is the site's background music, built note by note in
         the browser every time it plays, with no percussion and no hiss, made to loop forever.
-        <a href="rap.html">Read the lyrics</a> ·
+        <a href="#lyrics">Read the lyrics</a> ·
         <a href="assets/audio/rap.mp3" download>download the rap</a>
       </p>
+    </div>
+  </section>
+
+  <!-- ============ Lyrics ============ -->
+  <section class="section" id="lyrics">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Lyrics</span>
+        <h2>Attachment Too Large</h2>
+        <p class="lead">
+          The words the rap is singing, line by line, following the recording's own clock —
+          press play on track 02 above and they will move with it.
+        </p>
+      </div>
+      <div class="lyrics reveal" data-lyrics></div>
     </div>
   </section>
 </main>
@@ -186,6 +201,8 @@
   var rows = [].slice.call(document.querySelectorAll("[data-ms-tracks] .ms-track"));
   var audio = new Audio();
   audio.preload = "metadata";
+  audio.hidden = true;
+  document.body.appendChild(audio);   // keep it in the DOM so the player can be inspected and tested
   var state = document.querySelector("[data-ms-state]");
   var prog = document.querySelector("[data-ms-progress]");
   var clock = document.querySelector("[data-ms-clock]");
@@ -255,6 +272,46 @@
 
   // leaving the page must not leave the synth running
   window.addEventListener("pagehide", stopAll);
+
+  /* ---- the lyrics, highlighted against the recording's clock ---- */
+  (function () {
+    var host = document.querySelector("[data-lyrics]");
+    if (!host || !window.ATTLYRICS) return;
+    var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
+    var flat = [], n = 0;
+    var html = window.ATTLYRICS.sections.map(function (sec) {
+      var lines = sec.lines.map(function (l) {
+        var idx = n++;
+        flat.push(l);
+        return '<p class="lyric-line" data-line="' + idx + '"><span class="mark">' +
+          String(idx + 1).padStart(2, "0") + "</span>" + esc(l) + "</p>";
+      }).join("");
+      return '<div class="lyric-section' + (sec.hook ? " is-hook" : "") + '">' +
+        '<div class="lyric-label">' + esc(sec.label) + "</div>" + lines + "</div>";
+    }).join("");
+    host.innerHTML = html;
+
+    var els = [].slice.call(host.querySelectorAll(".lyric-line"));
+    function highlight(i) {
+      els.forEach(function (el, k) { el.classList.toggle("is-active", k === i); });
+    }
+    audio.addEventListener("timeupdate", function () {
+      if (!audio.duration || !/rap\.mp3/.test(audio.currentSrc || audio.src || "")) return;
+      highlight(Math.min(els.length - 1, Math.floor((audio.currentTime / audio.duration) * els.length)));
+    });
+    els.forEach(function (el, i) {
+      el.style.cursor = "pointer";
+      el.addEventListener("click", function () {
+        var rapRow = rows.filter(function (r) { return /rap\.mp3/.test(r.getAttribute("data-src") || ""); })[0];
+        if (!rapRow) return;
+        if (current !== rapRow) play(rapRow);
+        if (audio.duration) {
+          audio.currentTime = (i / els.length) * audio.duration;
+          highlight(i);
+        }
+      });
+    });
+  })();
 })();
 </script>
 </body>

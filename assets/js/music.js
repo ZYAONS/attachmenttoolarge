@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    attachmenttoolarge — 主题音乐引擎
    浏览器实时合成（Web Audio），不加载任何音频文件、不联网、不上传数据。
 
@@ -940,7 +940,7 @@
         '<span class="music-title" data-music-title>Failed at 19:59</span>' +
         '<span class="music-sub" data-music-status>Title track · synthesized live</span>' +
       '</span>' +
-      '<a class="music-chip" href="rap.html" data-music-lyrics title="The rap is a separate release — read the lyrics">Rap ↗</a>' +
+      '<a class="music-chip" href="music.html" data-music-lyrics title="All four recordings, with lyrics">Recordings ↗</a>' +
       '<button class="music-chip" type="button" data-music-mute title="Mute everything and keep it muted">✕</button>' +
       '<input class="music-vol" type="range" min="0" max="100" value="' + Math.round(state.vol * 100) +
         '" aria-label="Volume" data-music-vol>';

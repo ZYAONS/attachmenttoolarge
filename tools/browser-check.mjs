@@ -180,7 +180,8 @@ const SUITE = `(async () => {
   ok("播放器不提供说唱切换", !pill.querySelector("[data-music-track]"), "no track switcher");
   ok("播放器不提供人声朗读开关", !pill.querySelector("[data-music-voice]"), "no voice switch");
   ok("播放器曲目固定为器乐", music.currentTrack().id === "lofi", music.currentTrack().name);
-  ok("说唱入口改为独立页面链接", /rap\.html/.test(pill.querySelector("[data-music-lyrics]")?.getAttribute("href") || ""), "Rap ↗");
+  ok("入口指向唱片页", /music\.html/.test(pill.querySelector("[data-music-lyrics]")?.getAttribute("href") || ""),
+     (pill.querySelector("[data-music-lyrics]")?.textContent || "").trim());
 
   const heard = [];
   const off = music.onLine(p => { if (p) heard.push(p); });
@@ -199,30 +200,46 @@ const SUITE = `(async () => {
   ok("可以解除静音", music.isMuted() === false, "unmuted");
   ok("解除后仍保持不自动播放", music.isOn() === false, "still silent until asked");
 
-  /* ---------- 说唱页：由页面自己的原生播放器播放成品 ---------- */
-  const rapAudio = document.querySelector('audio[src*="rap.mp3"]');
-  if (rapAudio) {
-    if (!rapAudio.duration) {
-      await until(() => rapAudio.duration > 0 || rapAudio.error, 8000, 200);
-    }
-    ok("说唱页有独立播放器", true, "audio[src=rap.mp3]");
-    ok("成品歌已加载", rapAudio.duration > 150 && rapAudio.duration < 200, Math.round(rapAudio.duration) + "s");
-    ok("提供 mp3 下载", !!document.querySelector('a[href$="rap.mp3"][download]'), "download link");
+  /* ---------- 唱片页：四首曲目、真实播放、歌词跟随 ---------- */
+  const trackList = document.querySelector("[data-ms-tracks]");
+  if (trackList) {
+    const rows = [...trackList.querySelectorAll(".ms-track")];
+    ok("曲目表有四条", rows.length === 4, rows.length + " rows");
+    const names = rows.map(r => r.querySelector(".ms-name")?.textContent || "");
+    ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Blues/.test(names[2]) && /Anthem/.test(names[3]), names.join(" · ").slice(0, 60));
+    ok("播放器在 DOM 里", !!document.querySelector("audio"), "hidden audio element");
 
-    // the two alternate treatments are rendered from assets/js/recordings.js
-    const alts = [...document.querySelectorAll("[data-recordings] audio")];
-    ok("另有两条改编版", alts.length === 2, alts.length + " alternate tracks");
-    for (const a of alts) {
-      if (!a.duration) await until(() => a.duration > 0 || a.error, 8000, 200);
-    }
-    const loaded = alts.filter(a => a.duration > 140 && a.duration < 200);
-    ok("改编版音频可用", loaded.length === alts.length && alts.length === 2,
-       alts.map(a => (a.getAttribute("src").split("/").pop() || "?") + " " + Math.round(a.duration || 0) + "s").join(" · "));
-    ok("改编版有下载链接", document.querySelectorAll("[data-recordings] a[download]").length === 2, "two download links");
-    ok("改编版歌词已渲染", document.querySelectorAll("[data-recordings] .lyric-line").length >= 30,
-       document.querySelectorAll("[data-recordings] .lyric-line").length + " lines");
+    // 点击说唱那条：应当切到 rap.mp3 并开始播放
+    const rapRow = rows.find(r => /rap\.mp3/.test(r.getAttribute("data-src") || ""));
+    rapRow.click();
+    await until(() => { const a = document.querySelector("audio"); return a && /rap\.mp3/.test(a.currentSrc || a.src) && a.duration > 0; }, 9000, 200);
+    const a1 = document.querySelector("audio");
+    ok("点击后切到该曲目", /rap\.mp3/.test(a1.currentSrc || a1.src), (a1.currentSrc || a1.src).split("/").pop());
+    ok("该曲目时长正确", a1.duration > 150 && a1.duration < 200, Math.round(a1.duration) + "s");
+    await until(() => !a1.paused, 4000, 150);
+    ok("真的在播放", !a1.paused, "paused=" + a1.paused);
+    ok("该行高亮", rapRow.classList.contains("is-playing"), "row marked");
+
+    // 歌词：38 行（一致性由下面那条通用断言负责），点一行会跳到对应位置并高亮
+    const lyricLines = [...document.querySelectorAll("[data-lyrics] .lyric-line")];
+    ok("唱片页带说唱歌词", lyricLines.length === 38, lyricLines.length + " lines");
+    lyricLines[12].click();
+    await until(() => document.querySelector(".lyric-line.is-active"), 4000, 150);
+    ok("点歌词会定位并高亮", !!document.querySelector(".lyric-line.is-active"),
+       (document.querySelector(".lyric-line.is-active")?.textContent || "").slice(0, 30));
+
+    // 切到合成器乐那条：不该有音频文件在放
+    rows[0].click();
+    await wait(600);
+    const a2 = document.querySelector("audio");
+    ok("切到实时合成器乐会停掉文件", a2.paused === true, "file audio paused");
+    ok("播放条反映状态", /Failed at 19:59/.test(document.querySelector("[data-ms-state]")?.textContent || ""),
+       document.querySelector("[data-ms-state]")?.textContent?.slice(0, 40));
+    if (window.ATTMusic && ATTMusic.isOn()) ATTMusic.stop();
+  } else if (document.querySelector('audio[src*="rap.mp3"]')) {
+    ok("旧版说唱页（已退役为跳转）", true, "legacy page");
   } else {
-    ok("本页无说唱播放器（跳过）", true, "N/A on this page");
+    ok("本页无唱片播放器（跳过）", true, "N/A on this page");
   }
 
   /* ---------- 歌词页：HTML 与 lyrics.js 一致性 ---------- */
