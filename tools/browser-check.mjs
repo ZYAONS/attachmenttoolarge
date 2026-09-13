@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    attachmenttoolarge — 浏览器端自检（CDP 驱动，零依赖）
 
    用法：
@@ -212,7 +212,7 @@ const SUITE = `(async () => {
     const rows = [...trackList.querySelectorAll(".ms-track")];
     ok("曲目表有四条", rows.length === 4, rows.length + " rows");
     const names = rows.map(r => r.querySelector(".ms-name")?.textContent || "");
-    ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Blues/.test(names[2]) && /Anthem/.test(names[3]), names.join(" · ").slice(0, 60));
+    ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Wrong Side of the Wire/.test(names[2]) && /Ninety-Nine Forever/.test(names[3]), names.join(" · ").slice(0, 60));
     ok("播放器在 DOM 里", !!document.querySelector("audio"), "hidden audio element");
 
     // 点击说唱那条：应当切到 rap.mp3 并开始播放
