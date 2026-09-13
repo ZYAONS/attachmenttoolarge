@@ -19,7 +19,7 @@
 
 .ms-left {
   position: relative; overflow: hidden;
-  background: #f4fbff;
+  background: #ffffff;              /* 生成的图自带白底，面板也用纯白，图片才融得进去 */
   display: grid; align-items: end; justify-items: center;
   padding-top: 30px;
 }
@@ -28,7 +28,7 @@
   background: linear-gradient(102deg, transparent 74%, #7fe0ff 74.1% 80%, transparent 80.2%);
   pointer-events: none;
 }
-.ms-left img { width: min(430px, 78%); filter: drop-shadow(0 24px 40px rgba(6, 40, 90, 0.28)); }
+.ms-left img { width: min(560px, 92%); mix-blend-mode: multiply; }
 
 .ms-right {
   background: linear-gradient(118deg, #35c6f2 0%, #1567cf 34%, #0b3f9e 62%, #062a76 100%);
@@ -112,7 +112,7 @@
 <main id="main">
   <section class="ms">
     <div class="ms-left">
-      <img src="assets/img/hoplite.svg" alt="A hoplite in a Corinthian helmet, crest swept back" width="620" height="820">
+      <img src="assets/img/hoplite.webp" alt="A Corinthian helmet: hammered bronze, narrow eye slits and a black-and-tan horsehair crest" width="896" height="1152">
     </div>
 
     <div class="ms-right">
