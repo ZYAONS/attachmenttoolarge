@@ -1,0 +1,180 @@
+﻿/* ==========================================================================
+   rhodes.css — the terminal, replicated
+   --------------------------------------------------------------------------
+   Built from the published breakdown of the game's interface language rather
+   than from taste. The rules it follows:
+
+     · Kal'tsit's palette: bone white and medical green on near-black
+     · serif for the classical register, condensed sans and mono for the
+       instrument labels, and both languages side by side as decoration
+     · bone-white printed plates against the dark field, black hairline frames,
+       corners cut at 45 degrees
+     · halftone dot fields and bold hazard stripes as the two background
+       textures — the analysis calls them the scattered-dot and coarse-stripe
+       treatments that appear at every visual exit of the game
+     · a vignette around the page so the centre holds the eye
+     · glitch, used sparingly, the way "loss of sync" is used for story
+     · bilingual micro-labels on everything
+
+   Loaded last, so it is the layer that decides.
+   ========================================================================== */
+
+:root {
+  --bone: #f4f1e8;
+  --bone-2: #e6e1d3;
+  --bone-3: #d5cfbc;
+  --med: #b6d94a;              /* medical green — Kal'tsit */
+  --med-dim: #7f9a2e;
+  --steel: #8fa3ad;            /* cold instrument grey */
+  --rhodes-ink: #0a0b0a;
+  --rhodes-ink-2: #141614;
+  --rhodes-red: #d94f3d;
+  --rhodes-serif: Georgia, "Times New Roman", "Songti SC", "Noto Serif SC", serif;
+  --rhodes-mono: "Cascadia Mono", "Consolas", "SFMono-Regular", ui-monospace, monospace;
+  --rhodes-label: "Bahnschrift", "DIN Alternate", "Segoe UI", system-ui, sans-serif;
+}
+
+html[data-theme="light"] {
+  --bone: #fbf9f3;
+  --rhodes-ink: #16181a;
+  --rhodes-ink-2: #23262a;
+  --med: #6f8c1c;
+  --steel: #5b6b73;
+}
+
+/* ---------- the field: near-black, vignetted, so the centre holds ------- */
+body { background-color: #08090a !important; }
+html[data-theme="light"] body { background-color: var(--bone) !important; }
+body::before { opacity: 0.5 !important; }          /* the composite stays, but back a step */
+
+html::before {                                     /* vignette */
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 2;
+  box-shadow: inset 0 0 200px 70px rgba(0, 0, 0, 0.72);
+}
+html[data-theme="light"]::before { box-shadow: inset 0 0 200px 70px rgba(60, 56, 44, 0.18); }
+
+/* ---------- type: two registers ---------------------------------------- */
+h1, h2, .hero-title, .section-head h2 {
+  font-family: var(--rhodes-serif) !important;
+  background-image: none !important;          /* the site tints headings with a gradient; */
+  -webkit-text-fill-color: currentColor !important;  /* the game sets them solid */
+  font-weight: 400 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+  color: var(--bone);
+}
+html[data-theme="light"] h1, html[data-theme="light"] h2,
+html[data-theme="light"] .hero-title, html[data-theme="light"] .section-head h2 { color: var(--rhodes-ink); }
+h3, .project-name, .stat-num { font-family: var(--rhodes-label) !important; letter-spacing: 0.02em; }
+
+.eyebrow, .badge, .tag, .small, .muted, .footer-bottom, .stat-label, .project-meta, .post-date {
+  font-family: var(--rhodes-mono) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+}
+.eyebrow {
+  color: var(--med) !important; background: transparent !important;
+  border-left: 3px solid var(--med); padding: 2px 0 2px 12px; transform: none !important;
+}
+.section-head h2::after { background: var(--med) !important; height: 4px !important; }
+
+/* ---------- bone plates: printed cards on a dark field ------------------ */
+.card, .stat, .callout, .member-card, .table-wrap, .cta-band, .track-bar, .project-card {
+  background: linear-gradient(180deg, var(--bone), var(--bone-2)) !important;
+  color: var(--rhodes-ink) !important;
+  border: 2px solid var(--rhodes-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.45) !important;
+  clip-path: polygon(0 14px, 14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+}
+.card h3, .card .project-name, .card p, .card .project-desc, .stat-label, .callout div { color: var(--rhodes-ink) !important; }
+.card a, .callout a { color: var(--med-dim) !important; }
+.stat-num { color: var(--rhodes-ink) !important; font-family: var(--rhodes-serif) !important; font-size: 2.4rem; }
+.card::before, .card::after, .stat::before, .stat::after { display: none !important; }
+
+/* the halftone dot field, on the plates where it reads */
+.card::after, .stat::after {
+  display: block !important; content: ""; position: absolute; inset: auto 0 0 auto;
+  width: 96px; height: 56px; border: 0; opacity: 0.5;
+  background-image: radial-gradient(rgba(10, 11, 10, 0.5) 1.4px, transparent 1.5px);
+  background-size: 6px 6px;
+  clip-path: none;
+}
+
+/* ---------- hazard stripes: the coarse-stripe treatment ---------------- */
+.hazard, .cta-band::before, .site-header::after {
+  background: repeating-linear-gradient(-45deg, var(--med) 0 10px, var(--rhodes-ink) 10px 20px) !important;
+  height: 8px !important; opacity: 1 !important; border: 0 !important;
+}
+.site-header { border-bottom: 2px solid var(--rhodes-ink) !important; }
+.site-header::after { clip-path: none !important; }
+
+/* ---------- bilingual micro-labels ------------------------------------- */
+.label-pair { display: inline-flex; align-items: baseline; gap: 6px; }
+.label-pair b { font-family: var(--rhodes-label); font-weight: 600; letter-spacing: 0.04em; }
+.label-pair span { font-family: var(--rhodes-mono); font-size: 0.6rem; letter-spacing: 0.2em; color: var(--steel); }
+
+/* ---------- glitch: used the way the game uses loss of sync ------------ */
+.glitch { position: relative; display: inline-block; }
+.glitch::before, .glitch::after {
+  content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%;
+  overflow: hidden; pointer-events: none;
+}
+.glitch::before { color: #4fd1ff; transform: translate(-2px, 0); clip-path: inset(0 0 58% 0); opacity: 0.55; }
+.glitch::after { color: var(--rhodes-red); transform: translate(2px, 0); clip-path: inset(56% 0 0 0); opacity: 0.5; }
+.glitch.is-live::before { animation: glitch-a 3.6s steps(2, end) infinite; }
+.glitch.is-live::after { animation: glitch-b 4.2s steps(2, end) infinite; }
+@keyframes glitch-a { 0%, 92%, 100% { transform: translate(-2px, 0); } 94% { transform: translate(-9px, 1px); } 96% { transform: translate(4px, -1px); } }
+@keyframes glitch-b { 0%, 90%, 100% { transform: translate(2px, 0); } 93% { transform: translate(8px, -2px); } 97% { transform: translate(-5px, 1px); } }
+
+/* ---------- the chrome, restyled to Kal'tsit --------------------------- */
+.hud-crumb, .hud-rail a, .hud-rail button, .hud-timer, .music-pill {
+  background: rgba(10, 11, 10, 0.94) !important;
+  border-color: rgba(244, 241, 232, 0.22) !important;
+  font-family: var(--rhodes-mono) !important;
+}
+.hud-crumb .glyph { border-color: var(--med) !important; color: var(--med) !important; }
+.hud-rail a:hover, .hud-rail button:hover, .hud-rail .is-active {
+  border-left-color: var(--med) !important; color: var(--med) !important;
+  background: rgba(182, 217, 74, 0.12) !important;
+}
+.hud-timer, .hud-timer b { color: var(--bone) !important; }
+.hud-timer .lime { color: var(--med) !important; }
+.hud-chip .gem { background: var(--med) !important; }
+.hud-hex { background: var(--med) !important; color: var(--rhodes-ink) !important; }
+
+/* a medical cross where the game would put a supply icon */
+.med-cross { display: inline-block; width: 12px; height: 12px; position: relative; }
+.med-cross::before, .med-cross::after {
+  content: ""; position: absolute; background: var(--med);
+}
+.med-cross::before { left: 4px; top: 0; width: 4px; height: 12px; }
+.med-cross::after { top: 4px; left: 0; width: 12px; height: 4px; }
+
+/* The hero time becomes the terminal's own clock, set in serif like the
+   chapter titles: bone on black, medical green for the separator. */
+.dark-hour {
+  color: var(--bone) !important; text-shadow: none !important;
+  font-family: var(--rhodes-serif) !important; font-style: normal !important;
+  letter-spacing: 0.01em;
+}
+.dark-hour .colon { color: var(--med) !important; }
+.dark-hour small { color: var(--steel) !important; font-family: var(--rhodes-mono) !important; }
+
+/* ---------- light theme: bone paper, ink text ------------------------- */
+html[data-theme="light"] .card, html[data-theme="light"] .stat,
+html[data-theme="light"] .callout, html[data-theme="light"] .member-card,
+html[data-theme="light"] .table-wrap {
+  background: #fffdf7 !important; border-color: var(--rhodes-ink) !important;
+  box-shadow: 6px 6px 0 rgba(35, 38, 42, 0.18) !important;
+}
+html[data-theme="light"] .hud-crumb, html[data-theme="light"] .hud-rail a,
+html[data-theme="light"] .hud-timer, html[data-theme="light"] .music-pill {
+  background: rgba(251, 249, 243, 0.95) !important; color: var(--rhodes-ink) !important;
+}
+html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch.is-live::before, .glitch.is-live::after { animation: none !important; }
+}
