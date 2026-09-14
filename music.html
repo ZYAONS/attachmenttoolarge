@@ -21,7 +21,7 @@
 
 .ms-left {
   position: relative; overflow: hidden;
-  background: #f4f1ea;              /* 与生成图自带的米白底一致，图片才融得进去 */
+  background: #a5a5a2;              /* 与生成图自带的米白底一致，图片才融得进去 */
   display: grid; align-items: end; justify-items: center;
   padding-top: 30px;
 }
@@ -30,7 +30,7 @@
   background: linear-gradient(102deg, transparent 74%, #559f86 74.1% 79.4%, #d8b45c 79.5% 80.4%, transparent 80.5%);
   pointer-events: none;
 }
-.ms-left img { width: min(600px, 96%); mix-blend-mode: multiply; }
+.ms-left img { width: min(680px, 100%); display: block; }
 
 .ms-right {
   background: linear-gradient(118deg, #559f86 0%, #2f6d59 32%, #1d4a3c 62%, #102b23 100%);
@@ -126,7 +126,7 @@
 
 <main id="main">
   <section class="ms">
-    <div class="ms-left" aria-hidden="true"></div>
+    <div class="ms-left" aria-hidden="true"><img src="assets/img/dial.svg" alt="" width="900" height="900"></div>
 
     <div class="ms-right">
       <div class="ms-label">Recordings</div>
