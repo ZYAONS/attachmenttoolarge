@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -19,72 +19,165 @@
 .ms { display: grid; grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr); min-height: calc(100vh - var(--header-h)); }
 @media (max-width: 900px) { .ms { grid-template-columns: 1fr; min-height: 0; } }
 
+/* --------------------------------------------------------------------------
+   The object. The reference is a studio render: a matte grey sweep, one black
+   platter with cut grooves and matte segments, a brushed centre hub, a lime
+   crystal standing on it, soft contact shadow, and lime geometric confetti.
+   Drawn here with gradients and conic-gradients, so there is no image to load.
+   -------------------------------------------------------------------------- */
 .ms-left {
   position: relative; overflow: hidden;
-  background: #a5a5a2;              /* 与生成图自带的米白底一致，图片才融得进去 */
-  display: grid; align-items: end; justify-items: center;
-  padding-top: 30px;
+  background: radial-gradient(118% 82% at 50% 6%, #ffffff 0%, #dedddb 32%, #bcbcba 66%, #9a9a98 100%);
+  display: grid; place-items: center;
+  padding: 44px 20px 64px;
 }
-.ms-left::after {           /* the diagonal edge that cuts into the blue */
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(102deg, transparent 74%, #559f86 74.1% 79.4%, #d8b45c 79.5% 80.4%, transparent 80.5%);
-  pointer-events: none;
+.ms-left::before {                 /* the sweep of the backdrop, plus its falloff */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 44%),
+    radial-gradient(72% 42% at 50% 98%, rgba(0,0,0,.20), transparent 72%);
 }
-.ms-left img { width: min(680px, 100%); display: block; }
+.ms-left::after {                  /* the contact shadow the object sits in */
+  content: ""; position: absolute; left: 50%; bottom: 7%; width: 58%; height: 6%;
+  transform: translateX(-50%); pointer-events: none;
+  background: radial-gradient(closest-side, rgba(18,18,20,.46), rgba(18,18,20,0) 74%);
+  filter: blur(10px);
+}
 
+.stage { position: relative; width: min(600px, 90%); aspect-ratio: 1; display: grid; place-items: center; }
+.platter {
+  position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 36% 28%, #525256 0%, #2c2c30 28%, #17171a 60%, #0a0a0c 100%);
+  box-shadow:
+    0 40px 54px -22px rgba(0,0,0,.58),
+    0 10px 16px -8px rgba(0,0,0,.45),
+    inset 0 2px 3px rgba(255,255,255,.18),
+    inset 0 -4px 8px rgba(0,0,0,.65);
+  animation: ms-spin 26s linear infinite; animation-play-state: paused;
+}
+.platter::after {                  /* rim light along the top-left, as a lens would catch it */
+  content: ""; position: absolute; inset: -1px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 208deg, rgba(255,255,255,.42) 0 6%, rgba(255,255,255,.08) 12%, transparent 22%);
+  mask: radial-gradient(circle, transparent 96%, #000 97%);
+  -webkit-mask: radial-gradient(circle, transparent 96%, #000 97%);
+}
+.stage.is-spinning .platter { animation-play-state: running; }
+.grooves {                         /* the fine concentric cut */
+  position: absolute; inset: 5%; border-radius: 50%; opacity: .8;
+  background: repeating-radial-gradient(circle at 50% 50%,
+    rgba(255,255,255,.06) 0 1px, rgba(0,0,0,.18) 1px 3px);
+  mask: radial-gradient(circle, transparent 26%, #000 29%);
+  -webkit-mask: radial-gradient(circle, transparent 26%, #000 29%);
+}
+.segments {                        /* fine radial ticks, over a few wider cards */
+  position: absolute; inset: 6%; border-radius: 50%; opacity: .5;
+  background:
+    repeating-conic-gradient(from 0deg,
+      rgba(255,255,255,.85) 0 0.35deg, transparent 0.35deg 4.6deg);
+  mask: radial-gradient(circle, transparent 17%, #000 18.5% 55%, transparent 57%);
+  -webkit-mask: radial-gradient(circle, transparent 17%, #000 18.5% 55%, transparent 57%);
+}
+.band {                            /* matte clipped ring, like the striped card */
+  position: absolute; inset: 21%; border-radius: 50%;
+  background: conic-gradient(from 190deg,
+    #2a2a2f 0 5%, #0f0f12 5% 10%, #2e2e33 10% 17%, #0d0d10 17% 27%,
+    #26262b 27% 36%, #0c0c0f 36% 46%, #2b2b31 46% 56%, #101013 56% 68%,
+    #25252a 68% 78%, #0e0e11 78% 88%, #2c2c32 88% 96%, #111114 96% 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), inset 0 0 22px rgba(0,0,0,.6);
+  mask: radial-gradient(circle, transparent 16%, #000 18% 44%, transparent 46%);
+  -webkit-mask: radial-gradient(circle, transparent 16%, #000 18% 44%, transparent 46%);
+}
+.hub {                             /* the matte pale object the crystal stands on */
+  position: absolute; inset: 33%; border-radius: 50%;
+  background:
+    radial-gradient(circle at 36% 30%, #ffffff 0%, #f0f0ee 34%, #cfcfcd 66%, #a9a9a7 100%);
+  box-shadow:
+    0 14px 22px -10px rgba(0,0,0,.6),
+    inset 0 2px 3px rgba(255,255,255,.95),
+    inset 0 -5px 10px rgba(0,0,0,.22);
+}
+.hub::before {                     /* the crumpled form sitting on the platter */
+  content: ""; position: absolute; inset: 8% 4% 4% 8%;
+  border-radius: 46% 54% 50% 50% / 52% 48% 52% 48%;
+  background: radial-gradient(circle at 34% 28%, #ffffff, #ececea 46%, #c9c9c7 100%);
+  box-shadow: inset -6px -8px 14px rgba(0,0,0,.16), inset 6px 6px 12px rgba(255,255,255,.9);
+}
+.hub::after { content: ""; position: absolute; inset: 44%; border-radius: 50%; background: #131318; box-shadow: inset 0 1px 2px rgba(255,255,255,.3), 0 1px 2px rgba(0,0,0,.5); }
+.sheen { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(128deg, rgba(255,255,255,.24) 0 17%, rgba(255,255,255,.05) 30%, rgba(255,255,255,0) 52%); }
+.crystal {                         /* the lime crystal standing on the platter */
+  position: absolute; left: 50%; top: -19%; width: 16%; height: 44%;
+  transform: translateX(-50%) rotate(-2.5deg);
+  background: linear-gradient(160deg, #eaffa3 0%, #c6e04a 26%, #8fbf1f 54%, #4f7a10 82%, #33550a 100%);
+  clip-path: polygon(50% 0%, 82% 26%, 68% 100%, 32% 100%, 18% 26%);
+  filter: drop-shadow(0 12px 18px rgba(60,80,10,.45));
+}
+.crystal::after { content: ""; position: absolute; inset: 0; clip-path: polygon(50% 0%, 63% 30%, 50% 100%, 37% 30%); background: linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,0) 62%); mix-blend-mode: screen; }
+.glow { position: absolute; left: 50%; top: 8%; width: 42%; height: 42%; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle, rgba(198,224,74,.3), transparent 70%); filter: blur(18px); }
+.spark { position: absolute; width: 24px; height: 24px; background: #c6e04a; }
+.spark::before, .spark::after { content: ""; position: absolute; background: #8fbf1f; }
+.spark::before { left: 50%; top: -44%; width: 3px; height: 188%; transform: translateX(-50%); }
+.spark::after { top: 50%; left: -44%; height: 3px; width: 188%; transform: translateY(-50%); }
+.s1 { left: 5%; top: 31%; transform: rotate(20deg) scale(.8); }
+.s2 { right: 3%; top: 45%; transform: rotate(-14deg); }
+.s3 { left: 19%; bottom: 9%; transform: rotate(38deg) scale(.62); }
+@keyframes ms-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .platter { animation: none; } }
+
+/* the other half: matte charcoal, the way a render's backdrop reads next to the object */
 .ms-right {
-  background: linear-gradient(118deg, #559f86 0%, #2f6d59 32%, #1d4a3c 62%, #102b23 100%);
-  color: #f2e9cf;
+  background: linear-gradient(180deg, #26262a 0%, #1a1a1d 52%, #101012 100%);
+  color: #eeeeec;
   padding: 76px 6vw 60px;
   display: flex; flex-direction: column; justify-content: center;
   position: relative;
 }
+.ms-right::before { content: ""; position: absolute; inset: 0 0 auto; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent); }
 @media (max-width: 900px) { .ms-right { padding: 48px 22px 54px; } }
 
 .ms-label {
   font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.34em;
-  text-transform: uppercase; color: #d8b45c; margin-bottom: 26px;
+  text-transform: uppercase; color: #c6e04a; margin-bottom: 26px;
 }
 .ms-title {
   font-family: var(--display); font-weight: 900; text-transform: uppercase;
   font-size: clamp(1.5rem, 3.2vw, 2.4rem); line-height: 1.05;
-  color: #fdf8ee; margin: 0 0 30px;
+  color: #fbfbf9; margin: 0 0 30px;
 }
 .ms-tracks { list-style: none; margin: 0; padding: 0; }
 .ms-track {
   display: grid; grid-template-columns: 34px 1fr auto; align-items: baseline;
   gap: 10px 14px;
   padding: 16px 14px 16px 6px;
-  border-bottom: 1px solid rgba(201, 169, 97, 0.26);
+  border-bottom: 1px solid rgba(255,255,255,.09);
   cursor: pointer;
   transition: background 0.18s, transform 0.18s, color 0.18s;
 }
-.ms-track:hover { background: rgba(201, 169, 97, 0.12); transform: translateX(4px); }
-.ms-track.is-playing { background: rgba(201, 169, 97, 0.2); }
-.ms-num { font-family: var(--mono); font-size: 0.8rem; color: rgba(201, 169, 97, 0.75); }
+.ms-track:hover { background: rgba(198,224,74,.09); transform: translateX(4px); }
+.ms-track.is-playing { background: rgba(198,224,74,.15); }
+.ms-num { font-family: var(--mono); font-size: 0.8rem; color: rgba(255,255,255,.42); }
 .ms-name {
   font-family: var(--sans); font-weight: 600; letter-spacing: 0.01em;
-  font-size: clamp(1.05rem, 2.1vw, 1.55rem); color: #f6efd8;
+  font-size: clamp(1.05rem, 2.1vw, 1.55rem); color: #f1f1ef;
 }
-.ms-track.is-playing .ms-name { color: #f3dc9c; text-shadow: 0 0 18px rgba(216, 180, 92, 0.5); }
-.ms-sub { grid-column: 2; font-family: var(--mono); font-size: 0.74rem; color: rgba(242, 233, 207, 0.62); }
-.ms-time { font-family: var(--mono); font-size: 0.8rem; color: #d8b45c; }
-.ms-track.is-playing .ms-time::before { content: "▶ "; color: #e0c179; }
+.ms-track.is-playing .ms-name { color: #dcf57e; text-shadow: 0 0 20px rgba(198,224,74,.35); }
+.ms-sub { grid-column: 2; font-family: var(--mono); font-size: 0.74rem; color: rgba(255,255,255,.5); }
+.ms-time { font-family: var(--mono); font-size: 0.8rem; color: #c6e04a; }
+.ms-track.is-playing .ms-time::before { content: "▶ "; color: #dcf57e; }
 
 .ms-bar {
   margin-top: 34px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  font-family: var(--mono); font-size: 0.78rem; color: rgba(242, 233, 207, 0.78);
+  font-family: var(--mono); font-size: 0.78rem; color: rgba(255,255,255,.72);
 }
 .ms-bar button {
   font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
-  background: rgba(201, 169, 97, 0.18); color: #f3dc9c;
-  border: 1px solid rgba(216, 180, 92, 0.55); border-radius: 999px; padding: 9px 18px; cursor: pointer;
+  background: rgba(198,224,74,.16); color: #dcf57e;
+  border: 1px solid rgba(198,224,74,.5); border-radius: 999px; padding: 9px 18px; cursor: pointer;
 }
-.ms-bar button:hover { background: #e0c179; color: #102b23; }
-.ms-progress { flex: 1; min-width: 140px; height: 4px; background: rgba(201, 169, 97, 0.28); border-radius: 999px; overflow: hidden; }
-.ms-progress span { display: block; height: 100%; width: 0; background: #e0c179; }
-.ms-note { margin-top: 26px; font-size: 0.86rem; color: rgba(242, 233, 207, 0.78); max-width: 56ch; }
-.ms-note a { color: #e0c179; text-decoration: underline; text-underline-offset: 3px; }
+.ms-bar button:hover { background: #c6e04a; color: #14140f; }
+.ms-progress { flex: 1; min-width: 140px; height: 4px; background: rgba(255,255,255,.14); border-radius: 999px; overflow: hidden; }
+.ms-progress span { display: block; height: 100%; width: 0; background: #c6e04a; }
+.ms-note { margin-top: 26px; font-size: 0.86rem; color: rgba(255,255,255,.72); max-width: 56ch; }
+.ms-note a { color: #dcf57e; text-decoration: underline; text-underline-offset: 3px; }
 </style>
 </head>
 <body>
@@ -126,7 +219,22 @@
 
 <main id="main">
   <section class="ms">
-    <div class="ms-left" aria-hidden="true"><img src="assets/img/dial.svg" alt="" width="900" height="900"></div>
+    <div class="ms-left" aria-hidden="true">
+      <div class="stage">
+        <div class="platter">
+          <span class="grooves"></span>
+          <span class="segments"></span>
+          <span class="band"></span>
+          <span class="hub"></span>
+          <span class="sheen"></span>
+        </div>
+        <span class="crystal"></span>
+        <span class="glow"></span>
+        <span class="spark s1"></span>
+        <span class="spark s2"></span>
+        <span class="spark s3"></span>
+      </div>
+    </div>
 
     <div class="ms-right">
       <div class="ms-label">Recordings</div>
@@ -380,6 +488,22 @@
 
     rows.forEach(function (r) {
       r.addEventListener("click", function () { render(r.getAttribute("data-track")); });
+    });
+
+    /* the platter is a record: it turns while something is playing */
+    var stage = document.querySelector(".stage");
+    var spin = function (on) { if (stage) stage.classList.toggle("is-spinning", !!on); };
+    audio.addEventListener("play", function () { spin(true); });
+    audio.addEventListener("pause", function () { spin(false); });
+    audio.addEventListener("ended", function () { spin(false); });
+    rows.forEach(function (r) {
+      r.addEventListener("click", function () {
+        if (r.getAttribute("data-kind") === "synth") {
+          setTimeout(function () { spin(window.ATTMusic && window.ATTMusic.isOn()); }, 60);
+        } else {
+          spin(current === r);          // clicking the current row stops it
+        }
+      });
     });
 
     render("rap");     // the page opens on the rap, so open on its words

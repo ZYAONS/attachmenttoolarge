@@ -6,7 +6,7 @@
    ★ Want a real vocal instead of the system voice?
      Drop the audio at assets/audio/rap.mp3 and tell us — we will wire it into
      the player and the system voice will step aside automatically.
-     Prompt for Suno / ElevenLabs is at the bottom of rap.html.
+     The words are shown on music.html, following the recording.
    ========================================================================== */
 window.ATTLYRICS = {
   title: "Attachment Too Large",
