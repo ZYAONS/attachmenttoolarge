@@ -624,7 +624,7 @@
     vol: parseFloat(store(STORE_VOL)) || 0.6,
     /* 本站播放器只放器乐背景音乐。说唱是独立的作品（music.html / Release），
        不参与这里的曲目切换，也不再用系统语音朗读任何东西。 */
-    track: "lofi",
+    track: "postrock",              /* 背景音乐：The Long Send（后摇），不是 01 那条铺底 */
     /* 人声默认关闭：只用系统语音朗读的「人声」是很多人不想要的，
        所以它必须由用户显式打开。默认只放伴奏 + 页面上的逐句高亮。 */
     voice: store(STORE_VOICE) === "1",
@@ -1137,7 +1137,7 @@
       '<button class="music-btn" type="button" data-music-toggle aria-pressed="false">' + ICON_PLAY + '</button>' +
       '<span class="music-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>' +
       '<span class="music-meta">' +
-        '<span class="music-title" data-music-title>Failed at 19:59</span>' +
+        '<span class="music-title" data-music-title>The Long Send</span>' +
         '<span class="music-sub" data-music-status>Title track · synthesized live</span>' +
       '</span>' +
       '<a class="music-chip" href="music.html" data-music-lyrics title="All four recordings, with lyrics">Recordings ↗</a>' +

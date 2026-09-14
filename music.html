@@ -450,7 +450,9 @@
         el.addEventListener("click", function () {
           var row = rows.filter(function (r) { return r.getAttribute("data-track") === shown; })[0];
           if (!row || row.getAttribute("data-kind") !== "file") return;
-          if (current !== row) play(row);
+          /* Only seek. Clicking a line must never change which song is playing:
+             if that track is not the one running, the click does nothing. */
+          if (current !== row) return;
           if (audio.duration) { audio.currentTime = (i / els.length) * audio.duration; highlight(i); }
         });
       });

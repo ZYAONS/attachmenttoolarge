@@ -232,40 +232,55 @@
   strip.castShadow = true;
   platter.add(strip);
 
-  var blobGeo = new THREE.IcosahedronGeometry(1.78, 4);
-  (function crumple() {
-    var pos = blobGeo.attributes.position;
-    for (var i = 0; i < pos.count; i++) {
-      var x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
-      var n = Math.sin(x * 3.1 + y * 2.3) * Math.cos(z * 2.7 - y * 1.9) * 0.11
-            + Math.sin(x * 6.2 - z * 4.1) * 0.05;
-      var len = Math.sqrt(x * x + y * y + z * z) || 1;
-      pos.setXYZ(i, x + (x / len) * n, y + (y / len) * n * 0.7, z + (z / len) * n);
-    }
-    pos.needsUpdate = true;
-    blobGeo.computeVertexNormals();
-  })();
-  var blob = new THREE.Mesh(blobGeo, matWhite);
-  blob.scale.set(1.42, 0.82, 1.18);
-  blob.position.set(0.1, TOP + 1.0, 0.95);
-  blob.castShadow = true; blob.receiveShadow = true;
-  platter.add(blob);
+  /* --------------------------------------------------------------------------
+     The centrepiece, drawn as a designed object rather than a found one:
+     a stepped hexagonal dais with a lit ring between its steps, and a six-sided
+     bipyramid crystal standing on it, perfectly symmetric, flat-shaded so every
+     facet reads as its own plane, with a glowing core inside.
+     -------------------------------------------------------------------------- */
+  var matDais = new THREE.MeshStandardMaterial({
+    color: 0xdcdcd8, roughness: 0.62, metalness: 0.12, flatShading: true, envMapIntensity: 0.5
+  });
+  var daisLo = new THREE.Mesh(new THREE.CylinderGeometry(2.30, 2.55, 0.55, 6), matDais);
+  daisLo.position.set(0, TOP + 0.34, 0.85);
+  daisLo.rotation.y = 30 * DEG;
+  daisLo.castShadow = true; daisLo.receiveShadow = true;
+  platter.add(daisLo);
 
-  var spindle = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.9, 32), matHole);
-  spindle.position.set(0, TOP + 0.95, 0.35);
+  var daisHi = new THREE.Mesh(new THREE.CylinderGeometry(1.62, 1.86, 0.42, 6), matDais);
+  daisHi.position.set(0, TOP + 0.82, 0.85);
+  daisHi.rotation.y = 30 * DEG;
+  daisHi.castShadow = true; daisHi.receiveShadow = true;
+  platter.add(daisHi);
+
+  var ring = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.045, 8, 6), matLime);
+  ring.rotation.x = 90 * DEG;
+  ring.position.set(0, TOP + 0.62, 0.85);
+  platter.add(ring);
+
+  var spindle = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.30, 0.5, 6), matHole);
+  spindle.position.set(0, TOP + 1.05, 0.85);
   platter.add(spindle);
 
-  /* the crystal: a faceted gem, glassy rather than painted */
+  /* the crystal: a hexagonal bipyramid — waist, point, and a point below */
+  var matGem = matCrystal.clone();
+  matGem.flatShading = true;                       // crisp planes, not a smooth blob
+  matGem.emissive = new THREE.Color(0x2f4a08);
+  matGem.emissiveIntensity = 0.5;
+
   var gem = new THREE.Group();
-  var body = new THREE.Mesh(new THREE.CylinderGeometry(0.60, 0.26, 2.75, 6, 1), matCrystal);
-  body.position.y = 1.38;
-  var tip = new THREE.Mesh(new THREE.ConeGeometry(0.60, 3.1, 6), matCrystal);
-  tip.position.y = 4.30;
-  var collar = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.28, 0.42, 6), matCrystal);
-  collar.position.y = -0.18;
-  gem.add(body); gem.add(tip); gem.add(collar);
-  gem.position.set(0, TOP + 0.75, 0.35);
-  gem.rotation.y = 12 * DEG;
+  var waist = new THREE.Mesh(new THREE.CylinderGeometry(0.60, 0.60, 1.05, 6), matGem);
+  waist.position.y = 0.52;
+  var point = new THREE.Mesh(new THREE.ConeGeometry(0.60, 2.15, 6), matGem);
+  point.position.y = 2.12;
+  var tail = new THREE.Mesh(new THREE.ConeGeometry(0.60, 0.85, 6), matGem);
+  tail.position.y = -0.42;
+  tail.rotation.x = 180 * DEG;
+  var core = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 2.0, 6),
+    new THREE.MeshBasicMaterial({ color: 0xd8ff7a }));
+  core.position.y = 0.9;
+  gem.add(waist); gem.add(point); gem.add(tail); gem.add(core);
+  gem.position.set(0, TOP + 1.05, 0.85);
   gem.children.forEach(function (c) { c.castShadow = true; });
   platter.add(gem);
 
