@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    record-scene.js — the record screen, modelled and rendered
 
    Not a drawing of the photograph: geometry that is actually lit. The platter
@@ -27,25 +27,26 @@
 
   var DEG = Math.PI / 180;
   var LIME = 0xc6e04a;
-  var BACKDROP = 0xc6c6c4;
+  var BACKDROP = 0x0a0c0b;        // 暗场：参考图是暗底，物体自己发光
 
   /* ---------------- renderer ---------------- */
   var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.02;
+  renderer.toneMappingExposure = 0.92;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setClearColor(BACKDROP, 1);
 
   var scene = new THREE.Scene();
   scene.background = new THREE.Color(BACKDROP);
-  scene.fog = new THREE.Fog(BACKDROP, 30, 62);
 
-  var camera = new THREE.PerspectiveCamera(22, 3 / 2, 0.1, 200);
-  camera.position.set(0, 22.5, 6.6);            // near top-down, as the reference is
-  camera.lookAt(0, 0.4, 0);
+  var camera = new THREE.PerspectiveCamera(26, 3 / 2, 0.1, 400);
+  /* the platter is 20 units across, so the camera has to stand far enough back that
+     the whole object and the marks around it fit: ~30 units of visible height. */
+  camera.position.set(0, 62, 20);
+  camera.lookAt(0, 1.2, 0);
 
   /* ---------------- a small procedural environment, so glass has something to bend ---- */
   (function environment() {
@@ -53,12 +54,12 @@
     c.width = 256; c.height = 128;
     var g = c.getContext("2d");
     var grad = g.createLinearGradient(0, 0, 0, 128);
-    grad.addColorStop(0, "#f4f4f2");
-    grad.addColorStop(0.45, "#d2d2d0");
-    grad.addColorStop(0.55, "#b8b8b6");
-    grad.addColorStop(1, "#8e8e8c");
+    grad.addColorStop(0, "#39433f");
+    grad.addColorStop(0.45, "#1d2426");
+    grad.addColorStop(0.55, "#12181a");
+    grad.addColorStop(1, "#07090a");
     g.fillStyle = grad; g.fillRect(0, 0, 256, 128);
-    g.fillStyle = "rgba(255,255,255,0.75)";
+    g.fillStyle = "rgba(220,255,200,0.55)";
     g.beginPath(); g.ellipse(70, 34, 46, 22, 0, 0, Math.PI * 2); g.fill();
     var tex = new THREE.CanvasTexture(c);
     tex.mapping = THREE.EquirectangularReflectionMapping;
@@ -67,19 +68,19 @@
   })();
 
   /* ---------------- lighting: a studio, not a lamp ---------------- */
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x9b9b99, 0.85));
+  scene.add(new THREE.HemisphereLight(0xcfe8d8, 0x0a0f0e, 0.30));
 
-  var key = new THREE.DirectionalLight(0xffffff, 1.55);
+  var key = new THREE.DirectionalLight(0xffffff, 0.95);
   key.position.set(-9, 16, 7);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
   key.shadow.radius = 6;
   key.shadow.bias = -0.0006;
   var sc = key.shadow.camera;
-  sc.left = -16; sc.right = 16; sc.top = 16; sc.bottom = -16; sc.near = 1; sc.far = 60;
+  sc.left = -26; sc.right = 26; sc.top = 26; sc.bottom = -26; sc.near = 1; sc.far = 140;
   scene.add(key);
 
-  var fill = new THREE.DirectionalLight(0xdfe8ff, 0.5);
+  var fill = new THREE.DirectionalLight(0xdfe8ff, 0.22);
   fill.position.set(10, 9, -7);
   scene.add(fill);
 
@@ -89,21 +90,21 @@
 
   /* ---------------- floor ---------------- */
   var floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(90, 90),
-    new THREE.MeshStandardMaterial({ color: BACKDROP, roughness: 0.98, metalness: 0 })
+    new THREE.PlaneGeometry(320, 320),
+    new THREE.MeshStandardMaterial({ color: 0x121614, roughness: 0.95, metalness: 0.05 })
   );
   floor.rotation.x = -90 * DEG;
   floor.receiveShadow = true;
   scene.add(floor);
 
   /* ---------------- materials ---------------- */
-  var matDisc   = new THREE.MeshStandardMaterial({ color: 0x141418, roughness: 0.72, metalness: 0.12 });
-  var matCardA  = new THREE.MeshStandardMaterial({ color: 0x101014, roughness: 0.62, metalness: 0.16 });
-  var matCardB  = new THREE.MeshStandardMaterial({ color: 0x232328, roughness: 0.55, metalness: 0.2 });
+  var matDisc   = new THREE.MeshStandardMaterial({ color: 0x0b0b0e, roughness: 0.78, metalness: 0.10, envMapIntensity: 0.35 });
+  var matCardA  = new THREE.MeshStandardMaterial({ color: 0x09090c, roughness: 0.70, metalness: 0.14, envMapIntensity: 0.3 });
+  var matCardB  = new THREE.MeshStandardMaterial({ color: 0x1a1a1f, roughness: 0.62, metalness: 0.18, envMapIntensity: 0.35 });
   var matCardC  = new THREE.MeshStandardMaterial({ color: 0x0b0b0e, roughness: 0.68, metalness: 0.14 });
-  var matPale   = new THREE.MeshStandardMaterial({ color: 0xd9d9d5, roughness: 0.85, metalness: 0.02 });
-  var matWhite  = new THREE.MeshStandardMaterial({ color: 0xf2f2ef, roughness: 0.9, metalness: 0 });
-  var matGroove = new THREE.MeshStandardMaterial({ color: 0x2c2c31, roughness: 0.35, metalness: 0.5 });
+  var matPale   = new THREE.MeshStandardMaterial({ color: 0xbfbfbb, roughness: 0.9, metalness: 0.02 });
+  var matWhite  = new THREE.MeshStandardMaterial({ color: 0xdcdcd8, roughness: 0.92, metalness: 0 });
+  var matGroove = new THREE.MeshStandardMaterial({ color: 0x35353b, roughness: 0.35, metalness: 0.5, envMapIntensity: 0.6 });
   var matLine   = new THREE.MeshStandardMaterial({ color: 0x121216, roughness: 0.6, metalness: 0.2 });
   var matLime   = new THREE.MeshStandardMaterial({ color: LIME, roughness: 0.42, metalness: 0.05, emissive: 0x2a3a06, emissiveIntensity: 0.35 });
   var matSalmon = new THREE.MeshStandardMaterial({ color: 0xeda189, roughness: 0.8, metalness: 0 });
@@ -296,7 +297,6 @@
     var h = Math.round(w * 2 / 3);
     canvas.width = Math.round(w * renderer.getPixelRatio());
     canvas.height = Math.round(h * renderer.getPixelRatio());
-    canvas.style.height = h + "px";
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();

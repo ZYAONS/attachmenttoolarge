@@ -1,0 +1,151 @@
+﻿/* ==========================================================================
+   tactical.css — the briefing screen's design language, in thin lines
+
+   The reference is a game briefing screen: a dark field, a scanline and noise
+   wash over it, thin-line panels clustered down one side, corner brackets, and
+   monospace labels with one accent colour doing all the shouting.
+
+   What is honestly reproducible here is that language — the lines, the panels,
+   the type, the wash. What is not is the reference's baked-in image: its
+   blurred terminal text and lens artefacts are rendered assets, and a faithful
+   1:1 of that needs a shader post-process pass, not stylesheets. So this file
+   does the part that is real: geometry and type.
+   ========================================================================== */
+
+body.tactical {
+  --tac-field: #0a0c0b;
+  --tac-panel: rgba(10, 14, 12, 0.72);
+  --tac-line: rgba(214, 232, 210, 0.20);
+  --tac-line-soft: rgba(214, 232, 210, 0.10);
+  --tac-ink: #d8e6d2;
+  --tac-dim: rgba(216, 230, 210, 0.62);
+  --tac-accent: #b6e04a;
+  --tac-accent-2: #7ee0b0;
+  background: var(--tac-field);
+  color: var(--tac-ink);
+}
+
+/* ---------- the wash: scanlines, noise, vignette, over everything ---------- */
+.tac-wash { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+.tac-wash::before {                 /* scanlines */
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg,
+    rgba(255, 255, 255, 0.04) 0 1px, rgba(0, 0, 0, 0) 1px 3px);
+  mix-blend-mode: overlay;
+}
+.tac-wash::after {                  /* vignette */
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 45%, rgba(0,0,0,0) 42%, rgba(0,0,0,.55) 88%, rgba(0,0,0,.78) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,0) 18%, rgba(0,0,0,0) 82%, rgba(0,0,0,.45));
+}
+.tac-grain {                        /* film grain, drawn once by the script */
+  position: fixed; inset: 0; pointer-events: none; z-index: 61;
+  opacity: 0.03; mix-blend-mode: screen;
+  background-repeat: repeat; background-size: 180px 180px;
+}
+
+/* ---------- corner brackets ---------- */
+.tac-corner { position: fixed; width: 26px; height: 26px; z-index: 62; pointer-events: none;
+  border: 1px solid var(--tac-line); }
+.tac-corner.tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.tac-corner.tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+.tac-corner.bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+.tac-corner.br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+/* ---------- top strip ---------- */
+.tac-top { position: fixed; top: 12px; left: 46px; right: 46px; z-index: 62;
+  display: flex; align-items: center; gap: 12px; pointer-events: none; }
+.tac-top > * { pointer-events: auto; }
+.tac-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 34px; padding: 0 16px; background: rgba(255,255,255,.06);
+  border: 1px solid var(--tac-line); color: var(--tac-ink);
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+  text-decoration: none; }
+.tac-btn:hover { background: rgba(182,224,74,.14); border-color: var(--tac-accent); color: #f2ffe0; }
+.tac-crumb { font-family: var(--mono); font-size: .72rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--tac-dim); }
+.tac-crumb b { color: var(--tac-accent); font-weight: 600; }
+.tac-spacer { flex: 1; }
+.tac-search { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px;
+  border: 1px solid var(--tac-line); background: rgba(255,255,255,.04);
+  font-family: var(--mono); font-size: .72rem; color: var(--tac-dim); }
+.tac-search i { font-style: normal; color: var(--tac-accent); }
+.tac-count { display: inline-flex; align-items: baseline; gap: 6px; height: 34px; padding: 0 12px;
+  border: 1px solid var(--tac-line); background: rgba(255,255,255,.04);
+  font-family: var(--mono); font-size: .78rem; color: var(--tac-ink); }
+.tac-count em { font-style: normal; color: var(--tac-accent); font-size: 1.05rem; }
+
+/* ---------- side cluster ---------- */
+.tac-side { position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+  z-index: 62; display: grid; gap: 10px; width: 190px; pointer-events: none; }
+.tac-side > * { pointer-events: auto; }
+.tac-panel { border: 1px solid var(--tac-line); background: var(--tac-panel);
+  padding: 10px 12px; backdrop-filter: blur(2px); }
+.tac-panel .tac-h { display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; color: var(--tac-ink); }
+.tac-panel .tac-h i { font-style: normal; color: var(--tac-accent); }
+.tac-panel .tac-s { margin-top: 4px; font-family: var(--mono); font-size: .64rem;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--tac-dim); }
+.tac-panel.is-open { border-color: var(--tac-accent); background: rgba(182,224,74,.10); }
+.tac-panel.is-open .tac-h { color: #f4ffe2; }
+.tac-panel .tac-r { margin-top: 6px; height: 1px; background: var(--tac-line-soft); }
+.tac-panel .tac-v { margin-top: 6px; font-family: var(--mono); font-size: .7rem; color: var(--tac-accent-2); }
+
+/* ---------- bottom-left briefing block ---------- */
+.tac-foot { position: fixed; left: 46px; bottom: 118px; z-index: 62; pointer-events: none; max-width: 340px; }
+.tac-foot .tac-cap { font-family: var(--mono); font-size: .68rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--tac-dim); }
+.tac-foot .tac-big { margin-top: 4px; font-family: var(--mono); font-size: 1.02rem; color: var(--tac-ink); }
+.tac-foot .tac-big b { color: var(--tac-accent); font-weight: 600; }
+.tac-title { margin-top: 18px; font-family: var(--display); font-weight: 900; font-size: 1.5rem;
+  letter-spacing: .04em; color: #eefbe4; text-transform: uppercase;
+  text-shadow: 2px 0 rgba(255, 40, 90, .38), -2px 0 rgba(0, 230, 170, .34); }
+.tac-sub { margin-top: 6px; font-family: var(--mono); font-size: .7rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--tac-dim); }
+.tac-code { margin-top: 10px; display: flex; gap: 14px; font-family: var(--mono);
+  font-size: .74rem; letter-spacing: .3em; color: var(--tac-dim); }
+
+/* ---------- poem / log column, as in the reference's lower left ---------- */
+.tac-poem { position: fixed; left: 46px; top: 30%; z-index: 61; max-width: 240px;
+  font-family: var(--mono); font-size: .66rem; line-height: 1.7; color: rgba(216,230,210,.42);
+  pointer-events: none; }
+.tac-poem b { color: rgba(216,230,210,.66); font-weight: 400; }
+
+/* ---------- the glitch, kept to headings and disabled on request ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .tac-title { animation: tac-glitch 7.5s steps(1, end) infinite; }
+  @keyframes tac-glitch {
+    0%, 92%, 100% { transform: translateX(0); clip-path: none; }
+    93% { transform: translateX(-2px); clip-path: inset(18% 0 42% 0); }
+    94% { transform: translateX(2px);  clip-path: inset(52% 0 12% 0); }
+    95% { transform: translateX(-1px); clip-path: none; }
+    96% { transform: translateX(1px); }
+  }
+}
+
+/* ---------- the page itself, restated in this language ---------- */
+body.tactical .ms-left { background: var(--tac-field); }
+body.tactical .ms-left canvas, body.tactical .ms-left .ms-fallback { filter: contrast(1.06) saturate(1.05); }
+body.tactical .ms-right { background: linear-gradient(180deg, rgba(8,10,9,.92), rgba(6,8,7,.96)); }
+body.tactical .ms-label { color: var(--tac-accent); }
+body.tactical .ms-title { color: #eef7e6; }
+body.tactical .ms-track { border-bottom: 1px solid var(--tac-line-soft); }
+body.tactical .ms-track:hover { background: rgba(182,224,74,.08); }
+body.tactical .ms-track.is-playing { background: rgba(182,224,74,.14); }
+body.tactical .ms-name { color: #e4efdc; }
+body.tactical .ms-track.is-playing .ms-name { color: #dcf57e; text-shadow: 0 0 16px rgba(182,224,74,.4); }
+body.tactical .ms-time, body.tactical .ms-num { color: var(--tac-dim); }
+body.tactical .ms-bar { color: var(--tac-dim); }
+body.tactical .ms-bar button { background: rgba(182,224,74,.14); color: #dcf57e; border-color: rgba(182,224,74,.5); }
+body.tactical .ms-progress { background: rgba(255,255,255,.12); }
+body.tactical .ms-progress span { background: var(--tac-accent); }
+
+@media (max-width: 1100px) {
+  .tac-side { display: none; }
+  .tac-poem { display: none; }
+}
+@media (max-width: 700px) {
+  .tac-top { left: 20px; right: 20px; }
+  .tac-foot { left: 20px; bottom: 26px; }
+}

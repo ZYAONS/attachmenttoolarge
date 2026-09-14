@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -6,9 +6,10 @@
 <title>Recordings · attachmenttoolarge — the Attachment Too Large Society</title>
 <meta name="description" content="Recordings of one complaint: a live-synthesised instrumental, a boom-bap rap, an electric Memphis soul-blues and a night-drive synth-pop song — each written and generated from its own lyrics.">
 <link rel="icon" href="assets/img/emblem.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/p3.css">
-<link rel="stylesheet" href="assets/css/hud.css">
+<link rel="stylesheet" href="assets/css/style.css?v=20260915a">
+<link rel="stylesheet" href="assets/css/p3.css?v=20260915a">
+<link rel="stylesheet" href="assets/css/tactical.css">
+<link rel="stylesheet" href="assets/css/hud.css?v=20260915a">
 <script>document.documentElement.className += " js";</script>
 <style>
 /* ==========================================================================
@@ -30,12 +31,17 @@
   background: #c6c6c4; overflow: hidden;
   display: block; padding: 0;
 }
+/* The scene script marks its own host [data-record-scene] when WebGL is up; the
+   drawn screen stays underneath until then, and is hidden the moment it is not
+   needed. Keying off the host is what makes the canvas visible at all — keying
+   off .ms-left silently hid it and left the fallback on screen. */
+.ms-left [data-record-scene] { position: absolute; inset: 0; display: block; }
 .ms-left .ms-fallback,
 .ms-left canvas { display: block; width: 100%; height: 100%; }
 .ms-left .ms-fallback { object-fit: cover; object-position: 50% 46%; }
-.ms-left canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
-.ms-left:not(.is-rendered) canvas { display: none; }
-.ms-left.is-rendered .ms-fallback { display: none; }
+.ms-left canvas { position: absolute; inset: 0; }
+[data-record-scene]:not(.is-rendered) canvas { display: none; }
+[data-record-scene].is-rendered .ms-fallback { display: none; }
 /* the other half: matte charcoal, the way a render's backdrop reads next to the object */
 .ms-right {
   background: linear-gradient(180deg, #26262a 0%, #1a1a1d 52%, #101012 100%);
@@ -93,7 +99,7 @@
 .ms-note a { color: #dcf57e; text-decoration: underline; text-underline-offset: 3px; }
 </style>
 </head>
-<body>
+<body class="tactical page-recordings">
 <nav class="hud-crumb" aria-label="Breadcrumb"><span class="glyph">◈</span> ATT-20MB <b>TERMINAL</b></nav>
 <nav class="hud-rail" aria-label="Sections">
   <a href="index.html"><span class="ic">⌂</span><span class="zh">主页</span>HOME</a>
@@ -217,6 +223,7 @@
 <script src="assets/js/recordings.js"></script>
 <script src="assets/js/music.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/tactical.js"></script>
 <script>
 /* The menu: one audio element, four rows. Row 01 is not a file — it starts the
    site's own synth instead, and the row highlights for as long as it runs. */
