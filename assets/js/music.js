@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    attachmenttoolarge — 主题音乐引擎
    浏览器实时合成（Web Audio），不加载任何音频文件、不联网、不上传数据。
 
@@ -344,6 +344,74 @@
     if (local === 3 || local === 11) hat(ctx, b, t, 0.28);
   }
 
+  /* ======================= 曲目三：Gate Keeper（方舟味配乐）=======================
+     这一首是自己写的，不经过任何外部服务 —— 因为 GPU 配额那种东西不该决定
+     一首曲子能不能存在。D 小调，140 BPM，十六分音符步进，四小节一循环：
+     合成器持续音型（ostinato）+ 太鼓式底鼓 + 军鼓 + 铜管重音 + 合唱式和声垫。
+     第 1–2 小节只留低频与音型，第 3–4 小节全乐队进 —— 那种「憋住再放开」的
+     推进感，是这类配乐的性格所在。 */
+  var ARK_BPM = 140;
+  var ARK_BEAT = 60 / ARK_BPM;
+  var ARK_STEP = ARK_BEAT / 4;
+  var ARK_BAR = 16;
+  var ARK_ROOT = [73.42, 73.42, 98.00, 87.31];                  // D2 D2 G2 F2
+  var ARK_OSTINATO = [293.66, 349.23, 440.00, 349.23, 293.66, 440.00, 587.33, 440.00];
+  var ARK_CHOIR = [
+    [146.83, 174.61, 220.00], [146.83, 174.61, 220.00],
+    [196.00, 233.08, 293.66], [174.61, 220.00, 261.63]
+  ];
+  var ARK_BRASS = [[146.83, 220.00, 293.66], [196.00, 293.66, 392.00]];
+
+  /* 铜管式重音：两层微失谐锯齿过扫频低通，起音快、尾巴短 */
+  function stab(ctx, b, freqs, t) {
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(800, t);
+    f.frequency.linearRampToValueAtTime(2600, t + 0.05);
+    f.frequency.exponentialRampToValueAtTime(650, t + 0.5);
+    f.Q.value = 3;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.07, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+
+    freqs.forEach(function (fr) {
+      [0, 1].forEach(function (k) {
+        var o = ctx.createOscillator();
+        o.type = "sawtooth";
+        o.frequency.value = fr * (k ? 1.006 : 1);
+        var vg = ctx.createGain();
+        vg.gain.value = 0.5;
+        o.connect(vg);
+        vg.connect(f);
+        o.start(t);
+        o.stop(t + 0.6);
+      });
+    });
+    f.connect(g);
+    g.connect(b.master);
+  }
+
+  function scheduleArkStep(ctx, b, step, t) {
+    var bar = Math.floor(step / ARK_BAR) % 4;
+    var local = step % ARK_BAR;
+    var full = bar >= 2;                       // 后半段才是全乐队
+
+    if (local === 0 || local === 6 || local === 10 || (full && local === 14)) kick(ctx, b, t);
+    if (full && (local === 4 || local === 12)) snare(ctx, b, t);
+    /* 十六分音符踩镲全程不断，重拍更响 —— 这一类配乐的推进感全靠它 */
+    if (full) hat(ctx, b, t, local % 4 === 0 ? 1.0 : local % 2 === 0 ? 0.62 : 0.4);
+    else if (local % 4 === 2) hat(ctx, b, t, 0.3);
+    if (local === 0 || local === 8) bass(ctx, b, ARK_ROOT[bar], t, ARK_STEP * 6, 0.5);
+
+    /* 持续音型十六分音符不断，每次移位一点，避免听起来像死循环 */
+    arp(ctx, b, ARK_OSTINATO[(step + bar * 3) % ARK_OSTINATO.length], t, local % 4 === 0 ? 0.9 : 0.5);
+
+    if (local === 0) pad(ctx, b, ARK_CHOIR[bar], t, ARK_BAR * ARK_STEP);
+    if (full && (local === 0 || local === 8)) stab(ctx, b, ARK_BRASS[local === 8 ? 1 : 0], t);
+  }
+
   /* ======================= 音效 ======================= */
   function sfxError(ctx, b) {
     var t = ctx.currentTime + 0.01;
@@ -464,10 +532,15 @@
 
   var lineSubs = [];
 
-  function stepDur() { return state.track === "rap" ? RAP_STEP : STEP; }
+  function stepDur() {
+    if (state.track === "rap") return RAP_STEP;
+    if (state.track === "ark") return ARK_STEP;
+    return STEP;
+  }
 
   function scheduleStep(ctx, b, step, t) {
     if (state.track === "rap") scheduleRapStep(ctx, b, step, t);
+    else if (state.track === "ark") scheduleArkStep(ctx, b, step, t);
     else scheduleLofiStep(ctx, b, step, t);
   }
 
@@ -783,7 +856,7 @@
   }
 
   function selectTrack(id) {
-    if (id !== "rap") id = "lofi";
+    if (id !== "rap" && id !== "ark") id = "lofi";
     if (id === state.track) return state.track;
     var wasOn = state.on;
     if (wasOn) stop();
@@ -808,8 +881,8 @@
       id: state.track,
       name: state.track === "rap"
         ? ((data && data.title) || "Attachment Too Large") + " (Rap)"
-        : "Failed at 19:59",
-      kind: state.track === "rap" ? "rap" : "lofi"
+        : state.track === "ark" ? "Gate Keeper" : "Failed at 19:59",
+      kind: state.track
     };
   }
 
@@ -880,10 +953,11 @@
     var buses = createBuses(ctx, ctx.destination);
     buses.master.gain.value = 0.3;
 
-    var dur = which === "rap" ? RAP_STEP : STEP;
+    var dur = which === "rap" ? RAP_STEP : which === "ark" ? ARK_STEP : STEP;
     var steps = Math.ceil(seconds / dur);
     for (var i = 0; i < steps; i++) {
       if (which === "rap") scheduleRapStep(ctx, buses, i, i * dur);
+      else if (which === "ark") scheduleArkStep(ctx, buses, i, i * dur);
       else scheduleLofiStep(ctx, buses, i % TOTAL_STEPS, i * dur);
     }
     if (which === "rap") { try { crackle(ctx, buses); } catch (e) { /* 忽略 */ } }
@@ -903,6 +977,26 @@
         if (j < mid) sumA += ch[j] * ch[j]; else sumB += ch[j] * ch[j];
       }
       var rmsA = Math.sqrt(sumA / mid), rmsB = Math.sqrt(sumB / (ch.length - mid));
+      /* 起音密度：先取 5 ms 跳距的能量包络，再在包络上找上升沿。
+         直接在波形上设阈值会数到振荡周期本身（4 个周期就是 4 个「起音」），
+         那不是节奏 —— 所以必须先算包络，再和它自己的滑动均值比较。 */
+      var hop = Math.max(1, Math.round(sr * 0.005));
+      var env = [];
+      for (var h = 0; h + hop <= ch.length; h += hop) {
+        var e = 0;
+        for (var m = 0; m < hop; m++) { var v2 = ch[h + m]; e += v2 * v2; }
+        env.push(Math.sqrt(e / hop));
+      }
+      var onsets = 0, lastOnset = -1e9, refr = Math.round(0.08 / 0.005);   // 80 ms 不应期
+      for (var q = 1; q < env.length; q++) {
+        var from = Math.max(0, q - 40), acc = 0, cnt = 0;
+        for (var p = from; p < q; p++) { acc += env[p]; cnt++; }
+        var avg = cnt ? acc / cnt : 0;
+        if (env[q] > 0.02 && avg > 0 && env[q] > avg * 2.2 && (q - lastOnset) > refr) {
+          onsets++;
+          lastOnset = q;
+        }
+      }
       return {
         track: which,
         seconds: seconds,
@@ -916,6 +1010,7 @@
            如果两段差得离谱，说明循环边界塌了或声音在衰减。 */
         rmsFirstHalf: Math.round(rmsA * 10000) / 10000,
         rmsSecondHalf: Math.round(rmsB * 10000) / 10000,
+        onsetsPerSecond: Math.round((onsets / seconds) * 100) / 100,
         loopSeconds: Math.round((which === "rap" ? RAP_BAR * RAP_STEP * 4 : LOOP_SECONDS) * 100) / 100
       };
     });

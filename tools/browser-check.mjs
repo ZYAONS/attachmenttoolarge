@@ -210,9 +210,25 @@ const SUITE = `(async () => {
   const trackList = document.querySelector("[data-ms-tracks]");
   if (trackList) {
     const rows = [...trackList.querySelectorAll(".ms-track")];
-    ok("曲目表有四条", rows.length === 4, rows.length + " rows");
+    ok("曲目表有五条", rows.length === 5, rows.length + " rows");
     const names = rows.map(r => r.querySelector(".ms-name")?.textContent || "");
-    ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Wrong Side of the Wire/.test(names[2]) && /Ninety-Nine Forever/.test(names[3]), names.join(" · ").slice(0, 60));
+    ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Wrong Side of the Wire/.test(names[2]) && /Ninety-Nine Forever/.test(names[3]) && /Gate Keeper/.test(names[4]), names.join(" · ").slice(0, 78));
+
+    /* the in-house Ark-flavoured score: composed here, not fetched from anywhere */
+    const ark = await music.renderOffline(6, "ark");
+    ok("方舟味配乐有波形", ark.peak > 0.02 && ark.rms > 0.004, "peak=" + ark.peak + " rms=" + ark.rms);
+    /* comparative, not a bare threshold: the score must be far more percussive
+       than the ambient loop, which is the actual musical difference between them */
+    ok("方舟味配乐有节奏（对比铺底）", ark.onsetsPerSecond > rl.onsetsPerSecond * 2,
+       "ark " + ark.onsetsPerSecond + "/s vs ambient " + rl.onsetsPerSecond + "/s");
+    const arkRow = document.querySelector('[data-track="ark"]');
+    if (arkRow) {
+      arkRow.click(); await wait(400);
+      ok("选到方舟曲目", music.currentTrack().id === "ark" && /Gate Keeper/.test(music.currentTrack().name),
+         music.currentTrack().id + " · " + music.currentTrack().name);
+      ok("方舟曲目在播", music.isOn() === true, "playing");
+      arkRow.click(); await wait(200);   // stop it again
+    }
 
     /* the words below the list must follow whichever track is selected */
     const msTitle = () => (document.querySelector("[data-lyrics-title]") || {}).textContent || "";

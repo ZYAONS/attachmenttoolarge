@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /* ==========================================================================
    generate-version.mjs — render one of the alternate recordings
 
@@ -7,7 +7,7 @@
    to its own file so the site can offer them side by side.
 
    Usage:
-     node tools/music-ai/generate-version.mjs blues
+     node tools/music-ai/generate-version.mjs wire
      node tools/music-ai/generate-version.mjs pop --duration 165
      node tools/music-ai/generate-version.mjs --list
    ========================================================================== */
