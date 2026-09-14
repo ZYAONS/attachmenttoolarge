@@ -1,0 +1,197 @@
+﻿/* ==========================================================================
+   hud.css — the terminal HUD design layer
+   --------------------------------------------------------------------------
+   Loaded after style.css and p3.css, this one carries the language of an
+   operations terminal rather than a poster: a dark industrial base, hairline
+   borders instead of heavy drops, one lime signal colour, dense monospace
+   labels with tiny Latin subtitles, corner brackets, a right-hand rail, a
+   breadcrumb strip, a mission timer, and a scanline wash over dark bands.
+
+   Everything is driven from the block below: change these and the whole layer
+   changes with them.
+   ========================================================================== */
+:root {
+  --hud-bg: #101214;
+  --hud-bg-2: #14171a;
+  --hud-panel: #171a1d;
+  --hud-panel-2: #1c2024;
+  --hud-line: rgba(232, 236, 233, 0.14);
+  --hud-line-soft: rgba(232, 236, 233, 0.07);
+  --hud-ink: #e8ece9;
+  --hud-dim: rgba(232, 236, 233, 0.55);
+  --hud-lime: #c8e84f;
+  --hud-lime-soft: rgba(200, 232, 79, 0.14);
+  --hud-red: #ff5a52;
+  --hud-rail: 74px;
+  --hud-font: "Bahnschrift", "DIN Alternate", "Segoe UI", system-ui, sans-serif;
+}
+
+/* ---------- the base ---------------------------------------------------- */
+html[data-theme="dark"] body,
+body {
+  background: var(--hud-bg);
+}
+html[data-theme="light"] body {
+  background: #eceae4;                     /* daylight: a pale grey plate, same language */
+}
+html[data-theme="light"] {
+  --hud-bg: #eceae4;
+  --hud-bg-2: #e4e1d9;
+  --hud-panel: #f5f3ee;
+  --hud-panel-2: #eceae4;
+  --hud-line: rgba(16, 18, 20, 0.16);
+  --hud-line-soft: rgba(16, 18, 20, 0.08);
+  --hud-ink: #14171a;
+  --hud-dim: rgba(20, 23, 26, 0.6);
+}
+
+/* flat plates and hairlines: the opposite of the poster layer's hard shadows */
+.card, .stat, .callout, .member-card, .table-wrap, .cta-band, .track-bar {
+  border: 1px solid var(--hud-line) !important;
+  border-radius: 2px;
+  box-shadow: none !important;
+  background: var(--hud-panel);
+}
+.card:hover, .stat:hover { border-color: rgba(200, 232, 79, 0.45) !important; }
+.btn, .badge, .tag, .eyebrow { border-radius: 2px !important; }
+.btn { border: 1px solid var(--hud-line) !important; box-shadow: none !important; }
+.btn-primary { background: var(--hud-lime) !important; color: #10130f !important; border-color: var(--hud-lime) !important; }
+.btn-ghost { background: transparent !important; color: var(--hud-ink) !important; }
+.btn-ghost:hover { border-color: var(--hud-lime) !important; color: var(--hud-lime) !important; }
+.eyebrow, .badge, .tag { box-shadow: none !important; transform: none !important; }
+.eyebrow {
+  background: transparent !important; color: var(--hud-lime) !important;
+  border-left: 3px solid var(--hud-lime); padding-left: 10px;
+  font-family: var(--mono) !important; letter-spacing: 0.24em !important;
+}
+.badge { background: transparent; border-color: var(--hud-line); color: var(--hud-dim); }
+.dot-live { background: var(--hud-lime) !important; }
+
+/* type: dense labels, tight headings, lime signal words */
+h1, h2, h3, .hero-title { font-family: var(--hud-font) !important; letter-spacing: -0.01em; }
+h1, h2 { text-shadow: none !important; font-style: normal !important; }
+.section-head h2::after { background: var(--hud-lime) !important; height: 3px; }
+.section-head[data-num]::before { -webkit-text-stroke-color: var(--hud-line) !important; opacity: 0.9; }
+.lead, p { color: var(--hud-dim); }
+.small, .muted, .footer-col a, .footer-bottom { color: var(--hud-dim); }
+a { color: var(--hud-lime); }
+
+/* the poster layer's colour motifs become HUD motifs */
+.dark-hour { text-shadow: 3px 3px 0 rgba(200, 232, 79, 0.22) !important; color: var(--hud-ink) !important; }
+.dark-hour .colon, .dark-hour small { color: var(--hud-lime) !important; }
+.p3-sticker { background: var(--hud-lime) !important; color: #10130f !important; box-shadow: 4px 4px 0 rgba(232, 236, 233, 0.16) !important; }
+.p3-band, .p3-speed::after { display: none !important; }
+.section::before { opacity: 0.5; }
+.section:nth-of-type(3n+1)::after { background-image: radial-gradient(var(--hud-line-soft) 1.4px, transparent 1.5px) !important; }
+
+/* ---------- scanline wash on dark bands -------------------------------- */
+.hud-scan { position: relative; overflow: hidden; }
+.hud-scan::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.55;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, rgba(200, 232, 79, 0.05), transparent 40%);
+}
+.hud-glitch { position: relative; }
+.hud-glitch:hover { animation: hud-shift 0.28s steps(2, end) 2; }
+@keyframes hud-shift {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-2px, 1px); }
+  100% { transform: translate(1px, -1px); }
+}
+
+/* ---------- corner brackets ------------------------------------------- */
+.card::before, .card::after, .stat::before, .stat::after {
+  content: ""; position: absolute; width: 12px; height: 12px; pointer-events: none;
+  border: 0; background: var(--hud-lime) !important; opacity: 0.85;
+}
+.card::before, .stat::before { left: -1px; top: -1px;
+  clip-path: polygon(0 0, 100% 0, 100% 2px, 2px 2px, 2px 100%, 0 100%); }
+.card::after, .stat::after { right: -1px; bottom: -1px;
+  clip-path: polygon(100% 100%, 0 100%, 0 calc(100% - 2px), calc(100% - 2px) calc(100% - 2px), calc(100% - 2px) 0, 100% 0); }
+
+/* ---------- breadcrumb strip (top left) -------------------------------- */
+.hud-crumb {
+  position: fixed; left: 0; top: 0; z-index: 60;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(12, 14, 16, 0.92); backdrop-filter: blur(4px);
+  border: 1px solid var(--hud-line); border-left: 0;
+  padding: 9px 20px 9px 14px;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--hud-dim);
+}
+.hud-crumb b { color: var(--hud-ink); font-weight: 600; }
+.hud-crumb .glyph {
+  width: 22px; height: 22px; display: grid; place-items: center;
+  border: 1px solid var(--hud-line); color: var(--hud-lime);
+}
+@media (max-width: 720px) { .hud-crumb { display: none; } }
+
+/* ---------- right-hand rail ------------------------------------------- */
+.hud-rail {
+  position: fixed; right: 0; top: 96px; z-index: 60; width: var(--hud-rail);
+  display: flex; flex-direction: column; gap: 1px;
+  background: var(--hud-line-soft);
+  border: 1px solid var(--hud-line); border-right: 0;
+}
+.hud-rail a, .hud-rail button {
+  display: grid; gap: 4px; justify-items: center; text-align: center;
+  padding: 12px 6px; background: rgba(12, 14, 16, 0.9); cursor: pointer;
+  font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--hud-dim); text-decoration: none;
+  border: 0; border-left: 2px solid transparent;
+}
+.hud-rail a:hover, .hud-rail button:hover { color: var(--hud-lime); border-left-color: var(--hud-lime); background: var(--hud-lime-soft); }
+.hud-rail .ic { font-size: 1.05rem; line-height: 1; color: var(--hud-ink); }
+.hud-rail .zh { color: var(--hud-dim); font-size: 0.58rem; letter-spacing: 0.06em; }
+.hud-rail .is-active { border-left-color: var(--hud-lime); color: var(--hud-lime); }
+@media (max-width: 1000px) { .hud-rail { display: none; } }
+
+/* ---------- mission timer (bottom left) ------------------------------- */
+.hud-timer {
+  position: fixed; left: 0; bottom: 0; z-index: 60;
+  background: rgba(12, 14, 16, 0.92); border: 1px solid var(--hud-line); border-left: 0; border-bottom: 0;
+  padding: 10px 18px 12px; font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.1em; color: var(--hud-dim);
+}
+.hud-timer .row { display: flex; gap: 10px; }
+.hud-timer b { color: var(--hud-ink); font-weight: 600; }
+.hud-timer .lime { color: var(--hud-lime); }
+@media (max-width: 720px) { .hud-timer { display: none; } }
+
+/* ---------- progress chip (3 / 5) ------------------------------------- */
+.hud-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.14em; color: var(--hud-ink);
+}
+.hud-chip .gem {
+  width: 14px; height: 14px; background: var(--hud-lime);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+/* ---------- hexagon marker -------------------------------------------- */
+.hud-hex {
+  display: inline-grid; place-items: center; width: 34px; height: 34px;
+  background: var(--hud-lime); color: #10130f;
+  clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0 50%);
+  font-family: var(--mono); font-weight: 700; font-size: 0.74rem;
+}
+
+/* keep fixed chrome clear of the page edges */
+@media (min-width: 1001px) { .container { padding-right: calc(var(--hud-rail) + 18px); } }
+
+@media print { .hud-rail, .hud-timer, .hud-crumb, .hud-scan::after { display: none !important; } }
+
+/* keep the music pill clear of the mission timer in the bottom-left corner */
+
+
+/* ---------- overrides that must win over the poster layer -------------- */
+/* the clock is one line of digits with the label underneath, not a stack of
+   flex children (which is what it became the moment the label was added) */
+.dark-hour { display: block !important; }
+.dark-hour .colon { display: inline !important; }
+.dark-hour small { display: block !important; margin: 8px 0 16px !important; }
+
+/* the mission timer belongs bottom-right: the music pill already owns the
+   bottom-left corner, and two fixed blocks fighting over it helps nobody */
+.hud-timer { left: auto !important; right: 0 !important; border-left: 1px solid var(--hud-line) !important; border-right: 0 !important; }

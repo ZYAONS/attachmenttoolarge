@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" role="img" aria-label="Terminal dial: a segmented ring with lime markers around a paperclip crystal">
+  <title>Terminal dial — segmented ring, lime markers, paperclip core</title>
+  <defs>
+    <linearGradient id="crystal" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#e8f79a"/>
+      <stop offset="0.42" stop-color="#b9de3c"/>
+      <stop offset="0.72" stop-color="#5f8f14"/>
+      <stop offset="1" stop-color="#26400a"/>
+    </linearGradient>
+    <linearGradient id="crystalSide" x1="0" y1="0" x2="1" y2="0.4">
+      <stop offset="0" stop-color="#3d6b0d"/>
+      <stop offset="1" stop-color="#1c3106"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#3a3f45"/>
+      <stop offset="0.5" stop-color="#24282c"/>
+      <stop offset="1" stop-color="#14171a"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(360 360)">
+    <!-- outer hairline ring -->
+    <circle r="318" fill="none" stroke="#e8ece9" stroke-opacity="0.18" stroke-width="1.5"/>
+    <circle r="286" fill="none" stroke="#e8ece9" stroke-opacity="0.1" stroke-width="1"/>
+
+    <!-- the segmented ring: twelve heavy wedges with hairline gaps -->
+    <g fill="url(#plate)" stroke="#0b0d0f" stroke-width="1.5">
+      <path d="M 0 -272 A 272 272 0 0 1 136 -235 L 118 -204 A 240 240 0 0 0 0 -240 Z"/>
+      <path d="M 136 -235 A 272 272 0 0 1 235 -136 L 204 -118 A 240 240 0 0 0 118 -204 Z"/>
+      <path d="M 235 -136 A 272 272 0 0 1 272 0 L 240 0 A 240 240 0 0 0 204 -118 Z"/>
+      <path d="M 272 0 A 272 272 0 0 1 235 136 L 204 118 A 240 240 0 0 0 240 0 Z"/>
+      <path d="M 235 136 A 272 272 0 0 1 136 235 L 118 204 A 240 240 0 0 0 204 118 Z"/>
+      <path d="M 136 235 A 272 272 0 0 1 0 272 L 0 240 A 240 240 0 0 0 118 204 Z"/>
+      <path d="M 0 272 A 272 272 0 0 1 -136 235 L -118 204 A 240 240 0 0 0 0 240 Z"/>
+      <path d="M -136 235 A 272 272 0 0 1 -235 136 L -204 118 A 240 240 0 0 0 -118 204 Z"/>
+      <path d="M -235 136 A 272 272 0 0 1 -272 0 L -240 0 A 240 240 0 0 0 -204 118 Z"/>
+      <path d="M -272 0 A 272 272 0 0 1 -235 -136 L -204 -118 A 240 240 0 0 0 -240 0 Z"/>
+      <path d="M -235 -136 A 272 272 0 0 1 -136 -235 L -118 -204 A 240 240 0 0 0 -204 -118 Z"/>
+      <path d="M -136 -235 A 272 272 0 0 1 0 -272 L 0 -240 A 240 240 0 0 0 -118 -204 Z"/>
+    </g>
+
+    <!-- one wedge is the lime signal, like the reference's single bright segment -->
+    <path d="M 272 0 A 272 272 0 0 1 235 136 L 204 118 A 240 240 0 0 0 240 0 Z" fill="#c8e84f"/>
+    <path d="M -272 0 A 272 272 0 0 0 -235 136 L -204 118 A 240 240 0 0 0 -240 0 Z" fill="#c8e84f" opacity="0.5"/>
+
+    <!-- perforation: small square holes punched along the wedges -->
+    <g fill="#0b0d0f">
+      <rect x="-6" y="-256" width="12" height="12"/><rect x="60" y="-248" width="12" height="12"/>
+      <rect x="120" y="-222" width="12" height="12"/><rect x="180" y="-180" width="12" height="12"/>
+      <rect x="222" y="-120" width="12" height="12"/><rect x="248" y="-60" width="12" height="12"/>
+      <rect x="-248" y="60" width="12" height="12"/><rect x="-222" y="120" width="12" height="12"/>
+      <rect x="-180" y="180" width="12" height="12"/><rect x="-120" y="222" width="12" height="12"/>
+      <rect x="-60" y="248" width="12" height="12"/>
+    </g>
+
+    <!-- inner instrument face -->
+    <circle r="196" fill="#111417" stroke="#e8ece9" stroke-opacity="0.16" stroke-width="1.5"/>
+    <circle r="150" fill="none" stroke="#e8ece9" stroke-opacity="0.12" stroke-width="1"/>
+    <!-- rail-and-tick marks -->
+    <g stroke="#e8ece9" stroke-opacity="0.5" stroke-width="2">
+      <path d="M -186 0 L -150 0"/><path d="M 150 0 L 186 0"/>
+      <path d="M 0 -186 L 0 -150"/><path d="M 0 150 L 0 186"/>
+    </g>
+    <g fill="#c8e84f">
+      <rect x="-2" y="-144" width="4" height="12"/><rect x="-2" y="132" width="4" height="12"/>
+      <rect x="-144" y="-2" width="12" height="4"/><rect x="132" y="-2" width="12" height="4"/>
+    </g>
+
+    <!-- the crystal: a tall faceted spike over the core, paperclip inside -->
+    <g transform="translate(0 -22)">
+      <path d="M 0 -168 L 30 -96 L 26 54 L 0 84 L -26 54 L -30 -96 Z" fill="url(#crystal)" stroke="#0b0d0f" stroke-width="2"/>
+      <path d="M 0 -168 L 30 -96 L 0 -30 Z" fill="#ffffff" opacity="0.28"/>
+      <path d="M 0 -30 L -26 54 L 0 84 Z" fill="url(#crystalSide)" opacity="0.85"/>
+      <path d="M 0 -150 L 0 74" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.5"/>
+    </g>
+    <g transform="translate(0 128)" fill="none" stroke="#e8ece9" stroke-width="6" stroke-linecap="round">
+      <path d="M -16 -14 L -16 8 A 16 16 0 0 0 16 8 L 16 -20"/>
+      <path d="M -2 0 A 7 7 0 0 1 12 0 L 12 4"/>
+    </g>
+
+    <!-- floating lime crosses, as in the reference -->
+    <g stroke="#c8e84f" stroke-width="4" stroke-linecap="round">
+      <path d="M -276 -150 L -276 -114 M -294 -132 L -258 -132"/>
+      <path d="M 288 -108 L 288 -76 M 272 -92 L 304 -92"/>
+      <path d="M 232 208 L 232 240 M 216 224 L 248 224"/>
+      <path d="M -240 196 L -240 226 M -255 211 L -225 211"/>
+    </g>
+    <g fill="#c8e84f" opacity="0.75">
+      <circle cx="-206" cy="-206" r="3"/><circle cx="206" cy="-206" r="3"/>
+      <circle cx="-206" cy="206" r="3"/><circle cx="206" cy="206" r="3"/>
+    </g>
+  </g>
+</svg>
