@@ -5,6 +5,31 @@ The audio is in `assets/audio/`, the words are in `assets/js/lyrics.js` and
 `assets/js/recordings.js`, and the generation parameters are beside each mp3 in
 its `.generation.json`.
 
+## Already published
+
+GitHub Releases — https://github.com/attachment-too-large/attachmenttoolarge/releases/tag/recordings-v1
+
+Permanent links to all three recordings, the cover, and `lyrics.txt`. Published by
+`node tools/publish-recordings.mjs --release`, which is idempotent: run it again
+with `--tag recordings-v2` to cut a new one, or with no tag to re-upload anything
+that is missing.
+
+## Where else they can go, honestly
+
+| Platform | Can this be published from here? | Because |
+|---|---|---|
+| GitHub Releases | **Yes, done** | Open API, permanent URLs, no account needed beyond the repo's own token |
+| Internet Archive | **Yes, with your keys** | Genuinely open upload API. Create a free account, set `IA_ACCESS` / `IA_SECRET`, and the same bundle can go up as a public item — the only streaming-ish host that allows this |
+| Audius | Only through their app | Decentralised and free to upload, but the upload flow expects a signed-in artist account |
+| SoundCloud, Audiomack | No | Upload needs an account; the old public upload API was closed to new apps |
+| Bandcamp, Jamendo, Free Music Archive | No | Account, artist profile and (usually) review before anything appears |
+| NetEase Cloud Music, QQ Music | No | Account, phone verification, real-name verification, and a review queue |
+| Spotify, Apple Music | No | Nothing uploads directly: it goes through a distributor (DistroKid, Amuse, TuneCore), which is an account and usually a fee |
+
+The short version: **an upload has to come from the account holder.** That is not a
+technical limit I can route around — it is the point of those accounts. What can be
+prepared is everything the upload needs, and that is this folder plus the release.
+
 ## Tracks
 
 | # | File | Title | Genre | Length | Notes |

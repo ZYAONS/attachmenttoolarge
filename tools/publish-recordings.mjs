@@ -55,7 +55,7 @@ const TRACKS = [
 ];
 const EXTRA = [
   { file: "assets/img/emblem.svg", name: "cover-emblem.svg" },
-  { file: "assets/img/org-avatar-1024.png", name: "cover-1024.png" }
+  { file: "assets/img/org-avatar.png", name: "cover-1024.png" }
 ];
 
 /* the words, gathered into one text file so the release is self-contained */
