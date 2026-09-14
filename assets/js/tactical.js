@@ -60,16 +60,4 @@
   foot.appendChild(el("div", "tac-code", "<span>E</span><span>P</span><span>1</span><span>7</span>"));
   document.body.appendChild(foot);
 
-  /* the count in the top strip follows the player */
-  var list = document.querySelector("[data-ms-tracks]");
-  if (list) {
-    var counter = top.querySelector(".tac-count");
-    list.addEventListener("click", function (e) {
-      var row = e.target.closest ? e.target.closest(".ms-track") : null;
-      if (!row || !counter) return;
-      var all = document.querySelectorAll("[data-ms-tracks] .ms-track");
-      var i = [].indexOf.call(all, row) + 1;
-      counter.innerHTML = "<em>" + i + "</em>/" + all.length;
-    }, true);
-  }
 })();
