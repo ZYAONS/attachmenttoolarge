@@ -207,7 +207,7 @@ body::after { background-image: none !important; }        /* the offset overprin
 
 html[data-theme="dark"] body::before,
 body:not([data-theme="light"])::before {
-  background-image: url("../img/glitch-bg.svg") !important;
+  background-image: url("../img/glitch-bg.svg?v=2") !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
@@ -227,3 +227,13 @@ html[data-theme="light"] body::before {
    recordings screen. Removed so nothing slanted is left at all. */
 .section-head::before, .section-head::after { display: none !important; }
 .ms-left::after { display: none !important; }
+/* ==========================================================================
+   Let the plate actually be seen.
+   The halftone layer (html::after) and the tinted section bands both sit on top
+   of the fixed background and grey it down to a flat olive wash. With a composite
+   this detailed behind them, that is the difference between "a texture" and
+   "nothing". Sections become transparent so the plate reads through.
+   ========================================================================== */
+html::after { display: none !important; }
+.section, .section-sm, .page-head, .hero { background: transparent !important; }
+body { background-color: #08090a !important; }
