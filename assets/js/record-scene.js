@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    record-scene.js — the record screen, modelled and rendered
 
    Not a drawing of the photograph: geometry that is actually lit. The platter
@@ -257,12 +257,12 @@
 
   /* the crystal: a faceted gem, glassy rather than painted */
   var gem = new THREE.Group();
-  var body = new THREE.Mesh(new THREE.CylinderGeometry(0.92, 0.42, 2.1, 6, 1), matCrystal);
-  body.position.y = 1.05;
-  var tip = new THREE.Mesh(new THREE.ConeGeometry(0.92, 2.3, 6), matCrystal);
-  tip.position.y = 3.25;
-  var collar = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.42, 0.34, 6), matCrystal);
-  collar.position.y = -0.12;
+  var body = new THREE.Mesh(new THREE.CylinderGeometry(0.60, 0.26, 2.75, 6, 1), matCrystal);
+  body.position.y = 1.38;
+  var tip = new THREE.Mesh(new THREE.ConeGeometry(0.60, 3.1, 6), matCrystal);
+  tip.position.y = 4.30;
+  var collar = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.28, 0.42, 6), matCrystal);
+  collar.position.y = -0.18;
   gem.add(body); gem.add(tip); gem.add(collar);
   gem.position.set(0, TOP + 0.75, 0.35);
   gem.rotation.y = 12 * DEG;
@@ -303,12 +303,46 @@
     renderer.render(scene, camera);
   }
 
-  /* a few frames, so shadows and the environment settle, then hold still:
-     the reference is a still screen and this is not the place to invent motion */
+  /* a few frames, so shadows and the environment settle */
   var frames = 0;
   function warm() {
     renderer.render(scene, camera);
     if (++frames < 8) requestAnimationFrame(warm);
+  }
+
+  /* ---------------- the platter turns while something is playing ----------------
+     A record should move, but only when there is sound. This asks the page's own
+     player whether anything is playing — the hidden audio element for a recording,
+     or the live synthesiser for the instrumental — and spins only then. Reduced
+     motion opts out entirely. */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var audio = document.querySelector("audio");
+  var spinning = false, last = 0;
+
+  function anythingPlaying() {
+    if (audio && !audio.paused && !audio.ended && audio.currentTime > 0) return true;
+    if (window.ATTMusic && typeof window.ATTMusic.isOn === "function" && window.ATTMusic.isOn()) return true;
+    return false;
+  }
+
+  function tick(t) {
+    if (!spinning) return;
+    if (!last) last = t;
+    var dt = Math.min((t - last) / 1000, 0.05);
+    last = t;
+    platter.rotation.y += dt * 0.42;                 // one turn in about fifteen seconds
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+
+  if (!reduce) {
+    setInterval(function () {
+      var want = anythingPlaying();
+      if (want === spinning) return;
+      spinning = want;
+      last = 0;
+      if (spinning) requestAnimationFrame(tick);
+    }, 350);
   }
 
   host.classList.add("is-rendered");

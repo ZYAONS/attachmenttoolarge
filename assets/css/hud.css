@@ -207,9 +207,9 @@ body::after { background-image: none !important; }        /* the offset overprin
 
 html[data-theme="dark"] body::before,
 body:not([data-theme="light"])::before {
-  background-image: url("../img/tech-bg.svg") !important;
+  background-image: url("../img/glitch-bg.svg") !important;
   background-size: cover !important;
-  background-position: center top !important;
+  background-position: center center !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
 }

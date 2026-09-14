@@ -1,0 +1,116 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="A torn terminal composite: stacked translucent documents with dense text, a ghosted X, vertical columns of marks and one lime light bar, under grain and scanlines">
+  <title>Terminal composite — torn documents, ghost X, grain</title>
+  <defs>
+    <!-- a block of dense fake text: many hairlines of uneven length -->
+    <pattern id="textA" width="200" height="9" patternUnits="userSpaceOnUse">
+      <rect x="0" y="3" width="188" height="1.6" fill="#e8ece9" opacity="0.30"/>
+      <rect x="0" y="0" width="120" height="1.2" fill="#e8ece9" opacity="0.16"/>
+    </pattern>
+    <pattern id="textB" width="200" height="11" patternUnits="userSpaceOnUse">
+      <rect x="0" y="4" width="176" height="1.8" fill="#e8ece9" opacity="0.26"/>
+      <rect x="26" y="0" width="140" height="1.3" fill="#e8ece9" opacity="0.14"/>
+    </pattern>
+    <pattern id="colA" width="16" height="7" patternUnits="userSpaceOnUse">
+      <rect x="2" y="0" width="9" height="2" fill="#e8ece9" opacity="0.22"/>
+    </pattern>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1.2" fill="#000000" opacity="0.5"/>
+    </pattern>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <linearGradient id="limeBar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c8e84f" stop-opacity="0"/>
+      <stop offset="0.18" stop-color="#c8e84f" stop-opacity="0.85"/>
+      <stop offset="0.62" stop-color="#eaffa0" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#c8e84f" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="pool" cx="50%" cy="46%" r="52%">
+      <stop offset="0" stop-color="#dfe9e2" stop-opacity="0.10"/>
+      <stop offset="1" stop-color="#dfe9e2" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig2" cx="50%" cy="44%" r="72%">
+      <stop offset="0" stop-color="#0c0e10"/>
+      <stop offset="0.6" stop-color="#08090a"/>
+      <stop offset="1" stop-color="#050607"/>
+    </radialGradient>
+    <!-- torn paper edge, used as a clip for the document panels -->
+    <clipPath id="torn1">
+      <path d="M 40 96 L 560 74 L 574 300 L 566 520 L 570 700 L 380 712 L 120 704 L 52 540 L 46 320 Z"/>
+    </clipPath>
+    <clipPath id="torn2">
+      <path d="M 520 150 L 1130 128 L 1146 360 L 1136 520 L 1150 690 L 880 706 L 640 700 L 528 470 Z"/>
+    </clipPath>
+    <clipPath id="torn3">
+      <path d="M 1080 60 L 1560 44 L 1574 380 L 1566 700 L 1300 716 L 1090 700 L 1074 360 Z"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#vig2)"/>
+  <ellipse cx="800" cy="470" rx="620" ry="430" fill="url(#pool)"/>
+
+  <!-- ===== the ghost X, first drawn as a chromatic pair, then in white ===== -->
+  <g opacity="0.10">
+    <g transform="translate(-4 2)">
+      <rect x="-160" y="486" width="1920" height="26" fill="#4fd1ff" transform="rotate(-26 800 500)"/>
+      <rect x="-160" y="486" width="1920" height="26" fill="#4fd1ff" transform="rotate(26 800 500)"/>
+    </g>
+    <g transform="translate(4 -2)">
+      <rect x="-160" y="486" width="1920" height="26" fill="#ff5a52" transform="rotate(-26 800 500)"/>
+      <rect x="-160" y="486" width="1920" height="26" fill="#ff5a52" transform="rotate(26 800 500)"/>
+    </g>
+  </g>
+  <g opacity="0.085" fill="#e8ece9">
+    <rect x="-160" y="488" width="1920" height="22" transform="rotate(-26 800 500)"/>
+    <rect x="-160" y="488" width="1920" height="22" transform="rotate(26 800 500)"/>
+  </g>
+
+  <!-- ===== torn document panels ===== -->
+  <g clip-path="url(#torn1)">
+    <rect x="30" y="60" width="560" height="670" fill="#ffffff" opacity="0.05"/>
+    <rect x="30" y="60" width="560" height="670" fill="url(#textA)"/>
+    <rect x="30" y="60" width="560" height="670" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="2"/>
+  </g>
+  <g clip-path="url(#torn2)">
+    <rect x="510" y="110" width="660" height="620" fill="#ffffff" opacity="0.07"/>
+    <rect x="510" y="110" width="660" height="620" fill="url(#textB)"/>
+    <rect x="510" y="110" width="660" height="620" fill="none" stroke="#ffffff" stroke-opacity="0.26" stroke-width="2"/>
+  </g>
+  <g clip-path="url(#torn3)">
+    <rect x="1060" y="30" width="540" height="700" fill="#ffffff" opacity="0.045"/>
+    <rect x="1060" y="30" width="540" height="700" fill="url(#colA)"/>
+    <rect x="1060" y="30" width="540" height="700" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="2"/>
+    <!-- a column of vertical text marks along the right, like a ledger -->
+    <g fill="#e8ece9" opacity="0.20">
+      <rect x="1180" y="60" width="7" height="520"/><rect x="1256" y="90" width="7" height="470"/>
+      <rect x="1332" y="70" width="7" height="560"/><rect x="1408" y="110" width="7" height="440"/>
+      <rect x="1484" y="80" width="7" height="500"/>
+    </g>
+  </g>
+
+  <!-- ===== the one lime light bar, with its bleed ===== -->
+  <g>
+    <rect x="700" y="150" width="46" height="520" fill="#c8e84f" opacity="0.07"/>
+    <rect x="716" y="180" width="14" height="460" fill="url(#limeBar)"/>
+    <rect x="706" y="200" width="34" height="420" fill="#c8e84f" opacity="0.12" filter="none"/>
+  </g>
+
+  <!-- ===== a few stray bars and blocks, as in the reference ===== -->
+  <g opacity="0.5">
+    <rect x="620" y="820" width="60" height="26" fill="#0b0d0e" stroke="#e8ece9" stroke-opacity="0.25"/>
+    <rect x="688" y="820" width="106" height="26" fill="#0b0d0e" stroke="#e8ece9" stroke-opacity="0.25"/>
+    <rect x="802" y="820" width="44" height="26" fill="#0b0d0e" stroke="#e8ece9" stroke-opacity="0.25"/>
+    <rect x="854" y="820" width="150" height="26" fill="#0b0d0e" stroke="#e8ece9" stroke-opacity="0.25"/>
+    <rect x="1012" y="820" width="70" height="26" fill="#0b0d0e" stroke="#e8ece9" stroke-opacity="0.25"/>
+  </g>
+  <g fill="#c8e84f" opacity="0.8">
+    <rect x="1180" y="700" width="10" height="10"/><rect x="1212" y="700" width="10" height="10"/>
+    <rect x="1244" y="700" width="10" height="10"/>
+  </g>
+
+  <!-- ===== grain and scanlines over everything ===== -->
+  <rect width="1600" height="1000" filter="url(#grain)" opacity="0.055"/>
+  <rect width="1600" height="1000" fill="url(#scan)" opacity="0.32"/>
+  <rect width="1600" height="1000" fill="none" stroke="#000000" stroke-opacity="0.5" stroke-width="60"/>
+</svg>

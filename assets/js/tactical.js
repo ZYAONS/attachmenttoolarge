@@ -60,4 +60,31 @@
   foot.appendChild(el("div", "tac-code", "<span>E</span><span>P</span><span>1</span><span>7</span>"));
   document.body.appendChild(foot);
 
+
+  /* ---------- the lyrics window: collapse, hide, bring back ---------- */
+  (function lyricsWindow() {
+    var win = document.getElementById("lyrics");
+    if (!win) return;
+    var min = win.querySelector(".lyr-min");
+    var close = win.querySelector(".lyr-close");
+    var reopen = document.querySelector(".lyr-reopen");
+    var KEY = "att.lyrics.hidden";
+
+    if (localStorage.getItem(KEY) === "1") document.body.classList.add("lyrics-closed");
+    if (min) min.addEventListener("click", function () { win.classList.toggle("is-min"); });
+    if (close) close.addEventListener("click", function () {
+      document.body.classList.add("lyrics-closed");
+      localStorage.setItem(KEY, "1");
+    });
+    if (reopen) reopen.addEventListener("click", function () {
+      document.body.classList.remove("lyrics-closed");
+      localStorage.setItem(KEY, "0");
+    });
+
+    /* the section's own heading is redundant once it is a window */
+    var head = win.querySelector(".section-head .eyebrow");
+    if (head) head.textContent = "LYRICS";
+    win.setAttribute("role", "complementary");
+    win.setAttribute("aria-label", "Lyrics, following the current track");
+  })();
 })();

@@ -97,6 +97,53 @@
 .ms-progress span { display: block; height: 100%; width: 0; background: #c6e04a; }
 .ms-note { margin-top: 26px; font-size: 0.86rem; color: rgba(255,255,255,.72); max-width: 56ch; }
 .ms-note a { color: #dcf57e; text-decoration: underline; text-underline-offset: 3px; }
+  /* --------------------------------------------------------------------------
+     The lyrics, as a window that floats over the screen and follows the song.
+     It is fixed, so the page keeps its shape; the body scrolls itself to
+     whichever line the recording has reached.
+     -------------------------------------------------------------------------- */
+  #lyrics.section {
+    position: fixed; right: 22px; bottom: 104px; z-index: 70;
+    width: min(400px, 92vw); max-height: 62vh;
+    margin: 0; padding: 0; background: none;
+    display: flex; flex-direction: column;
+    border: 1px solid var(--tac-line, rgba(214,230,210,.22));
+    background: rgba(7, 10, 9, 0.86);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 18px 40px -18px rgba(0,0,0,.75);
+  }
+  #lyrics .container { width: 100%; padding: 0; }
+  #lyrics .section-head { padding: 10px 12px; margin: 0; border-bottom: 1px solid var(--tac-line-soft, rgba(214,230,210,.12));
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  #lyrics .section-head .eyebrow { margin: 0; font-size: .6rem; letter-spacing: .2em; }
+  #lyrics .section-head h2 { margin: 0; font-size: .96rem; letter-spacing: .04em; }
+  #lyrics .section-head .lead { display: none; }
+  #lyrics .lyrics { overflow-y: auto; overscroll-behavior: contain; padding: 10px 12px 16px;
+    scroll-behavior: smooth; max-height: calc(62vh - 46px); }
+  #lyrics .lyric-line { font-size: .82rem; padding: 3px 0 3px 26px; }
+  #lyrics .lyric-label { margin-top: 10px; font-size: .6rem; letter-spacing: .18em; }
+  #lyrics .lyric-line.is-active { background: rgba(182,224,74,.12); }
+
+  .lyr-min { position: absolute; top: 8px; right: 54px; }
+  .lyr-close { position: absolute; top: 8px; right: 10px; }
+  .lyr-min, .lyr-close {
+    height: 22px; min-width: 22px; padding: 0 6px; cursor: pointer;
+    background: rgba(255,255,255,.06); border: 1px solid var(--tac-line, rgba(214,230,210,.22));
+    color: var(--tac-ink, #d8e6d2); font-family: var(--mono); font-size: .68rem; line-height: 1;
+  }
+  .lyr-min:hover, .lyr-close:hover { background: rgba(182,224,74,.16); color: #eaffc0; }
+  #lyrics.is-min .lyrics, #lyrics.is-min .section-head .lead { display: none; }
+  #lyrics.is-min { max-height: 44px; }
+  .lyr-reopen {
+    position: fixed; right: 22px; bottom: 104px; z-index: 70; display: none;
+    padding: 8px 12px; cursor: pointer;
+    background: rgba(7,10,9,.86); border: 1px solid var(--tac-line, rgba(214,230,210,.22));
+    color: var(--tac-ink, #d8e6d2); font-family: var(--mono); font-size: .7rem; letter-spacing: .1em;
+  }
+  #lyrics.is-min ~ .lyr-reopen { display: none; }
+  body.lyrics-closed #lyrics { display: none; }
+  body.lyrics-closed .lyr-reopen { display: block; }
+  @media (max-width: 900px) { #lyrics.section { right: 12px; left: 12px; width: auto; bottom: 92px; } }
 </style>
 </head>
 <body class="tactical page-recordings">
@@ -203,9 +250,13 @@
           track above and these change with it.
         </p>
       </div>
-      <div class="lyrics reveal" data-lyrics></div>
+              <button class="lyr-min" type="button" title="Collapse to the title bar">&#8211;</button>
+        <button class="lyr-close" type="button" title="Hide the lyrics window">&#10005;</button>
+      </div>
+      <div class="lyrics" data-lyrics></div>
     </div>
   </section>
+  <button class="lyr-reopen" type="button">LYRICS</button>
 </main>
 
 <footer class="site-footer">
@@ -333,7 +384,17 @@
 
     var els = [], shown = null;
 
-    function highlight(i) { els.forEach(function (el, k) { el.classList.toggle("is-active", k === i); }); }
+    /* one lyric line per equal slice of the recording, so it moves with the song,
+       and the window scrolls itself so the live line stays where you are looking */
+    function highlight(i) {
+      els.forEach(function (el, k) { el.classList.toggle("is-active", k === i); });
+      var live = els[i];
+      if (!live || !host.scrollHeight) return;
+      var box = host.getBoundingClientRect(), line = live.getBoundingClientRect();
+      if (line.top < box.top + 12 || line.bottom > box.bottom - 12) {
+        host.scrollTop += (line.top - box.top) - box.height / 2 + line.height / 2;
+      }
+    }
 
     function render(id) {
       shown = id;
