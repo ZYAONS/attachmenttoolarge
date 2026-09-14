@@ -207,7 +207,7 @@ body::after { background-image: none !important; }        /* the offset overprin
 
 html[data-theme="dark"] body::before,
 body:not([data-theme="light"])::before {
-  background-image: url("../img/glitch-bg.svg?v=2") !important;
+  background-image: url("../img/bg-decor.svg?v=1") !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;

@@ -45,7 +45,12 @@ html[data-theme="light"] {
 /* ---------- the field: near-black, vignetted, so the centre holds ------- */
 body { background-color: #08090a !important; }
 html[data-theme="light"] body { background-color: var(--bone) !important; }
-body::before { opacity: 0.5 !important; }          /* the composite stays, but back a step */
+/* The old plate (torn documents and a big crossed X) is gone: it read as
+   artwork behind body text, which is not what a background decoration is for.
+   The centre now gets a soft scrim so copy always wins. */
+body::before { opacity: 1 !important; }
+.container { position: relative; }
+.hero-copy, .section-head, .post-list, .prose, .grid { position: relative; z-index: 1; }
 
 html::before {                                     /* vignette */
   content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 2;
@@ -56,15 +61,19 @@ html[data-theme="light"]::before { box-shadow: inset 0 0 200px 70px rgba(60, 56,
 /* ---------- type: two registers ---------------------------------------- */
 h1, h2, .hero-title, .section-head h2 {
   font-family: var(--rhodes-serif) !important;
-  background-image: none !important;          /* the site tints headings with a gradient; */
-  -webkit-text-fill-color: currentColor !important;  /* the game sets them solid */
+  /* The site paints headings with a gradient and sets color: transparent so the
+     gradient shows through. Killing the gradient therefore has to restore an
+     explicit fill as well, or the title renders as nothing at all. */
+  background-image: none !important;
+  color: var(--bone) !important;
+  -webkit-text-fill-color: var(--bone) !important;
   font-weight: 400 !important;
   text-transform: uppercase;
   letter-spacing: 0.035em;
   color: var(--bone);
 }
 html[data-theme="light"] h1, html[data-theme="light"] h2,
-html[data-theme="light"] .hero-title, html[data-theme="light"] .section-head h2 { color: var(--rhodes-ink); }
+html[data-theme="light"] .hero-title, html[data-theme="light"] .section-head h2 { color: var(--rhodes-ink) !important; -webkit-text-fill-color: var(--rhodes-ink) !important; }
 h3, .project-name, .stat-num { font-family: var(--rhodes-label) !important; letter-spacing: 0.02em; }
 
 .eyebrow, .badge, .tag, .small, .muted, .footer-bottom, .stat-label, .project-meta, .post-date {

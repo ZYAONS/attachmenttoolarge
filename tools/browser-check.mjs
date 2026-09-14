@@ -210,7 +210,11 @@ const SUITE = `(async () => {
   const trackList = document.querySelector("[data-ms-tracks]");
   if (trackList) {
     const rows = [...trackList.querySelectorAll(".ms-track")];
-    ok("曲目表有五条", rows.length === 5, rows.length + " rows");
+    /* The count is not fixed — tracks keep being added, and a hard-coded number
+       only ever fails for the wrong reason. What matters is that every row is
+       playable and that the known ones are present. */
+    ok("曲目表不为空且每条都可播放", rows.length >= 5 && rows.every(r => r.hasAttribute("data-track")),
+       rows.length + " rows, each with a data-track");
     const names = rows.map(r => r.querySelector(".ms-name")?.textContent || "");
     ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Wrong Side of the Wire/.test(names[2]) && /Ninety-Nine Forever/.test(names[3]) && /The Long Send/.test(names[4]), names.join(" · ").slice(0, 78));
 

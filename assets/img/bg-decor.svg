@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Instrument margin decoration: edge traces, registration marks, ruler ticks and a faint dial arc, kept clear of the centre">
+  <title>Instrument margins — nothing crosses the text column</title>
+  <defs>
+    <!-- very sparse dot field -->
+    <pattern id="dots" width="9" height="9" patternUnits="userSpaceOnUse">
+      <circle cx="1.2" cy="1.2" r="0.7" fill="#f4f1e8" opacity="0.055"/>
+    </pattern>
+    <!-- ruler ticks along the top and bottom edges -->
+    <pattern id="ruler" width="40" height="14" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="1.2" height="7" fill="#f4f1e8" opacity="0.14"/>
+      <rect x="20" y="0" width="1" height="4" fill="#f4f1e8" opacity="0.08"/>
+    </pattern>
+    <pattern id="rulerB" width="40" height="14" patternUnits="userSpaceOnUse">
+      <rect x="0" y="7" width="1.2" height="7" fill="#f4f1e8" opacity="0.14"/>
+      <rect x="20" y="10" width="1" height="4" fill="#f4f1e8" opacity="0.08"/>
+    </pattern>
+    <linearGradient id="medFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b6d94a" stop-opacity="0"/>
+      <stop offset="0.35" stop-color="#b6d94a" stop-opacity="0.9"/>
+      <stop offset="0.75" stop-color="#b6d94a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#b6d94a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#08090a"/>
+  <rect width="1600" height="1000" fill="url(#dots)"/>
+
+  <!-- ============ the dial, cropped into the bottom-right corner ========= -->
+  <g opacity="0.5">
+    <circle cx="1520" cy="940" r="520" fill="none" stroke="#f4f1e8" stroke-opacity="0.06" stroke-width="1.5"/>
+    <circle cx="1520" cy="940" r="440" fill="none" stroke="#f4f1e8" stroke-opacity="0.05" stroke-width="1"/>
+    <circle cx="1520" cy="940" r="352" fill="none" stroke="#f4f1e8" stroke-opacity="0.045" stroke-width="1"/>
+    <g stroke="#f4f1e8" stroke-opacity="0.1" stroke-width="1.4">
+      <path d="M 1520 420 L 1520 386"/>
+      <path d="M 1520 1460 L 1520 1494"/>
+      <path d="M 1000 940 L 966 940"/>
+      <path d="M 2040 940 L 2074 940"/>
+    </g>
+    <path d="M 1520 500 A 440 440 0 0 1 1180 646" fill="none" stroke="#b6d94a" stroke-opacity="0.42" stroke-width="2.4"/>
+  </g>
+
+  <!-- ============ a hexagon marker, top-left, well inside the margin ==== -->
+  <g transform="translate(126 132)" opacity="0.5">
+    <path d="M 0 -62 L 54 -31 L 54 31 L 0 62 L -54 31 L -54 -31 Z"
+          fill="none" stroke="#f4f1e8" stroke-opacity="0.12" stroke-width="1.4"/>
+    <path d="M 0 -40 L 35 -20 L 35 20 L 0 40 L -35 20 L -35 -20 Z"
+          fill="none" stroke="#b6d94a" stroke-opacity="0.3" stroke-width="1.2"/>
+    <circle r="3" fill="#b6d94a" opacity="0.8"/>
+  </g>
+
+  <!-- ============ edge routes: they turn at right angles and never reach
+                 the text column (content is centred at roughly x 300-1300) == -->
+  <g fill="none" stroke="#b6d94a" stroke-opacity="0.24" stroke-width="1.6">
+    <path d="M 40 200 H 168 V 330 H 96 V 470"/>
+    <path d="M 1560 180 H 1436 V 300 H 1508 V 430"/>
+    <path d="M 40 720 H 150 V 830"/>
+    <path d="M 1560 700 H 1444 V 812 H 1512"/>
+  </g>
+  <g fill="none" stroke="#f4f1e8" stroke-opacity="0.09" stroke-width="1.2">
+    <path d="M 40 120 H 210"/>
+    <path d="M 1560 120 H 1390"/>
+    <path d="M 40 880 H 200 V 930"/>
+    <path d="M 1560 880 H 1400"/>
+  </g>
+  <g fill="#08090a" stroke="#b6d94a" stroke-opacity="0.45" stroke-width="1.4">
+    <rect x="162" y="194" width="11" height="11"/>
+    <rect x="90" y="464" width="11" height="11"/>
+    <rect x="1430" y="174" width="11" height="11"/>
+    <rect x="1502" y="424" width="11" height="11"/>
+    <rect x="144" y="714" width="11" height="11"/>
+    <rect x="1438" y="694" width="11" height="11"/>
+  </g>
+  <g fill="#b6d94a">
+    <rect x="36" y="196" width="7" height="7"/>
+    <rect x="1556" y="176" width="7" height="7"/>
+    <rect x="36" y="876" width="7" height="7"/>
+    <rect x="1556" y="876" width="7" height="7"/>
+  </g>
+
+  <!-- ============ registration marks in the four corners ================ -->
+  <g stroke="#f4f1e8" stroke-opacity="0.2" stroke-width="1.3" fill="none">
+    <g transform="translate(58 58)"><path d="M 0 26 V 0 H 26"/><circle r="4"/></g>
+    <g transform="translate(1542 58)"><path d="M 0 26 V 0 H -26"/><circle r="4"/></g>
+    <g transform="translate(58 942)"><path d="M 0 -26 V 0 H 26"/><circle r="4"/></g>
+    <g transform="translate(1542 942)"><path d="M 0 -26 V 0 H -26"/><circle r="4"/></g>
+  </g>
+
+  <!-- ============ ruler edges ============ -->
+  <rect x="0" y="0" width="1600" height="14" fill="url(#ruler)"/>
+  <rect x="0" y="986" width="1600" height="14" fill="url(#rulerB)"/>
+
+  <!-- ============ one margin light bar, left of the column ============== -->
+  <rect x="242" y="150" width="2" height="420" fill="url(#medFade)" opacity="0.5"/>
+
+  <!-- scanlines, barely there -->
+  <g opacity="0.14">
+    <rect width="1600" height="1000" fill="none" style="mask-image: repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 4px)"/>
+  </g>
+</svg>
