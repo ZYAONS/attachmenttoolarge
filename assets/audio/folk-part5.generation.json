@@ -1,9 +1,0 @@
-{
-  "generatedAt": "2026-09-14T18:13:25.623Z",
-  "engine": "MusicGen (instrumental — it does not sing)",
-  "space": "aach456-music-gen-ai.hf.space",
-  "endpoint": "/generate_music",
-  "prompt": "american folk ballad, front porch recording, fingerpicked acoustic guitar, five-string banjo, fiddle, upright bass, harmonica, close two-part harmony, warm and unhurried, no drums",
-  "file": "folk-part5.wav",
-  "bytes": 323884
-}

@@ -187,3 +187,116 @@ html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
 @media (prefers-reduced-motion: reduce) {
   .glitch.is-live::before, .glitch.is-live::after { animation: none !important; }
 }
+
+/* ==========================================================================
+   Bone plates carry ink, all the way down.
+   The CTA band is a light plate, and the heading rules above set headings to
+   bone — which is how white text ended up on a white card. Any descendant of a
+   light plate gets an explicit dark fill, headings included.
+   ========================================================================== */
+.card, .stat, .callout, .cta-band, .member-card, .table-wrap, .project-card, .quote {
+  color: var(--rhodes-ink) !important;
+}
+.card :is(h1, h2, h3, h4), .callout :is(h1, h2, h3), .cta-band :is(h1, h2, h3),
+.stat :is(h1, h2, h3), .member-card :is(h1, h2, h3), .table-wrap :is(h1, h2, h3),
+.quote :is(h1, h2, h3), .project-card :is(h1, h2, h3) {
+  color: var(--rhodes-ink) !important;
+  -webkit-text-fill-color: var(--rhodes-ink) !important;
+  background-image: none !important;
+}
+.card p, .callout p, .cta-band p, .cta-band .lead, .quote p, .project-card p,
+.card li, .callout li, .cta-band li { color: rgba(10, 11, 10, 0.78) !important; }
+.cta-band .eyebrow { color: var(--med-dim) !important; border-left-color: var(--med-dim) !important; }
+.cta-band .btn-ghost { color: var(--rhodes-ink) !important; border-color: rgba(10, 11, 10, 0.4) !important; }
+.cta-band .btn-ghost:hover { background: rgba(10, 11, 10, 0.08) !important; color: var(--rhodes-ink) !important; }
+.card a, .callout a, .cta-band a { color: var(--med-dim) !important; }
+
+/* ==========================================================================
+   Background: more layers, and they move.
+   Everything here sits behind the content column and stops under
+   prefers-reduced-motion. Layers: a rotating radar sweep, breathing
+   concentric rings, drifting dust, a slow scan band, and a ticking rail.
+   ========================================================================== */
+.bg-fx { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.bg-fx i { position: absolute; display: block; }
+
+.bg-fx .sweep {
+  right: -300px; bottom: -300px; width: 980px; height: 980px; border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    rgba(182, 217, 74, 0.16) 0deg, rgba(182, 217, 74, 0.05) 26deg,
+    transparent 60deg, transparent 360deg);
+  animation: fx-sweep 22s linear infinite;
+}
+@keyframes fx-sweep { to { transform: rotate(360deg); } }
+
+.bg-fx .rings {
+  left: -220px; top: -220px; width: 700px; height: 700px; border-radius: 50%;
+  background: repeating-radial-gradient(circle at 50% 50%,
+    rgba(244, 241, 232, 0.075) 0 1px, transparent 1px 36px);
+  animation: fx-breathe 14s ease-in-out infinite;
+}
+@keyframes fx-breathe {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.035); }
+}
+
+.bg-fx .dust {
+  inset: -10%;
+  background-image:
+    radial-gradient(rgba(244, 241, 232, 0.30) 0.9px, transparent 1px),
+    radial-gradient(rgba(182, 217, 74, 0.28) 0.8px, transparent 1px);
+  background-size: 140px 140px, 220px 220px;
+  background-position: 0 0, 70px 90px;
+  animation: fx-drift 90s linear infinite;
+}
+@keyframes fx-drift { to { background-position: 420px -560px, -380px 620px; } }
+
+.bg-fx .scan {
+  left: 0; right: 0; height: 220px;
+  background: linear-gradient(180deg, transparent, rgba(182, 217, 74, 0.075) 45%, transparent);
+  animation: fx-scan 11s linear infinite;
+}
+@keyframes fx-scan { 0% { top: -240px; } 100% { top: 106%; } }
+
+.bg-fx .ticks {
+  top: 0; bottom: 0; left: 0; width: 84px;
+  background: repeating-linear-gradient(0deg,
+    rgba(244, 241, 232, 0.11) 0 1px, transparent 1px 10px);
+  animation: fx-tick 7s linear infinite;
+}
+@keyframes fx-tick { to { background-position-y: 100px; } }
+
+.bg-fx .scanlines {
+  inset: 0; opacity: 0.35;
+  background: repeating-linear-gradient(0deg,
+    rgba(0, 0, 0, 0.42) 0 1px, transparent 1px 4px);
+}
+
+@media (max-width: 900px) { .bg-fx .sweep, .bg-fx .rings { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .bg-fx .sweep, .bg-fx .rings, .bg-fx .dust, .bg-fx .scan, .bg-fx .ticks { animation: none !important; }
+}
+/* ==========================================================================
+   The audit found this, not the eye: every light panel on the site was still
+   carrying the light text colour that hud.css set for dark panels, so headings
+   and body copy sat on bone plates at a contrast ratio of 1.01 — white on white.
+   The fix has to be broad, because the panels are not all one class.
+   ========================================================================== */
+:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
+    .quote, .faq, .faq details, .rule, .principle, .timeline li, .post, .box, .panel)
+  :is(h1, h2, h3, h4, h5, h6, p, li, td, th, span, strong, em, small, label, dt, dd, blockquote, div) {
+  color: var(--rhodes-ink) !important;
+  -webkit-text-fill-color: var(--rhodes-ink) !important;
+}
+:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
+    .quote, .faq, .rule, .principle, .timeline li, .post, .box, .panel) h1,
+:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
+    .quote, .faq, .rule, .principle, .timeline li, .post, .box, .panel) h2,
+:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
+    .quote, .faq, .rule, .principle, .timeline li, .post, .box, .panel) h3 {
+  background-image: none !important;
+}
+/* accents that must survive on light plates */
+:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap, .quote, .rule, .principle) a { color: var(--med-dim) !important; }
+:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap, .quote, .rule, .principle) .eyebrow { color: var(--med-dim) !important; border-left-color: var(--med-dim) !important; }
+:is(.card, .stat) .stat-num, :is(.card) .project-name, :is(.card) .card-num { color: var(--rhodes-ink) !important; }

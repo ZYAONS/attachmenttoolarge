@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    attachmenttoolarge — 浏览器端自检（CDP 驱动，零依赖）
 
    用法：
@@ -323,6 +323,113 @@ const SUITE = `(async () => {
     ok("旧版说唱页（已退役为跳转）", true, "legacy page");
   } else {
     ok("本页无唱片播放器（跳过）", true, "N/A on this page");
+
+    /* ---------- 设计审计：把已经犯过的错变成断言 ---------- */
+    /* No regular expressions anywhere in here on purpose: this whole suite is a
+       template literal in the host file, which swallows backslashes — a regex
+       written with escaped parentheses silently becomes a different regex and
+       takes the suite down with it (it happened: 12 checks instead of 102). */
+    function lumOfTriplet(r, g, b, a) {
+      if (a !== undefined && a === 0) return -1;
+      const f = [r, g, b].map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+      return 0.2126 * f[0] + 0.7152 * f[1] + 0.0722 * f[2];
+    }
+    function colorsIn(str) {
+      const out = [];
+      const s = String(str || "");
+      const parts = s.split("rgb");
+      for (let i = 1; i < parts.length; i++) {
+        const seg = parts[i];
+        const a = seg.indexOf("("), b = seg.indexOf(")");
+        if (a < 0 || b < 0) continue;
+        const nums = seg.slice(a + 1, b).split(",").map(x => parseFloat(x));
+        if (nums.length >= 3 && nums.slice(0, 3).every(v => !isNaN(v))) out.push(nums);
+      }
+      for (let i = 0; i < s.length; i++) {
+        if (s[i] !== "#") continue;
+        const hex = s.slice(i + 1, i + 7);
+        if (hex.length >= 6 && /^[0-9a-fA-F]{6}$/.test(hex)) {
+          out.push([parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16)]);
+        }
+      }
+      return out;
+    }
+    function lumOf(c) {
+      const list = colorsIn(c);
+      if (!list.length) return -1;
+      const v = list[0];
+      return lumOfTriplet(v[0], v[1], v[2], v.length > 3 ? v[3] : undefined);
+    }
+    /* A panel can be light because of a background-image gradient rather than a
+       background-color — which is exactly how a bone-white plate with white text
+       on it slipped past the first version of this audit. So gradients count too:
+       every colour stop in the image is averaged and treated as the backdrop. */
+    function bgLum(el) {
+      let n = el, fromImage = -1;
+      while (n && n !== document.documentElement) {
+        const cs = getComputedStyle(n);
+        const bg = cs.backgroundColor;
+        const solid = colorsIn(bg);
+        if (solid.length && !(solid[0].length > 3 && solid[0][3] === 0)) {
+          return lumOfTriplet(solid[0][0], solid[0][1], solid[0][2]);
+        }
+        if (fromImage < 0 && cs.backgroundImage && cs.backgroundImage !== "none") {
+          const stops = colorsIn(cs.backgroundImage);
+          if (stops.length) {
+            const ls = stops.map(s => lumOfTriplet(s[0], s[1], s[2]));
+            fromImage = ls.reduce((a, b) => a + b, 0) / ls.length;
+          }
+        }
+        n = n.parentElement;
+      }
+      return fromImage >= 0 ? fromImage : 0;
+    }
+    const auditRoots = [...document.querySelectorAll("main h1, main h2, main h3, main p, main li, main a, main span, main button, main label")]
+      .filter(el => el.offsetParent !== null && el.textContent.trim().length > 3
+        && !el.closest(".hud-rail,.hud-timer,.hud-crumb,.music-pill,.bg-fx"));
+    const lowContrast = [];
+    for (const el of auditRoots) {
+      const cs = getComputedStyle(el);
+      const fgRaw = cs.webkitTextFillColor && cs.webkitTextFillColor !== "rgb(0, 0, 0)" ? cs.webkitTextFillColor : cs.color;
+      const L1 = lumOf(fgRaw);
+      if (L1 < 0) { lowContrast.push("transparent fill: " + el.tagName + " " + el.textContent.trim().slice(0, 20)); continue; }
+      const L2 = bgLum(el);
+      const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+      if (ratio < 2.4) lowContrast.push(el.tagName + " '" + el.textContent.trim().slice(0, 18) + "' ratio=" + ratio.toFixed(2));
+    }
+    ok("审计: 文字对比度足够", lowContrast.length === 0,
+       lowContrast.length ? lowContrast.slice(0, 3).join(" | ") : auditRoots.length + " 处文字全部达标");
+
+    const invisibleHeads = [...document.querySelectorAll("main h1, main h2")].filter(h => {
+      const r = h.getBoundingClientRect();
+      const cs = getComputedStyle(h);
+      const fill = cs.webkitTextFillColor || cs.color;
+      return r.height < 8 || lumOf(fill) < 0;
+    }).map(h => h.tagName + " " + h.textContent.trim().slice(0, 20) + " h=" + Math.round(h.getBoundingClientRect().height));
+    ok("审计: 标题可见（非透明、有高度）", invisibleHeads.length === 0, invisibleHeads.join(" | ") || "all visible");
+
+    const fixed = [...document.querySelectorAll(".hud-crumb,.hud-rail,.hud-timer,.music-pill")]
+      .filter(el => el.offsetParent !== null || getComputedStyle(el).position === "fixed")
+      .map(el => ({ n: el.className.split(" ")[0], r: el.getBoundingClientRect() }))
+      .filter(o => o.r.width > 0 && o.r.height > 0);
+    const clashes = [];
+    for (let a = 0; a < fixed.length; a++) for (let b = a + 1; b < fixed.length; b++) {
+      const A = fixed[a].r, B = fixed[b].r;
+      const ox = Math.min(A.right, B.right) - Math.max(A.left, B.left);
+      const oy = Math.min(A.bottom, B.bottom) - Math.max(A.top, B.top);
+      if (ox > 4 && oy > 4) clashes.push(fixed[a].n + " × " + fixed[b].n);
+    }
+    ok("审计: 固定控件互不重叠", clashes.length === 0, clashes.join(", ") || fixed.length + " 个固定控件无交叠");
+
+    const fx = document.querySelector(".bg-fx");
+    if (fx) {
+      const col = document.querySelector("main .container") || document.querySelector("main");
+      const c = col.getBoundingClientRect();
+      const mid = document.elementFromPoint(Math.round(c.left + c.width / 2), Math.round(c.top + Math.min(120, c.height / 2)));
+      ok("审计: 装饰层未挡住正文", !(mid && mid.closest(".bg-fx")), mid ? mid.tagName + "." + String(mid.className).split(" ")[0] : "n/a");
+    }
+    const stamps = [...document.querySelectorAll("link[rel=stylesheet]")].map(l => { const h = l.getAttribute("href") || ""; const i = h.indexOf("?v="); return i < 0 ? "" : h.slice(i + 3); }).filter(Boolean);
+    ok("审计: 样式表缓存戳一致", new Set(stamps).size <= 1, stamps.join(", "));
   }
 
   /* ---------- 歌词页：HTML 与 lyrics.js 一致性 ---------- */
