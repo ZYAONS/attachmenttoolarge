@@ -152,14 +152,6 @@
         <span data-ms-clock>0:00</span>
       </div>
 
-      <p class="ms-note">
-        Three of these are real recordings, generated from their own lyrics by the open-source
-        ACE-Step model running remotely — prompts and parameters are stored next to each mp3.
-        The first is not a file at all: it is the site's background music, built note by note in
-        the browser every time it plays, with no percussion and no hiss, made to loop forever.
-        <a href="#lyrics">Read the lyrics</a> ·
-        <a href="assets/audio/rap.mp3" download>download the rap</a>
-      </p>
     </div>
   </section>
 
@@ -168,10 +160,10 @@
     <div class="container">
       <div class="section-head reveal" data-num="01">
         <span class="eyebrow">Lyrics</span>
-        <h2>Attachment Too Large</h2>
-        <p class="lead">
-          The words the rap is singing, line by line, following the recording's own clock —
-          press play on track 02 above and they will move with it.
+        <h2 data-lyrics-title>Attachment Too Large</h2>
+        <p class="lead" data-lyrics-lead>
+          The words being sung, line by line, following the recording's own clock. Pick another
+          track above and these change with it.
         </p>
       </div>
       <div class="lyrics reveal" data-lyrics></div>
@@ -235,7 +227,16 @@
     }
     audio.src = row.getAttribute("data-src");
     audio.volume = 0.9;
-    audio.play();
+    /* play() returns a promise, and switching tracks quickly interrupts the previous
+       one — that rejection is an AbortError, not a failure, and leaving it unhandled
+       puts a real error in the console. Handle it, and report anything else. */
+    var started = audio.play();
+    if (started && typeof started.catch === "function") {
+      started.catch(function (err) {
+        if (err && err.name === "AbortError") return;
+        if (state) state.textContent = "cannot play this file (" + ((err && err.name) || "error") + ")";
+      });
+    }
     if (state) state.textContent = "playing: " + row.querySelector(".ms-name").textContent;
     if (toggle) toggle.textContent = "■ Stop";
   }
@@ -272,44 +273,83 @@
   // leaving the page must not leave the synth running
   window.addEventListener("pagehide", stopAll);
 
-  /* ---- the lyrics, highlighted against the recording's clock ---- */
+  /* ---- lyrics, per track: the words below follow whatever is selected above ---- */
   (function () {
     var host = document.querySelector("[data-lyrics]");
-    if (!host || !window.ATTLYRICS) return;
+    if (!host) return;
+    var titleEl = document.querySelector("[data-lyrics-title]");
+    var leadEl = document.querySelector("[data-lyrics-lead]");
     var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
-    var flat = [], n = 0;
-    var html = window.ATTLYRICS.sections.map(function (sec) {
-      var lines = sec.lines.map(function (l) {
-        var idx = n++;
-        flat.push(l);
-        return '<p class="lyric-line" data-line="' + idx + '"><span class="mark">' +
-          String(idx + 1).padStart(2, "0") + "</span>" + esc(l) + "</p>";
-      }).join("");
-      return '<div class="lyric-section' + (sec.hook ? " is-hook" : "") + '">' +
-        '<div class="lyric-label">' + esc(sec.label) + "</div>" + lines + "</div>";
-    }).join("");
-    host.innerHTML = html;
 
-    var els = [].slice.call(host.querySelectorAll(".lyric-line"));
-    function highlight(i) {
-      els.forEach(function (el, k) { el.classList.toggle("is-active", k === i); });
+    var sectionsFor = function (id) {
+      if (id === "rap" && window.ATTLYRICS) return { title: window.ATTLYRICS.title, sections: window.ATTLYRICS.sections };
+      var rec = (window.ATTRECORDINGS || []).filter(function (r) { return r.id === id; })[0];
+      return rec ? { title: rec.title, sections: rec.sections } : null;
+    };
+
+    var els = [], shown = null;
+
+    function highlight(i) { els.forEach(function (el, k) { el.classList.toggle("is-active", k === i); }); }
+
+    function render(id) {
+      shown = id;
+      var data = sectionsFor(id);
+
+      if (!data) {
+        /* the instrumental has no words, so do not show it someone else's */
+        if (titleEl) titleEl.textContent = "No words";
+        if (leadEl) leadEl.textContent = "The first track is instrumental: there is nothing being sung, so there is nothing to print here.";
+        var songs = (window.ATTRECORDINGS || []).length + 1;
+        host.innerHTML = '<div class="callout"><div><b>Failed at 19:59 — instrumental</b>' +
+          "Built note by note in the browser as it plays: a pad, a walking bass and an arpeggio over " +
+          "Am–F–C–G. No percussion, no hiss, no audio file, made to loop forever. " +
+          songs + " tracks above carry words; pick one and they will appear here.</div></div>";
+        els = [];
+        return;
+      }
+
+      if (titleEl) titleEl.textContent = data.title;
+      if (leadEl) leadEl.textContent = "The words being sung, line by line, following the recording's own clock. Switch track above and these change with it.";
+
+      var n = 0;
+      host.innerHTML = data.sections.map(function (sec) {
+        var lines = sec.lines.map(function (l) {
+          var idx = n++;
+          return '<p class="lyric-line" data-line="' + idx + '"><span class="mark">' +
+            String(idx + 1).padStart(2, "0") + "</span>" + esc(l) + "</p>";
+        }).join("");
+        return '<div class="lyric-section' + (sec.hook ? " is-hook" : "") + '">' +
+          '<div class="lyric-label">' + esc(sec.label) + "</div>" + lines + "</div>";
+      }).join("");
+
+      els = [].slice.call(host.querySelectorAll(".lyric-line"));
+      els.forEach(function (el, i) {
+        el.style.cursor = "pointer";
+        el.addEventListener("click", function () {
+          var row = rows.filter(function (r) { return r.getAttribute("data-track") === shown; })[0];
+          if (!row || row.getAttribute("data-kind") !== "file") return;
+          if (current !== row) play(row);
+          if (audio.duration) { audio.currentTime = (i / els.length) * audio.duration; highlight(i); }
+        });
+      });
     }
+
+    /* one lyric line per equal slice of the recording, so it moves with the song */
     audio.addEventListener("timeupdate", function () {
-      if (!audio.duration || !/rap\.mp3/.test(audio.currentSrc || audio.src || "")) return;
+      if (!els.length || !audio.duration) return;
+      var row = rows.filter(function (r) { return r.getAttribute("data-track") === shown; })[0];
+      var src = row && row.getAttribute("data-src");
+      if (!src) return;
+      var playing = audio.currentSrc || audio.src || "";
+      if (playing.indexOf(src.split("/").pop()) === -1) return;   // another track is playing
       highlight(Math.min(els.length - 1, Math.floor((audio.currentTime / audio.duration) * els.length)));
     });
-    els.forEach(function (el, i) {
-      el.style.cursor = "pointer";
-      el.addEventListener("click", function () {
-        var rapRow = rows.filter(function (r) { return /rap\.mp3/.test(r.getAttribute("data-src") || ""); })[0];
-        if (!rapRow) return;
-        if (current !== rapRow) play(rapRow);
-        if (audio.duration) {
-          audio.currentTime = (i / els.length) * audio.duration;
-          highlight(i);
-        }
-      });
+
+    rows.forEach(function (r) {
+      r.addEventListener("click", function () { render(r.getAttribute("data-track")); });
     });
+
+    render("rap");     // the page opens on the rap, so open on its words
   })();
 })();
 </script>

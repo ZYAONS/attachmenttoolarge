@@ -213,6 +213,26 @@ const SUITE = `(async () => {
     ok("曲目表有四条", rows.length === 4, rows.length + " rows");
     const names = rows.map(r => r.querySelector(".ms-name")?.textContent || "");
     ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Wrong Side of the Wire/.test(names[2]) && /Ninety-Nine Forever/.test(names[3]), names.join(" · ").slice(0, 60));
+
+    /* the words below the list must follow whichever track is selected */
+    const msTitle = () => (document.querySelector("[data-lyrics-title]") || {}).textContent || "";
+    const msCount = () => document.querySelectorAll("[data-lyrics] .lyric-line").length;
+    const msRow = (id) => document.querySelector('[data-track="' + id + '"]');
+    ok("删掉了那段说明文字", !/real recordings, generated from their own lyrics/.test(document.body.innerText), "removed");
+    if (msRow("wire")) {
+      msRow("wire").click(); await wait(300);
+      ok("歌词随曲目切换 · wire", /Wrong Side of the Wire/.test(msTitle()) && msCount() > 15, msTitle() + " · " + msCount() + " lines");
+      msRow("ninetynine").click(); await wait(300);
+      ok("歌词随曲目切换 · ninetynine", /Ninety-Nine Forever/.test(msTitle()), msTitle());
+      msRow("lofi").click(); await wait(300);
+      ok("器乐不冒充别人的歌词", msTitle() === "No words" && msCount() === 0, msTitle());
+      msRow("rap").click(); await wait(300);
+      ok("切回说唱是它自己的词", /Attachment Too Large/.test(msTitle()) && msCount() >= 30, msTitle() + " · " + msCount() + " lines");
+      /* Leave the player stopped: the page stops the current track when its row is
+         clicked again, and a later assertion clicking "rap" then starts it properly.
+         (The page's stopAll() lives in a closure and is not reachable from here.) */
+      msRow("rap").click(); await wait(200);
+    }
     ok("播放器在 DOM 里", !!document.querySelector("audio"), "hidden audio element");
 
     // 点击说唱那条：应当切到 rap.mp3 并开始播放
