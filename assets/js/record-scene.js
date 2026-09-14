@@ -34,7 +34,7 @@
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.92;
+  renderer.toneMappingExposure = 0.75;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setClearColor(BACKDROP, 1);
@@ -68,9 +68,9 @@
   })();
 
   /* ---------------- lighting: a studio, not a lamp ---------------- */
-  scene.add(new THREE.HemisphereLight(0xcfe8d8, 0x0a0f0e, 0.30));
+  scene.add(new THREE.HemisphereLight(0xcfe8d8, 0x0a0f0e, 0.10));
 
-  var key = new THREE.DirectionalLight(0xffffff, 0.95);
+  var key = new THREE.DirectionalLight(0xffffff, 0.30);
   key.position.set(-9, 16, 7);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
@@ -80,7 +80,7 @@
   sc.left = -26; sc.right = 26; sc.top = 26; sc.bottom = -26; sc.near = 1; sc.far = 140;
   scene.add(key);
 
-  var fill = new THREE.DirectionalLight(0xdfe8ff, 0.22);
+  var fill = new THREE.DirectionalLight(0xdfe8ff, 0.07);
   fill.position.set(10, 9, -7);
   scene.add(fill);
 
@@ -91,7 +91,7 @@
   /* ---------------- floor ---------------- */
   var floor = new THREE.Mesh(
     new THREE.PlaneGeometry(320, 320),
-    new THREE.MeshStandardMaterial({ color: 0x121614, roughness: 0.95, metalness: 0.05 })
+    new THREE.MeshStandardMaterial({ color: 0x0c0f0e, roughness: 0.97, metalness: 0.03 })
   );
   floor.rotation.x = -90 * DEG;
   floor.receiveShadow = true;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scene isolation test</title>
+<style>
+  /* nothing from the site: no style.css, no p3.css, no tactical.css.
+     If the platter reads black here and grey on the record page, the lift is
+     coming from a page overlay rather than from the lighting. */
+  html, body { margin: 0; background: #0a0c0b; }
+  .ms-left { position: relative; width: 100vw; height: 66.66vw; max-height: 100vh; overflow: hidden; }
+  .ms-left [data-record-scene] { position: absolute; inset: 0; }
+  .ms-left .ms-fallback, .ms-left canvas { display: block; width: 100%; height: 100%; }
+  .ms-left canvas { position: absolute; inset: 0; }
+  [data-record-scene]:not(.is-rendered) canvas { display: none; }
+  [data-record-scene].is-rendered .ms-fallback { display: none; }
+</style>
+</head>
+<body>
+  <div class="ms-left">
+    <div data-record-scene>
+      <canvas></canvas>
+    </div>
+  </div>
+  <script src="../assets/js/vendor/three.min.js"></script>
+  <script src="../assets/js/record-scene.js"></script>
+</body>
+</html>
