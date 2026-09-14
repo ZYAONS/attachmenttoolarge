@@ -16,8 +16,8 @@
    and gold; this page borrows the blue of a late-night menu instead: white on
    one side, cyan falling into navy on the other, big airy type for the list.
    ========================================================================== */
-.ms { display: grid; grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr); min-height: calc(100vh - var(--header-h)); }
-@media (max-width: 900px) { .ms { grid-template-columns: 1fr; min-height: 0; } }
+.ms { display: block; }
+
 
 /* --------------------------------------------------------------------------
    The object. The reference is a studio render: a matte grey sweep, one black
@@ -26,103 +26,11 @@
    Drawn here with gradients and conic-gradients, so there is no image to load.
    -------------------------------------------------------------------------- */
 .ms-left {
-  position: relative; overflow: hidden;
-  background: radial-gradient(118% 82% at 50% 6%, #ffffff 0%, #dedddb 32%, #bcbcba 66%, #9a9a98 100%);
-  display: grid; place-items: center;
-  padding: 44px 20px 64px;
+  position: relative; width: 100%; aspect-ratio: 3 / 2;
+  background: #c6c6c4; overflow: hidden;
+  display: block; padding: 0;
 }
-.ms-left::before {                 /* the sweep of the backdrop, plus its falloff */
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 44%),
-    radial-gradient(72% 42% at 50% 98%, rgba(0,0,0,.20), transparent 72%);
-}
-.ms-left::after {                  /* the contact shadow the object sits in */
-  content: ""; position: absolute; left: 50%; bottom: 7%; width: 58%; height: 6%;
-  transform: translateX(-50%); pointer-events: none;
-  background: radial-gradient(closest-side, rgba(18,18,20,.46), rgba(18,18,20,0) 74%);
-  filter: blur(10px);
-}
-
-.stage { position: relative; width: min(600px, 90%); aspect-ratio: 1; display: grid; place-items: center; }
-.platter {
-  position: relative; width: 100%; aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle at 36% 28%, #525256 0%, #2c2c30 28%, #17171a 60%, #0a0a0c 100%);
-  box-shadow:
-    0 40px 54px -22px rgba(0,0,0,.58),
-    0 10px 16px -8px rgba(0,0,0,.45),
-    inset 0 2px 3px rgba(255,255,255,.18),
-    inset 0 -4px 8px rgba(0,0,0,.65);
-  animation: ms-spin 26s linear infinite; animation-play-state: paused;
-}
-.platter::after {                  /* rim light along the top-left, as a lens would catch it */
-  content: ""; position: absolute; inset: -1px; border-radius: 50%; pointer-events: none;
-  background: conic-gradient(from 208deg, rgba(255,255,255,.42) 0 6%, rgba(255,255,255,.08) 12%, transparent 22%);
-  mask: radial-gradient(circle, transparent 96%, #000 97%);
-  -webkit-mask: radial-gradient(circle, transparent 96%, #000 97%);
-}
-.stage.is-spinning .platter { animation-play-state: running; }
-.grooves {                         /* the fine concentric cut */
-  position: absolute; inset: 5%; border-radius: 50%; opacity: .8;
-  background: repeating-radial-gradient(circle at 50% 50%,
-    rgba(255,255,255,.06) 0 1px, rgba(0,0,0,.18) 1px 3px);
-  mask: radial-gradient(circle, transparent 26%, #000 29%);
-  -webkit-mask: radial-gradient(circle, transparent 26%, #000 29%);
-}
-.segments {                        /* fine radial ticks, over a few wider cards */
-  position: absolute; inset: 6%; border-radius: 50%; opacity: .5;
-  background:
-    repeating-conic-gradient(from 0deg,
-      rgba(255,255,255,.85) 0 0.35deg, transparent 0.35deg 4.6deg);
-  mask: radial-gradient(circle, transparent 17%, #000 18.5% 55%, transparent 57%);
-  -webkit-mask: radial-gradient(circle, transparent 17%, #000 18.5% 55%, transparent 57%);
-}
-.band {                            /* matte clipped ring, like the striped card */
-  position: absolute; inset: 21%; border-radius: 50%;
-  background: conic-gradient(from 190deg,
-    #2a2a2f 0 5%, #0f0f12 5% 10%, #2e2e33 10% 17%, #0d0d10 17% 27%,
-    #26262b 27% 36%, #0c0c0f 36% 46%, #2b2b31 46% 56%, #101013 56% 68%,
-    #25252a 68% 78%, #0e0e11 78% 88%, #2c2c32 88% 96%, #111114 96% 100%);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), inset 0 0 22px rgba(0,0,0,.6);
-  mask: radial-gradient(circle, transparent 16%, #000 18% 44%, transparent 46%);
-  -webkit-mask: radial-gradient(circle, transparent 16%, #000 18% 44%, transparent 46%);
-}
-.hub {                             /* the matte pale object the crystal stands on */
-  position: absolute; inset: 33%; border-radius: 50%;
-  background:
-    radial-gradient(circle at 36% 30%, #ffffff 0%, #f0f0ee 34%, #cfcfcd 66%, #a9a9a7 100%);
-  box-shadow:
-    0 14px 22px -10px rgba(0,0,0,.6),
-    inset 0 2px 3px rgba(255,255,255,.95),
-    inset 0 -5px 10px rgba(0,0,0,.22);
-}
-.hub::before {                     /* the crumpled form sitting on the platter */
-  content: ""; position: absolute; inset: 8% 4% 4% 8%;
-  border-radius: 46% 54% 50% 50% / 52% 48% 52% 48%;
-  background: radial-gradient(circle at 34% 28%, #ffffff, #ececea 46%, #c9c9c7 100%);
-  box-shadow: inset -6px -8px 14px rgba(0,0,0,.16), inset 6px 6px 12px rgba(255,255,255,.9);
-}
-.hub::after { content: ""; position: absolute; inset: 44%; border-radius: 50%; background: #131318; box-shadow: inset 0 1px 2px rgba(255,255,255,.3), 0 1px 2px rgba(0,0,0,.5); }
-.sheen { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(128deg, rgba(255,255,255,.24) 0 17%, rgba(255,255,255,.05) 30%, rgba(255,255,255,0) 52%); }
-.crystal {                         /* the lime crystal standing on the platter */
-  position: absolute; left: 50%; top: -19%; width: 16%; height: 44%;
-  transform: translateX(-50%) rotate(-2.5deg);
-  background: linear-gradient(160deg, #eaffa3 0%, #c6e04a 26%, #8fbf1f 54%, #4f7a10 82%, #33550a 100%);
-  clip-path: polygon(50% 0%, 82% 26%, 68% 100%, 32% 100%, 18% 26%);
-  filter: drop-shadow(0 12px 18px rgba(60,80,10,.45));
-}
-.crystal::after { content: ""; position: absolute; inset: 0; clip-path: polygon(50% 0%, 63% 30%, 50% 100%, 37% 30%); background: linear-gradient(180deg, rgba(255,255,255,.8), rgba(255,255,255,0) 62%); mix-blend-mode: screen; }
-.glow { position: absolute; left: 50%; top: 8%; width: 42%; height: 42%; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle, rgba(198,224,74,.3), transparent 70%); filter: blur(18px); }
-.spark { position: absolute; width: 24px; height: 24px; background: #c6e04a; }
-.spark::before, .spark::after { content: ""; position: absolute; background: #8fbf1f; }
-.spark::before { left: 50%; top: -44%; width: 3px; height: 188%; transform: translateX(-50%); }
-.spark::after { top: 50%; left: -44%; height: 3px; width: 188%; transform: translateY(-50%); }
-.s1 { left: 5%; top: 31%; transform: rotate(20deg) scale(.8); }
-.s2 { right: 3%; top: 45%; transform: rotate(-14deg); }
-.s3 { left: 19%; bottom: 9%; transform: rotate(38deg) scale(.62); }
-@keyframes ms-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .platter { animation: none; } }
-
+.ms-left img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%; }
 /* the other half: matte charcoal, the way a render's backdrop reads next to the object */
 .ms-right {
   background: linear-gradient(180deg, #26262a 0%, #1a1a1d 52%, #101012 100%);
@@ -219,21 +127,8 @@
 
 <main id="main">
   <section class="ms">
-    <div class="ms-left" aria-hidden="true">
-      <div class="stage">
-        <div class="platter">
-          <span class="grooves"></span>
-          <span class="segments"></span>
-          <span class="band"></span>
-          <span class="hub"></span>
-          <span class="sheen"></span>
-        </div>
-        <span class="crystal"></span>
-        <span class="glow"></span>
-        <span class="spark s1"></span>
-        <span class="spark s2"></span>
-        <span class="spark s3"></span>
-      </div>
+    <div class="ms-left">
+      <img src="assets/img/record-screen.svg" alt="A black segmented platter with a lime crystal on a grey backdrop" width="1920" height="1280">
     </div>
 
     <div class="ms-right">
@@ -488,22 +383,6 @@
 
     rows.forEach(function (r) {
       r.addEventListener("click", function () { render(r.getAttribute("data-track")); });
-    });
-
-    /* the platter is a record: it turns while something is playing */
-    var stage = document.querySelector(".stage");
-    var spin = function (on) { if (stage) stage.classList.toggle("is-spinning", !!on); };
-    audio.addEventListener("play", function () { spin(true); });
-    audio.addEventListener("pause", function () { spin(false); });
-    audio.addEventListener("ended", function () { spin(false); });
-    rows.forEach(function (r) {
-      r.addEventListener("click", function () {
-        if (r.getAttribute("data-kind") === "synth") {
-          setTimeout(function () { spin(window.ATTMusic && window.ATTMusic.isOn()); }, 60);
-        } else {
-          spin(current === r);          // clicking the current row stops it
-        }
-      });
     });
 
     render("rap");     // the page opens on the rap, so open on its words

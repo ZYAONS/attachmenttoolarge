@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1280" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Record screen: a black segmented platter with a lime crystal, on a grey backdrop">
+  <title>Record screen</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cfcfce"/>
+      <stop offset="0.42" stop-color="#c9c9c7"/>
+      <stop offset="0.52" stop-color="#c6c6c4"/>
+      <stop offset="1" stop-color="#c2c2c0"/>
+    </linearGradient>
+    <radialGradient id="vign" cx="0.5" cy="0.46" r="0.7">
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#8f8f8d" stop-opacity="0.22"/>
+    </radialGradient>
+    <radialGradient id="blob" cx="0.36" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.5" stop-color="#e9e9e6"/>
+      <stop offset="0.82" stop-color="#c3c3bf"/>
+      <stop offset="1" stop-color="#a8a8a4"/>
+    </radialGradient>
+    <linearGradient id="crystal" x1="0.15" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#e8ff9c"/>
+      <stop offset="0.28" stop-color="#c6e04a"/>
+      <stop offset="0.58" stop-color="#8fbf1f"/>
+      <stop offset="1" stop-color="#3f6a0c"/>
+    </linearGradient>
+    <linearGradient id="crystalDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7fae16"/>
+      <stop offset="1" stop-color="#2f5209"/>
+    </linearGradient>
+    <linearGradient id="hubGrad" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#4a4a4e"/>
+      <stop offset="1" stop-color="#2a2a2d"/>
+    </linearGradient>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <filter id="soft2" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+  </defs>
+
+  <!-- ============ backdrop ============ -->
+  <rect width="1920" height="1280" fill="url(#bg)"/>
+  <rect width="1920" height="1280" fill="url(#vign)"/>
+  <ellipse cx="700" cy="590" rx="620" ry="26" fill="#ffffff" opacity="0.32" filter="url(#soft)"/>
+
+  <!-- ============ back button ============ -->
+  <rect x="31" y="24" width="185" height="70" rx="6" fill="#3b3b3b"/>
+  <rect x="31" y="24" width="185" height="70" rx="6" fill="#ffffff" opacity="0.06"/>
+  <path d="M112 40 L86 59 L112 78" fill="none" stroke="#f2f2f2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- ============ the platter ============ -->
+  <g>
+    <!-- thin outer rim -->
+    <circle cx="990" cy="843" r="386" fill="none" stroke="#3a3a3d" stroke-width="7" opacity="0.75"/>
+
+    <!-- concentric cards: solid dark arcs with gaps, then the fine cut of a record over them -->
+    <g fill="none" stroke-linecap="butt">
+      <circle cx="990" cy="843" r="356" stroke="#16161a" stroke-width="46"
+              stroke-dasharray="392 60 214 66 300 58"/>
+      <circle cx="990" cy="843" r="300" stroke="#0e0e12" stroke-width="52"
+              stroke-dasharray="168 62 340 70 96 58 250 64"/>
+      <circle cx="990" cy="843" r="242" stroke="#1e1e23" stroke-width="46"
+              stroke-dasharray="300 66 120 58 200 68"/>
+    </g>
+    <!-- the fine grooves that run along every card -->
+    <g clip-path="url(#discClip)" fill="none" stroke="#ffffff" stroke-width="1.4" opacity="0.16">
+      <circle cx="990" cy="843" r="212"/><circle cx="990" cy="843" r="220"/>
+      <circle cx="990" cy="843" r="228"/><circle cx="990" cy="843" r="236"/>
+      <circle cx="990" cy="843" r="244"/><circle cx="990" cy="843" r="252"/>
+      <circle cx="990" cy="843" r="260"/><circle cx="990" cy="843" r="268"/>
+      <circle cx="990" cy="843" r="276"/><circle cx="990" cy="843" r="284"/>
+      <circle cx="990" cy="843" r="292"/><circle cx="990" cy="843" r="300"/>
+      <circle cx="990" cy="843" r="308"/><circle cx="990" cy="843" r="316"/>
+      <circle cx="990" cy="843" r="324"/><circle cx="990" cy="843" r="332"/>
+      <circle cx="990" cy="843" r="340"/><circle cx="990" cy="843" r="348"/>
+      <circle cx="990" cy="843" r="356"/><circle cx="990" cy="843" r="364"/>
+      <circle cx="990" cy="843" r="372"/>
+    </g>
+    <clipPath id="discClip"><circle cx="990" cy="843" r="382"/></clipPath>
+    <!-- a few pale cards among the dark ones -->
+    <g fill="none" stroke-linecap="butt" opacity="0.92">
+      <circle cx="990" cy="843" r="330" stroke="#d8d8d4" stroke-width="18" stroke-dasharray="120 640" stroke-dashoffset="-150"/>
+      <circle cx="990" cy="843" r="272" stroke="#cfcfcb" stroke-width="16" stroke-dasharray="96 700" stroke-dashoffset="-420"/>
+    </g>
+
+    <!-- the pale wedge with radial lines (lower left) -->
+    <path d="M990 843 L640 700 A386 386 0 0 0 700 1130 Z" fill="#dcdcd8" opacity="0.9"/>
+    <g clip-path="url(#wedge)">
+      <clipPath id="wedge">
+        <path d="M990 843 L640 700 A386 386 0 0 0 700 1130 Z"/>
+      </clipPath>
+    </g>
+    <g stroke="#121214" stroke-width="4" opacity="0.85">
+      <line x1="990" y1="843" x2="612" y2="742"/>
+      <line x1="990" y1="843" x2="616" y2="782"/>
+      <line x1="990" y1="843" x2="628" y2="822"/>
+      <line x1="990" y1="843" x2="646" y2="862"/>
+      <line x1="990" y1="843" x2="668" y2="902"/>
+      <line x1="990" y1="843" x2="694" y2="942"/>
+      <line x1="990" y1="843" x2="722" y2="982"/>
+      <line x1="990" y1="843" x2="756" y2="1018"/>
+      <line x1="990" y1="843" x2="792" y2="1052"/>
+      <line x1="990" y1="843" x2="832" y2="1082"/>
+      <line x1="990" y1="843" x2="874" y2="1108"/>
+    </g>
+    <!-- pale blocks and ticks inside the wedge -->
+    <g fill="#0f0f12">
+      <rect x="700" y="980" width="34" height="74" rx="2" transform="rotate(32 717 1017)"/>
+      <rect x="756" y="1030" width="30" height="66" rx="2" transform="rotate(30 771 1063)"/>
+      <rect x="820" y="1076" width="26" height="58" rx="2" transform="rotate(28 833 1105)"/>
+    </g>
+    <g fill="#ffffff" opacity="0.92">
+      <rect x="866" y="1024" width="26" height="26"/>
+      <rect x="866" y="1064" width="26" height="26"/>
+      <rect x="906" y="1044" width="26" height="26"/>
+      <rect x="946" y="1084" width="26" height="26"/>
+      <rect x="906" y="1084" width="26" height="26"/>
+      <rect x="986" y="1044" width="26" height="26"/>
+      <rect x="828" y="1160" width="22" height="22"/>
+      <rect x="760" y="1150" width="22" height="22"/>
+    </g>
+    <g fill="none" stroke="#ffffff" stroke-width="3" opacity="0.95">
+      <rect x="700" y="1078" width="30" height="30"/>
+      <rect x="752" y="1120" width="30" height="30"/>
+      <rect x="640" y="1046" width="26" height="26"/>
+    </g>
+
+    <!-- lime chevron row (lower left of the platter) -->
+    <g fill="#c9e04a">
+      <path d="M800 968 l-30 26 30 26 -14 -26 z"/>
+      <path d="M846 980 l-30 26 30 26 -14 -26 z"/>
+      <path d="M892 992 l-30 26 30 26 -14 -26 z"/>
+      <path d="M938 1004 l-30 26 30 26 -14 -26 z"/>
+      <path d="M826 1032 l-26 22 26 22 -12 -22 z"/>
+      <path d="M872 1044 l-26 22 26 22 -12 -22 z"/>
+      <path d="M918 1056 l-26 22 26 22 -12 -22 z"/>
+    </g>
+
+    <!-- thin pale ring around the hub -->
+    <circle cx="990" cy="843" r="212" fill="none" stroke="#f4f4f2" stroke-width="4" opacity="0.95"/>
+
+    <!-- dark plate behind the object -->
+    <path d="M812 706 C 812 620 900 556 990 556 C 1080 556 1168 620 1168 706
+             C 1168 792 1090 852 990 852 C 890 852 812 792 812 706 Z" fill="url(#hubGrad)"/>
+
+    <!-- salmon strip on the left of the plate -->
+    <rect x="792" y="640" width="46" height="176" rx="14" fill="#eda189"/>
+    <rect x="792" y="640" width="46" height="176" rx="14" fill="#000000" opacity="0.08"/>
+
+    <!-- the pale crumpled form, sitting at the spindle -->
+    <path d="M846 786 C 834 736 872 690 924 686 C 972 682 1014 696 1042 720
+             C 1082 712 1116 730 1126 764 C 1136 800 1110 826 1072 830
+             C 1058 852 1020 866 982 862 C 944 858 914 842 896 822
+             C 864 820 848 806 846 786 Z" fill="url(#blob)"/>
+    <path d="M880 768 C 872 726 904 700 944 698" fill="none" stroke="#ffffff" stroke-width="7" opacity="0.85"/>
+    <ellipse cx="1074" cy="812" rx="44" ry="20" fill="#9d9d99" opacity="0.5" filter="url(#soft2)"/>
+    <circle cx="1092" cy="744" r="18" fill="#8d8d89" opacity="0.75"/>
+    <circle cx="1032" cy="722" r="14" fill="#a9a9a5" opacity="0.8"/>
+    <circle cx="990" cy="800" r="20" fill="#1c1c20"/>
+
+    <!-- the crystal -->
+    <g>
+      <path d="M982 344 L1058 452 L1036 700 L930 700 L908 452 Z" fill="url(#crystal)"/>
+      <path d="M982 344 L1018 452 L1010 700 L982 700 L976 452 Z" fill="#f2ffc4" opacity="0.5"/>
+      <path d="M1058 452 L1036 700 L1010 700 L1018 452 Z" fill="url(#crystalDark)" opacity="0.85"/>
+      <path d="M908 452 L930 700 L956 700 L942 452 Z" fill="#ffffff" opacity="0.18"/>
+      <path d="M982 344 L1058 452 L908 452 Z" fill="#dcff86" opacity="0.35"/>
+      <path d="M930 700 L1036 700 L1046 726 L920 726 Z" fill="#2f5209" opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- ============ lime plus marks on the backdrop ============ -->
+  <g fill="#c9e04a">
+    <g transform="translate(843 400) scale(1.15)">
+      <rect x="22" y="0" width="16" height="16"/><rect x="0" y="22" width="16" height="16"/>
+      <rect x="22" y="22" width="16" height="16"/><rect x="44" y="22" width="16" height="16"/>
+      <rect x="22" y="44" width="16" height="16"/>
+    </g>
+    <g transform="translate(1400 700) scale(1)">
+      <rect x="22" y="0" width="14" height="14"/><rect x="0" y="22" width="14" height="14"/>
+      <rect x="22" y="22" width="14" height="14"/><rect x="44" y="22" width="14" height="14"/>
+      <rect x="22" y="44" width="14" height="14"/>
+    </g>
+    <g transform="translate(400 928) scale(0.85)">
+      <rect x="22" y="0" width="14" height="14"/><rect x="0" y="22" width="14" height="14"/>
+      <rect x="22" y="22" width="14" height="14"/><rect x="44" y="22" width="14" height="14"/>
+      <rect x="22" y="44" width="14" height="14"/>
+    </g>
+  </g>
+
+  <!-- ============ cursor ============ -->
+  <g transform="translate(1746 726) scale(1.5)">
+    <path d="M0 0 L0 34 L9 26 L15 40 L21 38 L15 24 L26 24 Z" fill="#fdfdfd" stroke="#3a3a3a" stroke-width="1.6"/>
+  </g>
+
+  <!-- ============ bottom-left plate ============ -->
+  <rect x="0" y="1176" width="196" height="104" fill="#3b3b3b"/>
+</svg>
