@@ -222,3 +222,8 @@ html[data-theme="light"] body::before {
   background-attachment: fixed !important;
   background-repeat: repeat !important;
 }
+/* The last two diagonals anywhere on the page: a 12px teal bar and a 96px gold
+   bar skewed against each section heading, plus the slanted edge on the
+   recordings screen. Removed so nothing slanted is left at all. */
+.section-head::before, .section-head::after { display: none !important; }
+.ms-left::after { display: none !important; }
