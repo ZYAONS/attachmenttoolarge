@@ -373,12 +373,12 @@
   function tremolo(ctx, b, fr, t, level) {
     var f = ctx.createBiquadFilter();
     f.type = "lowpass";
-    f.frequency.value = 3200;
+    f.frequency.value = 5200;              // 明亮才是后摇的吉他
     f.Q.value = 1.2;
 
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.05 * level, t + 0.012);
+    g.gain.linearRampToValueAtTime(0.11 * level, t + 0.012);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
 
     var o = ctx.createOscillator();
@@ -400,7 +400,7 @@
       o.frequency.value = fr * mult;
       var g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(k ? 0.012 : 0.035, t + 0.006);
+      g.gain.linearRampToValueAtTime(k ? 0.016 : 0.05, t + 0.006);
       g.gain.exponentialRampToValueAtTime(0.0001, t + (k ? 1.0 : 1.6));
       o.connect(g);
       g.connect(b.master);
@@ -420,7 +420,7 @@
     f.frequency.exponentialRampToValueAtTime(4000, t + 1.1);
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.05, t + 1.0);
+    g.gain.linearRampToValueAtTime(0.08, t + 1.0);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 1.25);
     s.connect(f);
     f.connect(g);
@@ -438,7 +438,7 @@
     f.frequency.value = 4200;
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.055, t + 0.01);
+    g.gain.linearRampToValueAtTime(0.085, t + 0.01);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
     s.connect(f);
     f.connect(g);
@@ -484,7 +484,9 @@
     var chord = POST_CHORDS[Math.floor(bar / 2) % POST_CHORDS.length];
     var section = bar < 2 ? 0 : bar < 4 ? 1 : bar < 6 ? 2 : 3;   // 渐强的四层
 
-    if (local === 0 && bar % 2 === 0) pad(ctx, b, chord, t, POST_BAR * POST_STEP * 2);
+    /* 垫只在低层铺；全奏段让位给吉他，改用一个高八度的小垫增加亮度而不是重量 */
+    if (local === 0 && (bar === 0 || bar === 2)) pad(ctx, b, chord, t, POST_BAR * POST_STEP * 2);
+    if (local === 0 && bar === 6) pad(ctx, b, [chord[0] * 2, chord[1] * 2, chord[2] * 2], t, POST_BAR * POST_STEP);
 
     /* 干净的延迟琶音：从第一小节就在，是这条曲子的线索 */
     if (local % 2 === 0) arp(ctx, b, POST_ARP[((local / 2) + bar) % POST_ARP.length], t, 0.65);
@@ -499,7 +501,7 @@
 
     if (section >= 2) {
       if (local === 4 || local === 12) snare(ctx, b, t);
-      if (local % 4 === 0) hat(ctx, b, t, 0.5);
+      if (local % 4 === 0) hat(ctx, b, t, 1.8);
       /* 颤音吉他十六分不停 —— 后摇的"推进"就是它 */
       tremolo(ctx, b, POST_TREMS[(step * 3 + bar) % POST_TREMS.length], t, 0.55);
     }
@@ -507,7 +509,7 @@
     if (section >= 3) {
       if (local === 6 || local === 14) kick(ctx, b, t);
       tremolo(ctx, b, POST_TREMS[(step * 5 + bar + 2) % POST_TREMS.length], t, 1.0);
-      if (local % 4 === 2) hat(ctx, b, t, 0.7);
+      if (local % 4 === 2) hat(ctx, b, t, 2.2);
       if (local === 0 || local === 8) stab(ctx, b, [chord[0] * 2, chord[1] * 2, chord[2] * 2], t);
     }
 
