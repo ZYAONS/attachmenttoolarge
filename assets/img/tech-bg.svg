@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="A technical background plate: grid, circuit traces with nodes, crosshair markers and a soft vignette">
+  <title>Technical field — grid, traces, nodes, crosshairs</title>
+  <defs>
+    <!-- fine graph grid, then a heavier one every fifth line -->
+    <pattern id="fine" width="25" height="25" patternUnits="userSpaceOnUse">
+      <path d="M 25 0 L 0 0 0 25" fill="none" stroke="#e8ece9" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+    <pattern id="coarse" width="125" height="125" patternUnits="userSpaceOnUse">
+      <path d="M 125 0 L 0 0 0 125" fill="none" stroke="#e8ece9" stroke-opacity="0.1" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="vig" cx="52%" cy="42%" r="76%">
+      <stop offset="0" stop-color="#0e1114"/>
+      <stop offset="0.55" stop-color="#0b0e10"/>
+      <stop offset="1" stop-color="#07090a"/>
+    </radialGradient>
+    <radialGradient id="glowA" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#c8e84f" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#c8e84f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#35c6f2" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#35c6f2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#vig)"/>
+
+  <!-- two soft pools of light, off-centre so the plate never looks symmetrical -->
+  <ellipse cx="1180" cy="250" rx="520" ry="380" fill="url(#glowA)"/>
+  <ellipse cx="330" cy="760" rx="560" ry="400" fill="url(#glowB)"/>
+
+  <!-- grid -->
+  <rect width="1600" height="1000" fill="url(#fine)"/>
+  <rect width="1600" height="1000" fill="url(#coarse)"/>
+
+  <!-- circuit traces: right angles only, the way a board actually routes -->
+  <g fill="none" stroke="#c8e84f" stroke-opacity="0.34" stroke-width="1.6">
+    <path d="M 0 220 H 260 V 340 H 470 V 250 H 700"/>
+    <path d="M 1600 150 H 1380 V 300 H 1180 V 430 H 980"/>
+    <path d="M 0 700 H 180 V 820 H 420 V 900"/>
+    <path d="M 1600 780 H 1300 V 660 H 1120"/>
+    <path d="M 760 0 V 120 H 880 V 260"/>
+    <path d="M 520 1000 V 880 H 700 V 760 H 900"/>
+  </g>
+  <g fill="none" stroke="#e8ece9" stroke-opacity="0.12" stroke-width="1.2">
+    <path d="M 0 120 H 340 V 60 H 620"/>
+    <path d="M 1600 900 H 1420 V 820 H 1240 V 700"/>
+    <path d="M 240 0 V 60 H 120"/>
+  </g>
+
+  <!-- nodes at trace junctions: small squares, a few filled lime -->
+  <g fill="#0b0e10" stroke="#c8e84f" stroke-opacity="0.5" stroke-width="1.6">
+    <rect x="254" y="214" width="12" height="12"/><rect x="464" y="334" width="12" height="12"/>
+    <rect x="1374" y="144" width="12" height="12"/><rect x="1174" y="294" width="12" height="12"/>
+    <rect x="174" y="694" width="12" height="12"/><rect x="414" y="814" width="12" height="12"/>
+    <rect x="1294" y="774" width="12" height="12"/><rect x="1114" y="654" width="12" height="12"/>
+  </g>
+  <g fill="#c8e84f">
+    <rect x="694" y="244" width="10" height="10"/><rect x="974" y="424" width="10" height="10"/>
+    <rect x="874" y="254" width="10" height="10"/><rect x="894" y="754" width="10" height="10"/>
+  </g>
+
+  <!-- crosshair markers, as on a survey plate -->
+  <g stroke="#e8ece9" stroke-opacity="0.45" stroke-width="1.4">
+    <g transform="translate(1080 620)">
+      <circle r="16" fill="none"/><path d="M -26 0 H 26 M 0 -26 V 26"/>
+    </g>
+    <g transform="translate(360 300)">
+      <circle r="10" fill="none"/><path d="M -18 0 H 18 M 0 -18 V 18"/>
+    </g>
+    <g transform="translate(1420 500)">
+      <circle r="7" fill="none"/><path d="M -13 0 H 13 M 0 -13 V 13"/>
+    </g>
+  </g>
+
+  <!-- faint corner ticks -->
+  <g stroke="#c8e84f" stroke-opacity="0.5" stroke-width="2">
+    <path d="M 40 40 H 96 M 40 40 V 96"/>
+    <path d="M 1560 40 H 1504 M 1560 40 V 96"/>
+    <path d="M 40 960 H 96 M 40 960 V 904"/>
+    <path d="M 1560 960 H 1504 M 1560 960 V 904"/>
+  </g>
+
+  <!-- scanlines, very light -->
+  <rect width="1600" height="1000" fill="url(#fine)" opacity="0"/>
+  <g opacity="0.06">
+    <rect y="0" width="1600" height="1000" fill="#ffffff"
+          mask="none" style="mask-image: repeating-linear-gradient(0deg,#000 0 1px,transparent 1px 4px)"/>
+  </g>
+</svg>

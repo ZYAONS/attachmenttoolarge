@@ -344,72 +344,175 @@
     if (local === 3 || local === 11) hat(ctx, b, t, 0.28);
   }
 
-  /* ======================= 曲目三：Gate Keeper（方舟味配乐）=======================
-     这一首是自己写的，不经过任何外部服务 —— 因为 GPU 配额那种东西不该决定
-     一首曲子能不能存在。D 小调，140 BPM，十六分音符步进，四小节一循环：
-     合成器持续音型（ostinato）+ 太鼓式底鼓 + 军鼓 + 铜管重音 + 合唱式和声垫。
-     第 1–2 小节只留低频与音型，第 3–4 小节全乐队进 —— 那种「憋住再放开」的
-     推进感，是这类配乐的性格所在。 */
-  var ARK_BPM = 140;
-  var ARK_BEAT = 60 / ARK_BPM;
-  var ARK_STEP = ARK_BEAT / 4;
-  var ARK_BAR = 16;
-  var ARK_ROOT = [73.42, 73.42, 98.00, 87.31];                  // D2 D2 G2 F2
-  var ARK_OSTINATO = [293.66, 349.23, 440.00, 349.23, 293.66, 440.00, 587.33, 440.00];
-  var ARK_CHOIR = [
-    [146.83, 174.61, 220.00], [146.83, 174.61, 220.00],
-    [196.00, 233.08, 293.66], [174.61, 220.00, 261.63]
-  ];
-  var ARK_BRASS = [[146.83, 220.00, 293.66], [196.00, 293.66, 392.00]];
+  /* ======================= 曲目三：The Long Send（后摇）=======================
+     上一版是错的，得说清楚错在哪：它用了和背景铺底一样的三种音色（和声垫、
+     走低音、三角波琶音），鼓又埋得太深，所以听上去和第一首没有区别 —— 换了
+     标签，没换音乐。这一版从音色到结构全部重写。
 
-  /* 铜管式重音：两层微失谐锯齿过扫频低通，起音快、尾巴短 */
-  function stab(ctx, b, freqs, t) {
+     后摇的性格是「渐强」：八小节一循环，每两小节进一层
+       0–1 小节  干净的延迟琶音 + 和声垫，没有鼓
+       2–3 小节  + 贝斯、软底鼓、高音铃铛
+       4–5 小节  + 颤音吉他十六分、军鼓、踩镲
+       6–7 小节  全奏：推进的底鼓、反拍军鼓、失真高频层，末小节上升后回到开头
+     E 小调，92 BPM，loop 点上有镲片与噪声涌浪做接缝。 */
+  var POST_BPM = 92;
+  var POST_BEAT = 60 / POST_BPM;
+  var POST_STEP = POST_BEAT / 4;
+  var POST_BAR = 16;              // 一小节 = 16 个十六分音符
+  var POST_BARS = 8;              // 八小节渐强
+  var POST_CHORDS = [
+    [164.81, 196.00, 246.94],     // Em
+    [146.83, 174.61, 220.00],     // D
+    [130.81, 164.81, 196.00],     // C
+    [146.83, 174.61, 220.00]      // D
+  ];
+  var POST_ARP = [329.63, 392.00, 493.88, 659.25];                 // E4 G4 B4 E5
+  var POST_TREMS = [164.81, 196.00, 246.94, 329.63, 392.00, 493.88];
+
+  /* 颤音吉他：明亮锯齿，快速起落，送进延迟总线做出后摇的那种余响 */
+  function tremolo(ctx, b, fr, t, level) {
     var f = ctx.createBiquadFilter();
     f.type = "lowpass";
-    f.frequency.setValueAtTime(800, t);
-    f.frequency.linearRampToValueAtTime(2600, t + 0.05);
-    f.frequency.exponentialRampToValueAtTime(650, t + 0.5);
-    f.Q.value = 3;
+    f.frequency.value = 3200;
+    f.Q.value = 1.2;
 
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.07, t + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+    g.gain.linearRampToValueAtTime(0.05 * level, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+
+    var o = ctx.createOscillator();
+    o.type = "sawtooth";
+    o.frequency.value = fr;
+    o.connect(f);
+    f.connect(g);
+    g.connect(b.master);
+    g.connect(b.delay);
+    o.start(t);
+    o.stop(t + 0.2);
+  }
+
+  /* 铃音：正弦加一个高次泛音，尾巴长 */
+  function bell(ctx, b, fr, t) {
+    [1, 2.76].forEach(function (mult, k) {
+      var o = ctx.createOscillator();
+      o.type = "sine";
+      o.frequency.value = fr * mult;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(k ? 0.012 : 0.035, t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + (k ? 1.0 : 1.6));
+      o.connect(g);
+      g.connect(b.master);
+      o.start(t);
+      o.stop(t + 1.8);
+    });
+  }
+
+  /* 噪声涌浪：频带从 400 扫到 4000，把乐句推向下一圈 */
+  function swell(ctx, b, t) {
+    var s = ctx.createBufferSource();
+    s.buffer = b.noise;
+    var f = ctx.createBiquadFilter();
+    f.type = "bandpass";
+    f.Q.value = 0.8;
+    f.frequency.setValueAtTime(400, t);
+    f.frequency.exponentialRampToValueAtTime(4000, t + 1.1);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.05, t + 1.0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 1.25);
+    s.connect(f);
+    f.connect(g);
+    g.connect(b.master);
+    s.start(t);
+    s.stop(t + 1.3);
+  }
+
+  /* 镲片：高通噪声，长衰减，用来缝住 loop 接点 */
+  function crash(ctx, b, t) {
+    var s = ctx.createBufferSource();
+    s.buffer = b.noise;
+    var f = ctx.createBiquadFilter();
+    f.type = "highpass";
+    f.frequency.value = 4200;
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.055, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+    s.connect(f);
+    f.connect(g);
+    g.connect(b.master);
+    s.start(t);
+    s.stop(t + 1.5);
+  }
+
+  /* 失真高频层：两层锯齿过扫频低通，做全奏段的那层"墙" */
+  function stab(ctx, b, freqs, t) {
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(1200, t);
+    f.frequency.linearRampToValueAtTime(3400, t + 0.04);
+    f.frequency.exponentialRampToValueAtTime(900, t + 0.6);
+    f.Q.value = 2.4;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.055, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.65);
 
     freqs.forEach(function (fr) {
       [0, 1].forEach(function (k) {
         var o = ctx.createOscillator();
         o.type = "sawtooth";
-        o.frequency.value = fr * (k ? 1.006 : 1);
+        o.frequency.value = fr * (k ? 1.005 : 1);
         var vg = ctx.createGain();
         vg.gain.value = 0.5;
         o.connect(vg);
         vg.connect(f);
         o.start(t);
-        o.stop(t + 0.6);
+        o.stop(t + 0.7);
       });
     });
     f.connect(g);
     g.connect(b.master);
   }
 
-  function scheduleArkStep(ctx, b, step, t) {
-    var bar = Math.floor(step / ARK_BAR) % 4;
-    var local = step % ARK_BAR;
-    var full = bar >= 2;                       // 后半段才是全乐队
+  function schedulePostStep(ctx, b, step, t) {
+    var bar = Math.floor(step / POST_BAR) % POST_BARS;
+    var local = step % POST_BAR;
+    var chord = POST_CHORDS[Math.floor(bar / 2) % POST_CHORDS.length];
+    var section = bar < 2 ? 0 : bar < 4 ? 1 : bar < 6 ? 2 : 3;   // 渐强的四层
 
-    if (local === 0 || local === 6 || local === 10 || (full && local === 14)) kick(ctx, b, t);
-    if (full && (local === 4 || local === 12)) snare(ctx, b, t);
-    /* 十六分音符踩镲全程不断，重拍更响 —— 这一类配乐的推进感全靠它 */
-    if (full) hat(ctx, b, t, local % 4 === 0 ? 1.0 : local % 2 === 0 ? 0.62 : 0.4);
-    else if (local % 4 === 2) hat(ctx, b, t, 0.3);
-    if (local === 0 || local === 8) bass(ctx, b, ARK_ROOT[bar], t, ARK_STEP * 6, 0.5);
+    if (local === 0 && bar % 2 === 0) pad(ctx, b, chord, t, POST_BAR * POST_STEP * 2);
 
-    /* 持续音型十六分音符不断，每次移位一点，避免听起来像死循环 */
-    arp(ctx, b, ARK_OSTINATO[(step + bar * 3) % ARK_OSTINATO.length], t, local % 4 === 0 ? 0.9 : 0.5);
+    /* 干净的延迟琶音：从第一小节就在，是这条曲子的线索 */
+    if (local % 2 === 0) arp(ctx, b, POST_ARP[((local / 2) + bar) % POST_ARP.length], t, 0.65);
 
-    if (local === 0) pad(ctx, b, ARK_CHOIR[bar], t, ARK_BAR * ARK_STEP);
-    if (full && (local === 0 || local === 8)) stab(ctx, b, ARK_BRASS[local === 8 ? 1 : 0], t);
+    if (section >= 1) {
+      if (local === 0 || local === 8) {
+        bass(ctx, b, chord[0] / 2, t, POST_STEP * 7, 0.5);
+        kick(ctx, b, t);
+      }
+      if (local === 4 || local === 10) bell(ctx, b, POST_ARP[(bar + local) % POST_ARP.length] * 2, t);
+    }
+
+    if (section >= 2) {
+      if (local === 4 || local === 12) snare(ctx, b, t);
+      if (local % 4 === 0) hat(ctx, b, t, 0.5);
+      /* 颤音吉他十六分不停 —— 后摇的"推进"就是它 */
+      tremolo(ctx, b, POST_TREMS[(step * 3 + bar) % POST_TREMS.length], t, 0.55);
+    }
+
+    if (section >= 3) {
+      if (local === 6 || local === 14) kick(ctx, b, t);
+      tremolo(ctx, b, POST_TREMS[(step * 5 + bar + 2) % POST_TREMS.length], t, 1.0);
+      if (local % 4 === 2) hat(ctx, b, t, 0.7);
+      if (local === 0 || local === 8) stab(ctx, b, [chord[0] * 2, chord[1] * 2, chord[2] * 2], t);
+    }
+
+    if (bar === POST_BARS - 1 && local === 12) swell(ctx, b, t);   // 推回开头
+    if (bar === 0 && local === 0) crash(ctx, b, t);                // 缝住 loop 接点
   }
 
   /* ======================= 音效 ======================= */
@@ -534,13 +637,13 @@
 
   function stepDur() {
     if (state.track === "rap") return RAP_STEP;
-    if (state.track === "ark") return ARK_STEP;
+    if (state.track === "postrock") return POST_STEP;
     return STEP;
   }
 
   function scheduleStep(ctx, b, step, t) {
     if (state.track === "rap") scheduleRapStep(ctx, b, step, t);
-    else if (state.track === "ark") scheduleArkStep(ctx, b, step, t);
+    else if (state.track === "postrock") schedulePostStep(ctx, b, step, t);
     else scheduleLofiStep(ctx, b, step, t);
   }
 
@@ -856,7 +959,7 @@
   }
 
   function selectTrack(id) {
-    if (id !== "rap" && id !== "ark") id = "lofi";
+    if (id !== "rap" && id !== "postrock") id = "lofi";
     if (id === state.track) return state.track;
     var wasOn = state.on;
     if (wasOn) stop();
@@ -881,7 +984,7 @@
       id: state.track,
       name: state.track === "rap"
         ? ((data && data.title) || "Attachment Too Large") + " (Rap)"
-        : state.track === "ark" ? "Gate Keeper" : "Failed at 19:59",
+        : state.track === "postrock" ? "The Long Send" : "Failed at 19:59",
       kind: state.track
     };
   }
@@ -953,11 +1056,11 @@
     var buses = createBuses(ctx, ctx.destination);
     buses.master.gain.value = 0.3;
 
-    var dur = which === "rap" ? RAP_STEP : which === "ark" ? ARK_STEP : STEP;
+    var dur = which === "rap" ? RAP_STEP : which === "postrock" ? POST_STEP : STEP;
     var steps = Math.ceil(seconds / dur);
     for (var i = 0; i < steps; i++) {
       if (which === "rap") scheduleRapStep(ctx, buses, i, i * dur);
-      else if (which === "ark") scheduleArkStep(ctx, buses, i, i * dur);
+      else if (which === "postrock") schedulePostStep(ctx, buses, i, i * dur);
       else scheduleLofiStep(ctx, buses, i % TOTAL_STEPS, i * dur);
     }
     if (which === "rap") { try { crackle(ctx, buses); } catch (e) { /* 忽略 */ } }

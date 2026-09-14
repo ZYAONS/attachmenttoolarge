@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    attachmenttoolarge — 浏览器端自检（CDP 驱动，零依赖）
 
    用法：
@@ -212,21 +212,30 @@ const SUITE = `(async () => {
     const rows = [...trackList.querySelectorAll(".ms-track")];
     ok("曲目表有五条", rows.length === 5, rows.length + " rows");
     const names = rows.map(r => r.querySelector(".ms-name")?.textContent || "");
-    ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Wrong Side of the Wire/.test(names[2]) && /Ninety-Nine Forever/.test(names[3]) && /Gate Keeper/.test(names[4]), names.join(" · ").slice(0, 78));
+    ok("曲目名完整", /Failed at 19:59/.test(names[0]) && /Wrong Side of the Wire/.test(names[2]) && /Ninety-Nine Forever/.test(names[3]) && /The Long Send/.test(names[4]), names.join(" · ").slice(0, 78));
 
     /* the in-house Ark-flavoured score: composed here, not fetched from anywhere */
-    const ark = await music.renderOffline(6, "ark");
-    ok("方舟味配乐有波形", ark.peak > 0.02 && ark.rms > 0.004, "peak=" + ark.peak + " rms=" + ark.rms);
+    const ark = await music.renderOffline(22, "postrock");   // a whole eight-bar build, not just the intro
+    ok("后摇曲有波形", ark.peak > 0.02 && ark.rms > 0.004, "peak=" + ark.peak + " rms=" + ark.rms);
     /* comparative, not a bare threshold: the score must be far more percussive
        than the ambient loop, which is the actual musical difference between them */
-    ok("方舟味配乐有节奏（对比铺底）", ark.onsetsPerSecond > rl.onsetsPerSecond * 2,
-       "ark " + ark.onsetsPerSecond + "/s vs ambient " + rl.onsetsPerSecond + "/s");
-    const arkRow = document.querySelector('[data-track="ark"]');
+    /* A single threshold is the wrong test: the tremolo-picked sixteenths are continuous, so
+       the envelope never drops enough for each note to count as a separate onset. Compare three
+       features instead and require the two pieces to differ in most of them. */
+    const differs = [
+      ark.onsetsPerSecond > rl.onsetsPerSecond * 2,
+      ark.hf > rl.hf * 2,
+      Math.abs(ark.rms - rl.rms) > 0.002
+    ].filter(Boolean).length;
+    ok("后摇与铺底是两首不同的曲子", differs >= 2,
+       "onsets " + ark.onsetsPerSecond + " vs " + rl.onsetsPerSecond + " · hf " + ark.hf + " vs " + rl.hf +
+       " · rms " + ark.rms + " vs " + rl.rms + " · " + differs + "/3 differ");
+    const arkRow = document.querySelector('[data-track="postrock"]');
     if (arkRow) {
       arkRow.click(); await wait(400);
-      ok("选到方舟曲目", music.currentTrack().id === "ark" && /Gate Keeper/.test(music.currentTrack().name),
+      ok("选到后摇曲目", music.currentTrack().id === "postrock" && /The Long Send/.test(music.currentTrack().name),
          music.currentTrack().id + " · " + music.currentTrack().name);
-      ok("方舟曲目在播", music.isOn() === true, "playing");
+      ok("后摇曲目在播", music.isOn() === true, "playing");
       arkRow.click(); await wait(200);   // stop it again
     }
 

@@ -30,7 +30,12 @@
   background: #c6c6c4; overflow: hidden;
   display: block; padding: 0;
 }
-.ms-left img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%; }
+.ms-left .ms-fallback,
+.ms-left canvas { display: block; width: 100%; height: 100%; }
+.ms-left .ms-fallback { object-fit: cover; object-position: 50% 46%; }
+.ms-left canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+.ms-left:not(.is-rendered) canvas { display: none; }
+.ms-left.is-rendered .ms-fallback { display: none; }
 /* the other half: matte charcoal, the way a render's backdrop reads next to the object */
 .ms-right {
   background: linear-gradient(180deg, #26262a 0%, #1a1a1d 52%, #101012 100%);
@@ -128,7 +133,10 @@
 <main id="main">
   <section class="ms">
     <div class="ms-left">
-      <img src="assets/img/record-screen.svg" alt="A black segmented platter with a lime crystal on a grey backdrop" width="1920" height="1280">
+      <div data-record-scene>
+        <img class="ms-fallback" src="assets/img/record-screen.svg" alt="A black segmented platter with a lime crystal on a grey backdrop" width="1920" height="1280">
+        <canvas aria-label="A black segmented platter with a lime crystal, lit in a studio"></canvas>
+      </div>
     </div>
 
     <div class="ms-right">
@@ -160,11 +168,11 @@
           <span class="ms-time">2:48</span>
           <span class="ms-sub">80s neon synth-pop · gated reverb, arpeggios, falsetto hook</span>
         </li>
-        <li class="ms-track" data-track="ark" data-kind="synth">
+        <li class="ms-track" data-track="postrock" data-kind="synth">
           <span class="ms-num">05</span>
-          <span class="ms-name">Gate Keeper</span>
+          <span class="ms-name">The Long Send</span>
           <span class="ms-time">loop</span>
-          <span class="ms-sub">Ark-flavoured score · D minor, 140 BPM · ostinato, taiko, brass — written in-house, synthesised live</span>
+          <span class="ms-sub">post-rock · E minor, 92 BPM · an eight-bar crescendo — tremolo guitar, bells, noise swells, written in-house</span>
         </li>
       </ol>
 
@@ -203,6 +211,8 @@
   </div>
 </footer>
 
+<script src="assets/js/vendor/three.min.js"></script>
+<script src="assets/js/record-scene.js"></script>
 <script src="assets/js/lyrics.js"></script>
 <script src="assets/js/recordings.js"></script>
 <script src="assets/js/music.js"></script>
@@ -324,19 +334,19 @@
 
       if (!data) {
         /* neither synthesised track has words; describe what it is instead */
-        var isArk = id === "ark";
+        var isScore = id === "postrock";
         if (titleEl) titleEl.textContent = "No words";
-        if (leadEl) leadEl.textContent = isArk
+        if (leadEl) leadEl.textContent = isScore
           ? "A score, not a song: nothing is being sung here either — only instruments, written in-house and played live by the browser."
           : "The first track is instrumental: there is nothing being sung, so there is nothing to print here.";
         var songs = (window.ATTRECORDINGS || []).length + 1;
         host.innerHTML = '<div class="callout"><div><b>' +
-          (isArk ? "Gate Keeper — in-house score" : "Failed at 19:59 — instrumental") + "</b>" +
-          (isArk
-            ? "D minor at 140 BPM in a four-bar loop: a synth ostinato running sixteenths, a taiko-ish kick, " +
-              "snare and hats, brass stabs, and a choir-like pad holding the chord. The first two bars keep it to " +
-              "bass and ostinato; the last two let the whole band in. No external service was involved — it is " +
-              "synthesised note by note while you listen."
+          (isScore ? "The Long Send — in-house post-rock" : "Failed at 19:59 — instrumental") + "</b>" +
+          (isScore
+            ? "E minor at 92 BPM, eight bars that build in four layers: a clean delayed arpeggio and a pad alone, " +
+              "then bass, soft kick and bells, then tremolo-picked sixteenths with snare and hats, then everything " +
+              "at once with a distorted high layer — a noise swell and a cymbal carry it back into the loop. " +
+              "Written in-house; synthesised note by note while you listen."
             : "Built note by note in the browser as it plays: a pad, a walking bass and an arpeggio over " +
               "Am–F–C–G. No percussion, no hiss, no audio file, made to loop forever.") +
           " " + songs + " tracks above carry words; pick one and they will appear here.</div></div>";

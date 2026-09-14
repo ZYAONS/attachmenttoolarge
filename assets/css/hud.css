@@ -195,3 +195,30 @@ a { color: var(--hud-lime); }
 /* the mission timer belongs bottom-right: the music pill already owns the
    bottom-left corner, and two fixed blocks fighting over it helps nobody */
 .hud-timer { left: auto !important; right: 0 !important; border-left: 1px solid var(--hud-line) !important; border-right: 0 !important; }
+/* ==========================================================================
+   Background: the diagonal blue slashes are gone.
+   style.css paints them on body::before and body::after (the 107deg streaks);
+   this layer is loaded last, so it replaces both without touching that file.
+   In their place, a technical plate: dark with a grid and circuit traces in the
+   dark theme, a plain light grid in daylight.
+   ========================================================================== */
+body::after { background-image: none !important; }        /* the offset overprint layer */
+.p3-speed::after { display: none !important; }            /* and my own speed lines */
+
+html[data-theme="dark"] body::before,
+body:not([data-theme="light"])::before {
+  background-image: url("../img/tech-bg.svg") !important;
+  background-size: cover !important;
+  background-position: center top !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+html[data-theme="light"] body::before {
+  background-image:
+    linear-gradient(var(--hud-line-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hud-line-soft) 1px, transparent 1px) !important;
+  background-size: 26px 26px !important;
+  background-position: 0 0 !important;
+  background-attachment: fixed !important;
+  background-repeat: repeat !important;
+}
