@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    attachmenttoolarge — 浏览器端自检（CDP 驱动，零依赖）
 
    用法：
@@ -257,6 +257,34 @@ const SUITE = `(async () => {
          clicked again, and a later assertion clicking "rap" then starts it properly.
          (The page's stopAll() lives in a closure and is not reachable from here.) */
       msRow("rap").click(); await wait(200);
+    }
+
+    /* ---------- switching between tracks: the file player and the live synth ---------- */
+    if (msRow("wire") && msRow("lofi")) {
+      const el = document.querySelector("audio");
+      const src = () => (el && (el.currentSrc || el.src)) || "";
+      const short = () => src().split("/").pop();
+
+      msRow("wire").click();
+      await until(() => /wire\.mp3/.test(src()) && !el.paused, 6000, 150);
+      ok("切到 03：音轨换成 wire 并在播", /wire\.mp3/.test(src()) && !el.paused, short() + " paused=" + el.paused);
+
+      msRow("ninetynine").click();
+      await until(() => /ninetynine\.mp3/.test(src()) && !el.paused, 6000, 150);
+      ok("03 直接切 04 不卡住", /ninetynine\.mp3/.test(src()) && !el.paused, short() + " paused=" + el.paused);
+
+      msRow("lofi").click();
+      await until(() => music.isOn(), 6000, 150);
+      ok("切到器乐：录音停下、合成器接管", el.paused === true && music.isOn() === true,
+         "audio paused=" + el.paused + " synth=" + music.isOn());
+
+      msRow("rap").click();
+      await until(() => /rap\.mp3/.test(src()) && !el.paused, 6000, 150);
+      ok("从器乐切回录音：合成器让位", /rap\.mp3/.test(src()) && !el.paused && music.isOn() === false,
+         short() + " paused=" + el.paused + " synth=" + music.isOn());
+
+      msRow("rap").click(); await wait(250);            // stop again, leaving the page quiet
+      ok("连点两次同一行会停下", el.paused === true, "paused=" + el.paused);
     }
     ok("播放器在 DOM 里", !!document.querySelector("audio"), "hidden audio element");
 
