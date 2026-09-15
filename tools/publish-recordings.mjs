@@ -58,7 +58,6 @@ const TRACKS = [
 const EXTRA = [
   { file: "assets/img/emblem.svg", name: "cover-emblem.svg" },
   { file: "assets/img/org-avatar.png", name: "cover-1024.png" },
-  { file: "assets/audio/folk-export.wav", name: "loop-porch-folk-60s.wav" },
   { file: "assets/audio/postrock-export.wav", name: "loop-the-long-send-45s.wav" }
 ];
 
@@ -109,6 +108,20 @@ if (args.includes("--check") || !args.length) {
   process.exit(0);
 }
 
+
+/* ---------- remove an asset from a release ---------- */
+if (args.includes("--drop")) {
+  const TAG = String(flag("tag", "recordings-v5"));
+  const NAME = String(flag("drop", ""));
+  const rel = await fetch("https://api.github.com/repos/" + OWNER + "/" + REPO + "/releases/tags/" + TAG, { headers: H });
+  if (!rel.ok) { console.error("No such release: " + TAG); process.exit(1); }
+  const rj = await rel.json();
+  const asset = (rj.assets || []).find((a) => a.name === NAME);
+  if (!asset) { console.log("not attached to " + TAG + ": " + NAME); process.exit(0); }
+  const del = await fetch("https://api.github.com/repos/" + OWNER + "/" + REPO + "/releases/assets/" + asset.id, { method: "DELETE", headers: H });
+  console.log((del.status === 204 ? "removed " : "FAILED HTTP " + del.status + " ") + NAME + " from " + TAG);
+  process.exit(del.status === 204 ? 0 : 1);
+}
 /* ---------- publish ---------- */
 if (args.includes("--release")) {
   const TAG = String(flag("tag", "recordings-v1"));

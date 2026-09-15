@@ -621,124 +621,6 @@
      片段首尾相接，每段和声与速度都不同，那不是一首曲子。
      Karplus-Strong 拨弦（噪声脉冲 + 延迟反馈）正是民谣吉他与五弦班卓的音色，
      配走步低音、口琴式长音与三度和声。G–C–G–D 循环，四小节一句。 */
-  var FOLK_BPM = 104, FOLK_BEAT = 60 / FOLK_BPM, FOLK_STEP = FOLK_BEAT / 2, FOLK_BAR = 8;
-  var FOLK_CHORDS = [
-    { root: 196.00, third: 246.94, fifth: 293.66, harm: 493.88 },   // G
-    { root: 130.81, third: 164.81, fifth: 196.00, harm: 392.00 },   // C
-    { root: 196.00, third: 246.94, fifth: 293.66, harm: 493.88 },   // G
-    { root: 146.83, third: 185.00, fifth: 220.00, harm: 440.00 }    // D
-  ];
-
-  /* 拨弦：一段很短的噪声送进与音高等长的延迟线，反馈里带一阶衰减 —— 这就是弦 */
-  /* Karplus-Strong needs delayTime >= 128 samples (about 2.9 ms at 44.1 kHz,
-     so a fundamental no higher than ~344 Hz). Ask for less and Web Audio clamps
-     the delay to one render quantum, which turns the feedback loop into a large-Q
-     comb filter: that is a metallic screech, not a plucked string. Anything above
-     the limit therefore takes a different route - a few sine partials with a fast
-     decay, which is what a short plucked string actually does. */
-  var KS_MAX_HZ = 300;
-  function pluckHigh(ctx, b, fr, t, vel) {
-    var out = ctx.createGain();
-    out.gain.value = 0.5 * (vel || 1);
-    out.connect(b.master);
-    [[1, 1], [2, 0.30], [3, 0.12]].forEach(function (p) {
-      var o = ctx.createOscillator();
-      o.type = "sine";
-      o.frequency.value = fr * p[0];
-      var g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.linearRampToValueAtTime(0.5 * p[1], t + 0.006);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.42 / p[0]);
-      o.connect(g); g.connect(out);
-      o.start(t); o.stop(t + 0.5);
-    });
-  }
-  function pluck(ctx, b, fr, t, vel) {
-    if (fr > KS_MAX_HZ) return pluckHigh(ctx, b, fr, t, vel);
-    var out = ctx.createGain();
-    out.gain.setValueAtTime(0.16 * (vel || 1), t);
-    out.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
-
-    var delay = ctx.createDelay(0.05);
-    /* never below the render-quantum floor, or the loop becomes a comb filter */
-    delay.delayTime.value = Math.max(1 / fr, 128 / ctx.sampleRate + 0.0005);
-    var fb = ctx.createGain();
-    fb.gain.value = 0.93;                      // 弦的衰减
-    var damp = ctx.createBiquadFilter();
-    damp.type = "lowpass";
-    damp.frequency.value = Math.min(4200, fr * 9);   // 高音衰减得比低音快，才有拨弦味
-
-    var burst = ctx.createBufferSource();
-    burst.buffer = b.noise;
-    var bg = ctx.createGain();
-    bg.gain.setValueAtTime(1, t);
-    bg.gain.exponentialRampToValueAtTime(0.001, t + 1 / fr);   // 只喂一个周期
-
-    burst.connect(bg); bg.connect(delay);
-    var dc = ctx.createBiquadFilter();          // a DC blocker in the loop: no rumble build-up
-    dc.type = "highpass";
-    dc.frequency.value = 70;
-    delay.connect(damp); damp.connect(dc); dc.connect(fb); fb.connect(delay);
-    damp.connect(out);
-    out.connect(b.master);
-    burst.start(t); burst.stop(t + 0.05);
-  }
-
-  /* 口琴：三角波过带通，加一点颤音，长音拖住整句 */
-  function harmonica(ctx, b, fr, t, dur) {
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.05, t + 0.12);
-    g.gain.setValueAtTime(0.05, t + dur - 0.2);
-    g.gain.linearRampToValueAtTime(0.0001, t + dur);
-    var f = ctx.createBiquadFilter();
-    f.type = "bandpass";
-    f.frequency.value = fr * 1.5;
-    f.Q.value = 1.0;
-    var o = ctx.createOscillator();
-    o.type = "triangle";
-    o.frequency.value = fr;
-    var vib = ctx.createOscillator();
-    vib.type = "sine";
-    vib.frequency.value = 5.2;                  // 手的颤音
-    var vg = ctx.createGain();
-    vg.gain.value = fr * 0.012;
-    vib.connect(vg); vg.connect(o.frequency);
-    o.connect(f); f.connect(g); g.connect(b.master);
-    o.start(t); vib.start(t);
-    o.stop(t + dur + 0.05); vib.stop(t + dur + 0.05);
-  }
-
-  function scheduleFolkStep(ctx, b, step, t) {
-    var bar = Math.floor(step / FOLK_BAR);
-    var local = step % FOLK_BAR;
-    var c = FOLK_CHORDS[bar % FOLK_CHORDS.length];
-    var phrase = bar % 4;
-
-    /* 指弹：根-三-五-三 的八分音型，每小节两遍，力度起伏像手在动 */
-    var fig = [c.root, c.third, c.fifth, c.third];
-    var note = fig[local % 4];
-    if (local % 2 === 0) {
-      var oct = (local === 4 || local === 6) ? 2 : 1;
-      pluck(ctx, b, note * oct, t, 0.75 + (local % 4 === 0 ? 0.25 : 0));
-    }
-    /* 班卓：反拍上的高八度短拨 */
-    if (local % 2 === 1) pluck(ctx, b, c.fifth * 2, t, 0.35);
-
-    /* 走步低音：一小节两下，根音与五度 */
-    if (local === 0 || local === 4) {
-      bass(ctx, b, (local === 0 ? c.root : c.fifth) / 2, t, FOLK_STEP * 3.2, 0.34);
-    }
-
-    /* 口琴：每四小节进来一次，吹一整句 */
-    if (local === 0 && (phrase === 0 || phrase === 2)) {
-      harmonica(ctx, b, c.harm / 2, t, FOLK_BAR * FOLK_STEP);
-    }
-
-    /* 三度和声：句尾两小节，副歌感 */
-    if (phrase >= 2 && local === 2) pluck(ctx, b, c.third * 2, t, 0.45);
-    if (phrase >= 2 && local === 6) pluck(ctx, b, c.root * 2, t, 0.45);
-  }
   function schedulePostStep(ctx, b, step, t) {
     var bar = Math.floor(step / POST_BAR) % POST_BARS;
     var local = step % POST_BAR;
@@ -906,14 +788,12 @@
   function stepDur() {
     if (state.track === "rap") return RAP_STEP;
     if (state.track === "postrock") return POST_STEP;
-    if (state.track === "folk") return FOLK_STEP;
     return STEP;
   }
 
   function scheduleStep(ctx, b, step, t) {
     if (state.track === "rap") scheduleRapStep(ctx, b, step, t);
     else if (state.track === "postrock") schedulePostStep(ctx, b, step, t);
-    else if (state.track === "folk") scheduleFolkStep(ctx, b, step, t);
     else scheduleLofiStep(ctx, b, step, t);
   }
 
@@ -1229,7 +1109,7 @@
   }
 
   function selectTrack(id) {
-    if (id !== "rap" && id !== "postrock" && id !== "folk") id = "lofi";
+    if (id !== "rap" && id !== "postrock") id = "lofi";
     if (id === state.track) return state.track;
     var wasOn = state.on;
     if (wasOn) stop();
@@ -1254,7 +1134,7 @@
       id: state.track,
       name: state.track === "rap"
         ? ((data && data.title) || "Attachment Too Large") + " (Rap)"
-        : state.track === "postrock" ? "The Long Send" : state.track === "folk" ? "The Twenty-Megabyte Line" : "Failed at 19:59",
+        : state.track === "postrock" ? "The Long Send" : "Failed at 19:59",
       kind: state.track
     };
   }
