@@ -320,3 +320,15 @@ html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
   border-left-color: #3c5a0f !important;
 }
 .cta-band .btn-ghost { color: var(--rhodes-ink) !important; border-color: rgba(10, 11, 10, 0.42) !important; }
+/* Buttons inside a light plate: .btn rules in the HUD layer also use !important,
+   so the link colour needed matching force. Buttons read as ink on a bone plate. */
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap)
+  :is(a.btn, a.btn-ghost, a.btn-sm, button.btn, .btn-sm) {
+  color: var(--rhodes-ink) !important;
+  -webkit-text-fill-color: var(--rhodes-ink) !important;
+  border-color: rgba(10, 11, 10, 0.45) !important;
+}
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) :is(a.btn-primary, .btn-primary) {
+  background: var(--med) !important; color: var(--rhodes-ink) !important;
+  -webkit-text-fill-color: var(--rhodes-ink) !important;
+}
