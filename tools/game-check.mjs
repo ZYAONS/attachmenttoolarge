@@ -83,6 +83,28 @@ const SUITE = `(async () => {
   if (!G) return [{ name: "页面加载了逻辑", pass: false, detail: "window.__game 不存在" }];
   const visible = () => [...document.querySelectorAll(".obj")].filter(n => n.style.display !== "none").length;
 
+  // ---- 窗外天气：必须是雾，且真的画出来了 ----
+  const rh = document.querySelector("[data-rain]");
+  const rc = rh && rh.querySelector("canvas");
+  ok("天气层有尺寸", !!(rh && rh.clientWidth > 40 && rh.clientHeight > 40),
+     rh ? rh.clientWidth + "x" + rh.clientHeight : "没有 [data-rain]");
+  ok("天气层画布有尺寸", !!(rc && rc.width > 40 && rc.height > 40),
+     rc ? rc.width + "x" + rc.height : "没有 canvas");
+  /* 一块纯色玻璃的亮度方差接近 0。雨真的画上去了，方差就会被水珠的高光拉开 ——
+     这比"有没有某个亮像素"可靠：之前那版画了、但暗到采样不到，断言就漏了。 */
+  let lum = [], mn = 255, mx = 0;
+  if (rc && rc.width > 40) {
+    const ctx2 = rc.getContext("2d");
+    const d = ctx2.getImageData(0, 0, rc.width, rc.height).data;
+    for (let i = 0; i < d.length; i += 4 * 37) {
+      const v = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+      lum.push(v); if (v < mn) mn = v; if (v > mx) mx = v;
+    }
+  }
+  const mean = lum.length ? lum.reduce((a, b) => a + b, 0) / lum.length : 0;
+  const vari = lum.length ? lum.reduce((a, b) => a + (b - mean) * (b - mean), 0) / lum.length : 0;
+  ok("窗外有雾（不是一块纯色）", vari > 60 && (mx - mn) > 60,
+     "方差 " + vari.toFixed(1) + " · 亮度 " + Math.round(mn) + "–" + Math.round(mx));
   // ---- 第 1 天：检索 ----
   let s = G.state();
   ok("第 1 天从检索开始", s.day === 1 && s.phase === "search", JSON.stringify(s));

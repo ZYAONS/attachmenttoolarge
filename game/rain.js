@@ -1,15 +1,18 @@
 /* ==========================================================================
-   UNDERSTUDY — 雨（rain.js）
+   UNDERSTUDY — 窗外的天气（rain.js）
    --------------------------------------------------------------------------
-   之前那版是 repeating-linear-gradient 画的斜线，滚动起来像贴纸。
-   这一版画的是**玻璃上的水**，四层叠出来：
+   这里原来画的是"玻璃挂水"：一颗亮头拖一条尾巴。
+   结果它看起来像精子，不像雨。撤了。
 
-     1. 背景：夜里的街，远处有一点暖光（雨里的一切都糊）
-     2. 挂水：不动的细小水珠，玻璃本身的湿
-     3. 行水：会长大、到临界就下滑的水滴，滑过的地方留下一条会抖的痕
-     4. 细流：几条一直在缓慢蜿蜒的水线
+   现在画的是**雾**，四个层次：
 
-   全部用 canvas，无图片资源。prefers-reduced-motion 时只画一帧静态的。
+     1. 夜里的街：远处几盏灯，全部糊成光晕（雾天看不见轮廓）
+     2. 雾团：九个大而极淡的圆，缓慢平移，出界就绕回来
+     3. 水膜：四条宽而极淡的竖条，慢慢往下淌（是"流下来的一层水"，
+        不是一颗颗水珠 —— 所以没有头也没有尾巴）
+     4. 玻璃：一层奶白色的薄雾贴在玻璃上，加一次性生成的噪点防色带
+
+   平静、缓慢、不用盯着看。prefers-reduced-motion 时只画一帧。
    ========================================================================== */
 (function () {
   "use strict";
@@ -20,9 +23,15 @@
   canvas.style.cssText = "position:absolute;inset:0;width:100%;height:100%;display:block";
   host.appendChild(canvas);
   var ctx = canvas.getContext("2d");
-  var W = 0, H = 0, dpr = 1;
 
+  var W = 0, H = 0, dpr = 1;
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  var puffs = [];      // 雾团
+  var films = [];      // 水膜
+  var grainPat = null; // 噪点（防色带）
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -33,183 +42,152 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
-  /* ---------------- 粒子 ---------------- */
-  var beads = [];      // 挂水：不动的
-  var drops = [];      // 行水：会下滑的
-  var rivulets = [];   // 细流
-
-  function rnd(a, b) { return a + Math.random() * (b - a); }
-
-  function makeBead() {
-    return { x: rnd(0, W), y: rnd(0, H), r: rnd(0.7, 2.4), a: rnd(0.10, 0.34) };
-  }
-
-  function makeDrop(atTop) {
-    return {
-      x: rnd(0, W),
-      y: atTop ? rnd(-H * 0.3, 0) : rnd(0, H),
-      r: rnd(1.6, 4.2),
-      v: 0,                      // 速度由"重量"推起来
-      grow: rnd(0.02, 0.10),     // 每秒长大多少
-      wob: rnd(0.6, 2.4),        // 摆动的频率
-      phase: rnd(0, 6.28),
-      trail: [],                 // 滑过的位置（用来画痕）
-      life: 0
-    };
+  function makeGrain() {
+    var g = document.createElement("canvas");
+    g.width = g.height = 64;
+    var gc = g.getContext("2d");
+    var img = gc.createImageData(64, 64);
+    for (var i = 0; i < img.data.length; i += 4) {
+      var v = 128 + (Math.random() * 2 - 1) * 34;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    gc.putImageData(img, 0, 0);
+    grainPat = ctx.createPattern(g, "repeat");
   }
 
   function seed() {
-    beads = []; drops = []; rivulets = [];
-    var beadCount = Math.round((W * H) / 1500);
-    for (var i = 0; i < beadCount; i++) beads.push(makeBead());
-    for (var d = 0; d < 26; d++) drops.push(makeDrop(false));
-    for (var r = 0; r < 4; r++) {
-      rivulets.push({
-        x: rnd(0.1, 0.9) * W, y: rnd(-H, 0), v: rnd(6, 16),
-        amp: rnd(3, 11), freq: rnd(0.6, 1.6), phase: rnd(0, 6.28), w: rnd(1.1, 2.6)
+    puffs = [];
+    var big = Math.max(W, H);
+    for (var i = 0; i < 9; i++) {
+      puffs.push({
+        x: rnd(-0.15, 1.15) * W,
+        y: rnd(0.05, 1.05) * H,
+        r: rnd(0.28, 0.68) * big,
+        a: rnd(0.05, 0.14),
+        vx: rnd(-3.5, 3.5),
+        vy: rnd(-1.2, 1.2)
+      });
+    }
+    films = [];
+    for (var k = 0; k < 4; k++) {
+      films.push({
+        x: rnd(0.05, 0.95) * W,
+        y: rnd(-H, H),
+        w: rnd(12, 30),
+        v: rnd(2.2, 5.5),
+        a: rnd(0.020, 0.045)
       });
     }
   }
 
-  /* ---------------- 画面 ---------------- */
-  function drawScene() {
-    // 1) 夜里的街：垂直渐变 + 一团远处的暖光（被雨糊掉）
+  function drawNight() {
     var g = ctx.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0, "#16202b");
-    g.addColorStop(0.55, "#101823");
-    g.addColorStop(1, "#0a0f16");
+    g.addColorStop(0, "#1b2531");
+    g.addColorStop(0.5, "#151d27");
+    g.addColorStop(1, "#101720");
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, H);
-
-    var lampX = W * 0.28, lampY = H * 0.72;
-    var lg = ctx.createRadialGradient(lampX, lampY, 0, lampX, lampY, Math.max(W, H) * 0.5);
-    lg.addColorStop(0, "rgba(255,206,140,0.20)");
-    lg.addColorStop(0.35, "rgba(255,190,120,0.06)");
-    lg.addColorStop(1, "rgba(255,190,120,0)");
-    ctx.fillStyle = lg;
-    ctx.fillRect(0, 0, W, H);
-
-    // 远处一点模糊的窗（对面楼）
-    ctx.globalAlpha = 0.16;
-    ctx.fillStyle = "#cbb489";
-    ctx.fillRect(W * 0.63, H * 0.36, 22, 16);
-    ctx.fillRect(W * 0.72, H * 0.52, 16, 12);
-    ctx.globalAlpha = 1;
   }
 
-  function drawBeads() {
-    beads.forEach(function (b) {
-      // 挂水：亮边 + 中心暗，才像贴在玻璃上的一颗水
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.r, 0, 6.283);
-      ctx.fillStyle = "rgba(198,222,240," + b.a * 0.5 + ")";
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(b.x - b.r * 0.28, b.y - b.r * 0.28, b.r * 0.52, 0, 6.283);
-      ctx.fillStyle = "rgba(255,255,255," + b.a * 0.55 + ")";
-      ctx.fill();
+  /* 远处的灯：雾里只剩光晕，没有轮廓 */
+  function drawLights() {
+    var lights = [[0.26, 0.74, 0.52, 0.30], [0.72, 0.42, 0.30, 0.13], [0.55, 0.86, 0.36, 0.15]];
+    lights.forEach(function (L) {
+      var cx = L[0] * W, cy = L[1] * H, rr = L[2] * Math.max(W, H);
+      var rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr);
+      rg.addColorStop(0, "rgba(255,206,142," + L[3] + ")");
+      rg.addColorStop(0.4, "rgba(250,196,138," + (L[3] * 0.35) + ")");
+      rg.addColorStop(1, "rgba(240,190,130,0)");
+      ctx.fillStyle = rg;
+      ctx.fillRect(0, 0, W, H);
     });
   }
 
-  function drawRivulets(dt) {
-    rivulets.forEach(function (r) {
-      r.phase += dt * r.freq;
-      r.y += r.v * dt;
-      if (r.y > H + 40) { r.y = -40; r.x = rnd(0.1, 0.9) * W; }
+  function drawPuffs(dt) {
+    ctx.globalCompositeOperation = "lighter";
+    puffs.forEach(function (p) {
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      var m = p.r * 1.1;
+      if (p.x < -m) p.x = W + m; else if (p.x > W + m) p.x = -m;
+      if (p.y < -m) p.y = H + m; else if (p.y > H + m) p.y = -m;
+      var rg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+      rg.addColorStop(0, "rgba(196,210,224," + p.a + ")");
+      rg.addColorStop(0.55, "rgba(186,202,218," + (p.a * 0.45) + ")");
+      rg.addColorStop(1, "rgba(180,196,214,0)");
+      ctx.fillStyle = rg;
       ctx.beginPath();
-      for (var k = 0; k <= 18; k++) {
-        var yy = r.y - k * 10;
-        var xx = r.x + Math.sin(r.phase + k * 0.35) * r.amp;
-        if (k === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
-      }
-      ctx.strokeStyle = "rgba(206,228,244,0.20)";
-      ctx.lineWidth = r.w;
-      ctx.lineCap = "round";
-      ctx.stroke();
-      ctx.strokeStyle = "rgba(255,255,255,0.10)";
-      ctx.lineWidth = r.w * 0.4;
-      ctx.stroke();
+      ctx.arc(p.x, p.y, p.r, 0, 6.283);
+      ctx.fill();
+    });
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  /* 水膜：宽、极淡、慢慢往下淌 —— 没有头，也没有尾巴 */
+  function drawFilms(dt) {
+    films.forEach(function (f) {
+      f.y += f.v * dt;
+      if (f.y - H * 0.5 > H) { f.y = -H * 0.5; f.x = rnd(0.05, 0.95) * W; f.w = rnd(12, 30); }
+      var lg = ctx.createLinearGradient(f.x - f.w, 0, f.x + f.w, 0);
+      lg.addColorStop(0, "rgba(214,232,246,0)");
+      lg.addColorStop(0.5, "rgba(214,232,246," + f.a + ")");
+      lg.addColorStop(1, "rgba(214,232,246,0)");
+      ctx.fillStyle = lg;
+      var hh = H * 1.4;
+      ctx.fillRect(f.x - f.w, f.y - hh * 0.5, f.w * 2, hh);
     });
   }
 
-  function drawDrops(dt) {
-    /* 一颗水滴的一生：挂在那儿慢慢变大 → 够重了开始滑 → 滑出一条会抖的痕 →
-       到画面底部消失（或在中途被另一颗吃掉，原型里省略这一步）。 */
-    drops.forEach(function (d) {
-      d.life += dt;
-      d.r += d.grow * dt;
-      if (d.r > 2.6 && d.v < 0.5) d.v = rnd(8, 22);          // 够重了，开始滑
-
-      if (d.v > 0) {
-        d.phase += dt * d.wob;
-        var dx = Math.sin(d.phase) * 0.7;                     // 左右轻微摆
-        d.x += dx;
-        d.y += d.v * dt;
-        d.v += 7 * dt;                                        // 越滑越快
-        d.trail.push({ x: d.x, y: d.y, r: d.r });
-        if (d.trail.length > 42) d.trail.shift();
-      }
-
-      // 痕：一条细的、上宽下窄的湿线
-      if (d.trail.length > 2) {
-        ctx.beginPath();
-        ctx.moveTo(d.trail[0].x, d.trail[0].y - d.r);
-        for (var i = 1; i < d.trail.length; i++) ctx.lineTo(d.trail[i].x, d.trail[i].y - d.trail[i].r);
-        ctx.strokeStyle = "rgba(214,234,248,0.19)";
-        ctx.lineWidth = Math.max(1, d.r * 0.5);
-        ctx.lineCap = "round";
-        ctx.stroke();
-      }
-
-      // 水滴本体
-      ctx.beginPath();
-      ctx.ellipse(d.x, d.y, d.r * 0.86, d.r * 1.12, 0, 0, 6.283);
-      ctx.fillStyle = "rgba(188,214,234,0.30)";
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(d.x - d.r * 0.25, d.y - d.r * 0.34, d.r * 0.34, d.r * 0.42, 0, 0, 6.283);
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      ctx.fill();
-
-      // 出界就换一颗新的，从上面重新落
-      if (d.y - d.r > H + 8) {
-        var fresh = makeDrop(true);
-        for (var k in fresh) d[k] = fresh[k];
-      }
-    });
-  }
-
-  /* 玻璃反光：一道斜的、很淡的室内光带，压在所有东西上面 */
+  /* 贴在玻璃上的奶白薄雾 + 一层反光 + 噪点 */
   function drawGlass() {
-    var g = ctx.createLinearGradient(0, 0, W, H);
-    g.addColorStop(0, "rgba(255,255,255,0.05)");
-    g.addColorStop(0.35, "rgba(255,255,255,0.015)");
-    g.addColorStop(0.55, "rgba(255,255,255,0)");
-    g.addColorStop(1, "rgba(255,255,255,0.03)");
-    ctx.fillStyle = g;
+    var v = ctx.createLinearGradient(0, 0, 0, H);
+    v.addColorStop(0, "rgba(226,236,244,0.070)");
+    v.addColorStop(0.45, "rgba(226,236,244,0.028)");
+    v.addColorStop(1, "rgba(226,236,244,0.050)");
+    ctx.fillStyle = v;
     ctx.fillRect(0, 0, W, H);
+
+    var s = ctx.createLinearGradient(0, 0, W, H);
+    s.addColorStop(0, "rgba(255,255,255,0.055)");
+    s.addColorStop(0.4, "rgba(255,255,255,0.012)");
+    s.addColorStop(1, "rgba(255,255,255,0.030)");
+    ctx.fillStyle = s;
+    ctx.fillRect(0, 0, W, H);
+
+    if (grainPat) {
+      ctx.save();
+      ctx.globalAlpha = 0.030;
+      ctx.globalCompositeOperation = "overlay";
+      ctx.fillStyle = grainPat;
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
   }
 
-  var last = 0;
+  var last = 0, running = false;
   function frame(t) {
     var dt = last ? Math.min((t - last) / 1000, 0.05) : 0.016;
     last = t;
     ctx.clearRect(0, 0, W, H);
-    drawScene();
-    drawBeads();
-    drawRivulets(dt);
-    drawDrops(dt);
+    drawNight();
+    drawLights();
+    drawPuffs(dt);
+    drawFilms(dt);
     drawGlass();
-    if (!reduce) requestAnimationFrame(frame);
+    if (!reduce) requestAnimationFrame(frame); else running = false;
   }
 
   resize();
+  makeGrain();
   seed();
-  requestAnimationFrame(frame);
+  running = !reduce;
+  frame(0);
+  if (!reduce) requestAnimationFrame(frame);
 
   var rt;
   window.addEventListener("resize", function () {
     clearTimeout(rt);
-    rt = setTimeout(function () { resize(); seed(); if (reduce) frame(0); }, 200);
+    rt = setTimeout(function () { resize(); makeGrain(); seed(); last = 0; if (reduce || !running) frame(0); }, 200);
   });
 })();

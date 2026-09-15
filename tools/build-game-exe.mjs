@@ -89,9 +89,10 @@ function serve(port) {
   return new Promise((res) => {
     const server = http.createServer((req, r) => {
       let p = decodeURIComponent((req.url || "/").split("?")[0]);
-      if (p === "/" || p === "") p = "/game/index.html";
+      if (p === "/" || p === "") { r.writeHead(302, { Location: "/game/index.html" }); return r.end(); }
       p = p.replace(/^\\//, "");
-      const body = EMBED[p];
+      let body = EMBED[p];
+      if (!body && EMBED["game/" + p]) { p = "game/" + p; body = EMBED[p]; }
       if (!body) { r.writeHead(404, { "Content-Type": "text/plain" }); return r.end("not found"); }
       const ext = path.extname(p).toLowerCase();
       r.writeHead(200, { "Content-Type": TYPES[ext] || "application/octet-stream", "Cache-Control": "no-store" });
@@ -131,6 +132,8 @@ function findEngine() {
       "--window-size=1280,860",
       "--autoplay-policy=no-user-gesture-required"
     ];
+    const dbg = valOf("--debug-port", "");
+    if (dbg) args.push("--remote-debugging-port=" + dbg);
     const child = spawn(engine, args, { detached: true, stdio: "ignore" });
     child.unref();
     console.log("窗口已打开（应用模式，无浏览器界面）。关掉窗口即可退出。");
@@ -214,13 +217,22 @@ if (process.argv.includes("--verify")) {
   const child = spawn(join(DIST, NAME + ".exe"), ["--serve-only", "--port", String(port)], { stdio: "ignore" });
   await new Promise((r) => setTimeout(r, 2500));
   let ok = 0, bad = 0;
-  for (const p of ["/", "/game/game.js", "/game/content.js", "/game/rain.js", "/assets/js/music.js"]) {
+  /* 按页面自己写的 src 去抓 —— 上一版只试了硬编码的路径，
+     正好绕过了"根路径下相对路径解析错"这个坑。 */
+  const rootRes = await fetch(`http://127.0.0.1:${port}/`);
+  const html = await rootRes.text();
+  const docUrl = rootRes.url;
+  const srcs = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map((m) => m[1]);
+  console.log(`    文档地址 ${docUrl} · 页面声明了 ${srcs.length} 个脚本`);
+  for (const s of srcs) {
+    const u = new URL(s, docUrl).href;
     try {
-      const res = await fetch(`http://127.0.0.1:${port}${p}`);
+      const res = await fetch(u);
       const body = await res.text();
-      if (res.ok && body.length > 100) { ok++; console.log(`    ✓ ${p}  ${res.status} · ${body.length} B`); }
-      else { bad++; console.log(`    ✗ ${p}  ${res.status}`); }
-    } catch (e) { bad++; console.log(`    ✗ ${p}  ${e.message}`); }
+      const isJs = /\\.js$/i.test(s);
+      if (res.ok && body.length > (isJs ? 200 : 50)) { ok++; console.log(`    ✓ ${s}  ${res.status} · ${body.length} B`); }
+      else { bad++; console.log(`    ✗ ${s}  ${res.status} · ${body.length} B`); }
+    } catch (e) { bad++; console.log(`    ✗ ${s}  ${e.message}`); }
   }
   child.kill();
   console.log(bad === 0 ? "    自检通过：exe 能独立把整套游戏喂给渲染引擎" : "    自检失败");

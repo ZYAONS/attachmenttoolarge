@@ -32,6 +32,7 @@ body{
   border:10px solid #221a13; box-shadow:0 0 60px rgba(0,0,0,.6) inset;
   overflow:hidden;
 }
+[data-rain]{position:absolute;inset:0;overflow:hidden}
 .window::before{ /* 窗棂 */
   content:""; position:absolute; inset:0;
   background:
@@ -55,6 +56,74 @@ body{
 .lamp .glow{position:absolute; left:-320px; top:40px; width:640px; height:520px;
   background:radial-gradient(circle at 50% 0%, rgba(255,215,154,.34), rgba(255,215,154,.06) 42%, transparent 70%);
   pointer-events:none; mix-blend-mode:screen;}
+/* ---------- 书架（书房总得有个书架）---------- */
+.shelf{position:absolute; right:3%; top:5%; width:32%; height:39%;
+  background:linear-gradient(180deg,#3b2b1e,#20170f);
+  border:9px solid #2a1d13; border-radius:2px;
+  box-shadow:0 24px 55px rgba(0,0,0,.65), inset 0 0 60px rgba(0,0,0,.55);}
+.shelf::after{content:""; position:absolute; left:0; right:0; top:0; height:34%; pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,214,150,.16), rgba(255,214,150,0));}
+.shelf .row{position:absolute; left:3%; right:3%; height:21.5%;
+  border-bottom:7px solid #1c130c; overflow:hidden;
+  box-shadow:0 -6px 12px rgba(0,0,0,.45) inset;}
+.shelf .row.r1{top:2.5%}
+.shelf .row.r2{top:26%}
+.shelf .row.r3{top:49.5%}
+.shelf .row.r4{top:73%}
+.shelf .row i{position:absolute; top:5%; bottom:8%; left:0; right:0; display:block;
+  background:repeating-linear-gradient(90deg,
+    #7d3b2e 0 7px, #8b4a34 7px 15px, #2f4a5a 15px 26px, #c2a468 26px 32px,
+    #3b5f45 32px 43px, #6d2f2a 43px 51px, #4a3b62 51px 61px, #a9713c 61px 67px,
+    #26403a 67px 79px, #8a6a3a 79px 85px, #5a3b2c 85px 94px);
+  box-shadow:0 2px 0 rgba(255,225,180,.10);}
+.shelf .row.r2 i{filter:hue-rotate(-20deg) brightness(.86); background-position:-9px 0}
+.shelf .row.r3 i{filter:hue-rotate(24deg) brightness(1.08); background-position:-23px 0}
+.shelf .row.r4 i{filter:hue-rotate(-40deg) brightness(.94); background-position:-41px 0}
+.shelf .top{position:absolute; left:-4%; right:-4%; top:-3%; height:9%;
+  background:linear-gradient(180deg,#4a3526,#2b1e13); border-radius:3px;
+  box-shadow:0 6px 16px rgba(0,0,0,.5)}
+.shelf .prop{position:absolute; top:-13%; border-radius:2px}
+.shelf .prop.a{left:6%; width:46px; height:34px; background:#5c4630; box-shadow:0 4px 10px rgba(0,0,0,.5)}
+.shelf .prop.b{left:22%; width:26px; height:40px; background:#3f5a46; border-radius:50% 50% 2px 2px;
+  box-shadow:0 4px 10px rgba(0,0,0,.5)}
+
+/* ---------- 墙上的钟（这游戏讲的就是时间）---------- */
+.clock{position:absolute; right:39%; top:11%; width:78px; height:78px; border-radius:50%;
+  background:radial-gradient(circle at 40% 34%, #f0e8d4, #cfc3a6 70%, #9c8f74);
+  border:7px solid #2c2115; box-shadow:0 10px 24px rgba(0,0,0,.55), inset 0 0 18px rgba(0,0,0,.25);}
+.clock i{position:absolute; left:50%; top:50%; width:3px; height:26px; background:#2b2118;
+  transform-origin:bottom center; transform:translate(-50%,-100%) rotate(15deg)}
+.clock u{position:absolute; left:50%; top:50%; width:2px; height:19px; background:#4a3a28;
+  transform-origin:bottom center; transform:translate(-50%,-100%) rotate(198deg); display:block}
+
+/* ---------- 墙上的画框 ---------- */
+.frame-pic{position:absolute; right:41%; top:34%; width:106px; height:80px;
+  background:#2f2418; border:8px solid #3d2f1e; box-shadow:0 12px 26px rgba(0,0,0,.55)}
+.frame-pic u{position:absolute; inset:4px; display:block;
+  background:linear-gradient(140deg,#5b6b6f,#2f3a3d 60%,#1e2628)}
+
+/* ---------- 地毯 ---------- */
+.rug{position:absolute; left:12%; right:16%; bottom:2%; height:16%; border-radius:50% 50% 42% 42%/60% 60% 40% 40%;
+  background:radial-gradient(60% 80% at 50% 40%, rgba(120,72,54,.55), rgba(78,44,34,.72) 70%, rgba(44,26,20,.8));
+  border:1px solid rgba(255,214,150,.10); filter:blur(1px)}
+
+/* ---------- 雾：雨看不清的时候，至少要有"潮"的感觉 ---------- */
+.mist{position:absolute; inset:0; pointer-events:none; z-index:3; mix-blend-mode:screen;
+  background:
+    radial-gradient(58% 42% at 28% 58%, rgba(186,208,226,.10), transparent 72%),
+    radial-gradient(52% 34% at 76% 34%, rgba(200,214,232,.09), transparent 74%),
+    radial-gradient(70% 50% at 50% 92%, rgba(170,190,210,.07), transparent 80%);
+  animation:mistdrift 26s ease-in-out infinite alternate}
+@keyframes mistdrift{from{transform:translate3d(-1.4%,0,0) scale(1.02)}to{transform:translate3d(1.8%,-1.2%,0) scale(1.04)}}
+@media (prefers-reduced-motion: reduce){.mist{animation:none}}
+
+/* ---------- 椅子（只露个背，给画面一点纵深）---------- */
+.chair{position:absolute; left:6%; bottom:38%; width:120px; height:96px;
+  background:linear-gradient(180deg,#3b2a1e,#241a12); border-radius:10px 10px 4px 4px;
+  box-shadow:0 12px 26px rgba(0,0,0,.55); transform:rotate(-2deg)}
+.chair::after{content:""; position:absolute; left:12%; right:12%; top:14%; height:34%;
+  border-radius:6px; background:linear-gradient(180deg,#4a3524,#2c1f14)}
+
 /* ---------- 桌子 ---------- */
 .desk{position:absolute; left:0; right:0; bottom:0; height:44%;
   background:linear-gradient(180deg,#5a4130,#3d2b1f 60%,#2a1d14);
@@ -232,6 +301,20 @@ body{
 <div class="room">
   <div class="window"><div data-rain></div><div class="street"></div></div>
   <div class="lamp"><div class="glow"></div><div class="shade"></div></div>
+  <div class="shelf">
+    <div class="top"></div>
+    <div class="prop a"></div>
+    <div class="prop b"></div>
+    <div class="row r1"><i></i></div>
+    <div class="row r2"><i></i></div>
+    <div class="row r3"><i></i></div>
+    <div class="row r4"><i></i></div>
+  </div>
+  <div class="clock"><i></i><u></u></div>
+  <div class="frame-pic"><u></u></div>
+  <div class="chair"></div>
+  <div class="rug"></div>
+  <div class="mist"></div>
   <div class="desk"><div class="deskmat"></div></div>
 
   <!-- 桌上的九件东西。三件与女儿的生日有关。 -->
