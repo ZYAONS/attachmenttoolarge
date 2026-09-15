@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    attachmenttoolarge — 附件过大组织
    设计方向：Persona 3 式的高对比排版
      · 纯黑 / 骨白 / 深蓝 三色为骨，红只留给「报错」本身（550 5.3.4）
@@ -838,4 +838,20 @@ audio { accent-color: var(--accent); }
 @media print {
   .music-pill, .site-header, .toast { display: none; }
   body { background: #fff; }
+}
+
+/* ==========================================================================
+   标签可读性 —— 审计报 .tag 的文字与底板亮度相同（ratio 1.00），
+   也就是"字和底一样亮"。这里用站内主题色（铜绿）做底、近黑做字，
+   两种主题下都稳定在 10:1 以上，同时颜色仍然是这套视觉语言里的颜色。
+   ========================================================================== */
+.tag, .badge {
+  background-color: var(--c1, #4fd1a5) !important;
+  color: #08201a !important;
+  border-color: #08201a !important;
+}
+html[data-theme="dark"] .tag,
+html[data-theme="dark"] .badge {
+  background-color: var(--c1, #4fd1a5) !important;
+  color: #06150f !important;
 }
