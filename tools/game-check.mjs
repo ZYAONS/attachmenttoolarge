@@ -180,6 +180,43 @@ const SUITE = `(async () => {
 
   ok("账本页数等于记录数", document.querySelectorAll("#pages .entry").length === G.state().entries,
      document.querySelectorAll("#pages .entry").length + " / " + G.state().entries);
+  // ---- 存档 = 分片（独立作用域，避免与上面的 const 重名）----
+  {
+  G.state(); // 确保有状态
+  const shards = G.shards.make();
+  ok("存档分六片", shards.length === 6 && G.shards.count === 6, shards.length + " 片");
+  ok("第一片是核心片", shards[0].kind === "core" && shards[0].i === 0, shards[0].kind);
+  ok("每片都带校验和", shards.every(s => typeof s.sum === "string" && s.sum.length > 0), shards.map(s => s.sum).join(","));
+  ok("分片文件名可读", G.shards.name(0).indexOf("001") > 0, G.shards.name(0));
+
+  const before = G.state();
+  G.shards.toStorage();
+  G.nextDay();                                   // 打乱状态
+  const messed = G.state();
+  const rep1 = G.shards.fromStorage();
+  const after = G.state();
+  ok("整份载入能还原天数与漂移", after.day === before.day && after.drift === before.drift,
+     "打乱到第 " + messed.day + " 天，载回第 " + after.day + " 天");
+  ok("整份载入报告完整", rep1.loaded === 6 && rep1.missing.length === 0, JSON.stringify(rep1.loaded) + "/6");
+
+  /* 少了账本片：照样能载入，但那部分记忆消失，并在账本上留下缺口 */
+  const gapsBefore = G.state().gaps;
+  const rep2 = G.shards.load([shards[0], shards[1], shards[2]]);
+  const st2 = G.state();
+  ok("缺片仍能载入（脊梁还在）", rep2.loaded === 3 && !rep2.fatal, rep2.loaded + " 片 · fatal=" + !!rep2.fatal);
+  ok("缺片会被记为记忆缺失", rep2.missing.length === 3 && st2.gaps > gapsBefore, "缺 " + rep2.missing.length + " 片 · 缺口 " + gapsBefore + " → " + st2.gaps);
+  ok("账本上写着哪一段丢了", /记忆缺失/.test(G.ledgerText()), "ledger note");
+
+  /* 坏片：校验和不符 → 按缺失处理 */
+  const broken = JSON.parse(JSON.stringify(shards[2]));
+  broken.data = [{ day: 99, text: "被改过的内容" }];
+  const rep3 = G.shards.load([shards[0], broken, shards[3]]);
+  ok("坏片被识破（校验和）", rep3.corrupt.length === 1, rep3.corrupt.join("；"));
+
+  /* 少了核心片：拼不回来 */
+  const rep4 = G.shards.load([shards[1], shards[2]]);
+  ok("缺核心片则拒绝载入", !!rep4.fatal, rep4.fatal || "（居然载入了）");
+  }
   ok("没有未捕获异常", !window.__errors || window.__errors.length === 0, (window.__errors || []).join(" | "));
   return out;
 })()`;
@@ -199,7 +236,7 @@ try {
 
   const res = await cdp.send("Runtime.evaluate", { expression: SUITE, awaitPromise: true, returnByValue: true, timeout: 120000 });
   if (res.exceptionDetails) {
-    console.error("suite threw:", res.exceptionDetails.text || JSON.stringify(res.exceptionDetails).slice(0, 300));
+    console.error("suite threw:", JSON.stringify(res.exceptionDetails).slice(0, 700));
     process.exit(1);
   }
   const rows = res.result.value || [];

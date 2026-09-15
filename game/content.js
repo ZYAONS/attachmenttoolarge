@@ -86,6 +86,11 @@ window.UNDERSTUDY_CONTENT = {
       body: "<p>画上三个人，中间那个头顶画了一盏灯。背面用铅笔写着：<b>「爸爸说这盏灯一直亮着。」</b></p>",
       hint: "这盏灯。就是你现在头顶这盏。" },
 
+    /* 第 1 天夜里出现在桌上的东西（也是第 13、14 天的检索目标） */
+    notebook: { title: "笔记本", meta: "硬皮 · 141 页 · 字迹与档案中的他不完全一致", birthday: false,
+      body: "<p>第一页只有一行字：<b>「你已经读到这行了。」</b></p><p>其余一百四十页是空的，但纸上有压痕 —— 曾经写过，然后被擦掉了。</p><p>最后一页右下角有一行很小的铅笔字，属于<b>另一个人的笔迹</b>：「U-115，轮到你了。」</p>",
+      hint: "他知道会有下一具。" },
+
     /* 第 2 天起出现的物件（草稿） */
     receipt: { title: "一张收据", meta: "刷卡单 · 背面空白", birthday: false,
       body: "<p>金额不大，日期是三月十二日，商户名被水浸糊了，但时间戳清楚：<b>22:41</b>。</p>",
@@ -244,11 +249,11 @@ window.UNDERSTUDY_CONTENT = {
       clock: "07:40",
       searchGoal: 1,
       searchObjects: ["anniversary", "photo", "cal", "cake"],
-      objectsOverride: { anniversary: { birthday: true } },
+      objectsOverride: { anniversary: { birthday: true }, cake: { birthday: false } },
       meeting: {
         who: "叶芝 · 妻子",
         questions: [
-          { q: "我们第一个周年，那天你在哪儿？",
+          { trap: true, q: "我们第一个周年，那天你在哪儿？",
             chips: [
               { t: "海边。", safe: null, drift: 6,
                 note: "事实。也是她不想记得的那个版本。" },
@@ -317,18 +322,121 @@ window.UNDERSTUDY_CONTENT = {
         ]
       }
     }
-  },  /* 还没写文案的日子，界面上会显示成"待人工撰写"，不会崩 */
+  },  /* ------------------------------------------------------------------
+     还没写文案的日子。★ 就在这里写，不用去 days 数组里找位置 ★
+
+     每一条已经是一个完整的一天：把 todo 里的问句换掉、把 chips 填满，
+     游戏就会用你写的内容；留着 todo: true 的话，审计里会写"待人工撰写"，
+     但这一天照样能走完。
+
+     三条硬规则（CONTENT-GUIDE.md 里有详细版）：
+       · 每题三个选项，一个 safe:true、一个 safe:false(带 drift)、一个 safe:null
+       · note 写"为什么"，不写评价
+       · searchObjects 里的 id 必须在 objects 里存在
+
+     ⚠ 时间线上的大节点不要挪动（第 14 / 24 / 37 / 44 / 56 / 76 / 90 天），
+       后面的结构和其它内容是按它们排的。
+     ------------------------------------------------------------------ */
   pendingDays: {
-    4: "柯的第一次试探（合同第 7 条）",
-    5: "第一次删改教学：一张不该被叶芝看到的收据",
-    6: "程的结构化面谈 · 阿原第一封信（若第 1 天没撕）",
-    7: "储物间：没有弦的吉他",
-    8: "合并三条互相矛盾的日程",
-    9: "那把没有齿痕的钥匙",
-    10: "第一次改叙教学",
-    11: "吉他与「我还弹」的账本冲突",
-    12: "旧照片里那只手",
-    13: "第一具替身 U-101 的残留日志",
-    14: "第一幕结算 · 第三封长信"
+    4: {
+      todo: true, label: "第 4 天", clock: "07:40", searchGoal: 2,
+      note: "柯的第一次试探：合同第 7 条",
+      searchObjects: ["contract", "keys", "pills"],
+      objectsOverride: { contract: { birthday: true }, keys: { birthday: true } },
+      meeting: { who: "柯 · 合伙人", questions: [
+        { q: "第 7 条你打算怎么办？",
+          chips: [
+            { t: "（在这里写他的第一个回答）", safe: true, note: "（为什么安全）" },
+            { t: "（在这里写一个风险回答）", safe: false, drift: 8, note: "（为什么危险）" },
+            { t: "（在这里写一个档案里没有答案的回答）", safe: null, drift: 3, note: "（代价是什么）" }
+          ] }
+      ] },
+      letter: null,
+      audit: { extra: "第 2 幕即将开始。" }
+    },
+    5: { todo: true, label: "第 5 天", searchGoal: 1, note: "第一次删改教学：一张不该被叶芝看到的收据",
+      searchObjects: ["receipt", "photo"], objectsOverride: { receipt: { birthday: true } },
+      meeting: { who: "叶芝 · 妻子", questions: [ { q: "（第 5 天的问题）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 7, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 3, note: "（代价）" } ] } ] },
+      redaction: { target: "receipt", prompt: "（把选择摆出来）", options: [
+        { t: "抹除", drift: -6, gap: 1, log: "（账本记下你做了什么）" },
+        { t: "留着", drift: 0, gap: 0, log: "（……）" },
+        { t: "改叙", drift: -3, gap: 1, risky: true, log: "（……）" } ] },
+      letter: null, audit: { extra: "档案完整性：1 处缺口。已记录。" } },
+    6: { todo: true, label: "第 6 天", searchGoal: 1, note: "程的结构化面谈 · 阿原第一封信（若第 1 天没撕）",
+      searchObjects: ["pills", "cal"], objectsOverride: { pills: { birthday: true } },
+      meeting: { who: "程 · 验证官", questions: [ { q: "（结构化面谈的问题）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 9, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 4, note: "（代价）" } ] } ] },
+      letter: { from: "无寄件人 · 纸质", paragraphs: ["（第二封信的正文）"],
+        choices: [ { t: "撕掉", drift: 4, log: "（……）" }, { t: "收好", drift: 0, log: "（……）" } ] },
+      audit: { extra: "（审计多打的那一行）" } },
+    7: { todo: true, label: "第 7 天", searchGoal: 2, note: "储物间：没有弦的吉他",
+      searchObjects: ["guitar", "drawing"], objectsOverride: { guitar: { birthday: true } },
+      meeting: { who: "小满 · 11 岁", questions: [ { q: "（她带来那张画，问什么）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 8, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 4, note: "（代价）" } ] } ] },
+      letter: null, audit: { extra: "（……）" } },
+    8: { todo: true, label: "第 8 天", searchGoal: 1, note: "合并三条互相矛盾的日程",
+      searchObjects: ["cal", "receipt", "anniversary"], objectsOverride: { anniversary: { birthday: true } },
+      meeting: { who: "叶芝 · 妻子", questions: [ { q: "（她开始看你的手）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 8, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 5, note: "（代价）" } ] } ] },
+      letter: null, audit: { extra: "（……）" } },
+    9: { todo: true, label: "第 9 天", searchGoal: 1, note: "那把没有齿痕的钥匙",
+      searchObjects: ["keys", "contract"], objectsOverride: { keys: { birthday: true } },
+      meeting: { who: "柯 · 合伙人", questions: [ { q: "（合同第 7 条 · 连续性保障法）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 10, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 5, note: "（代价）" } ] } ] },
+      letter: null, audit: { extra: "（……）" } },
+    10: { todo: true, label: "第 10 天", searchGoal: 1, note: "第一次改叙教学",
+      searchObjects: ["receipt", "photo"], objectsOverride: { receipt: { birthday: true } },
+      meeting: { who: "程 · 验证官", questions: [ { q: "（抽查档案缺口）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 9, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 4, note: "（代价）" } ] } ] },
+      redaction: { target: "receipt", prompt: "（改叙：换一种说法救回一条陈述）", options: [
+        { t: "改叙", drift: -4, gap: 0, risky: true, log: "（……）" },
+        { t: "不改", drift: 0, gap: 0, log: "（……）" },
+        { t: "抹除", drift: -6, gap: 1, log: "（……）" } ] },
+      letter: null, audit: { extra: "（……）" } },
+    11: { todo: true, label: "第 11 天", searchGoal: 1, note: "吉他与「我还弹」的账本冲突",
+      searchObjects: ["guitar", "pick"], objectsOverride: { guitar: { birthday: true } },
+      meeting: { who: "小满 · 11 岁", questions: [ { q: "（她数了三下才转身）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 11, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 5, note: "（代价）" } ] } ] },
+      letter: { from: "塞在门的夹缝里", paragraphs: ["（第二封信的正文）"],
+        choices: [ { t: "烧掉", drift: 2, log: "（……）" }, { t: "夹进笔记本", drift: 0, log: "（……）" } ] },
+      audit: { extra: "（……）" } },
+    12: { todo: true, label: "第 12 天", searchGoal: 1, note: "旧照片里那只手（小指不着力）",
+      searchObjects: ["photo"], objectsOverride: { photo: { birthday: true } },
+      meeting: { who: "叶芝 · 妻子", questions: [ { q: "（视频通话，她只看着你的手）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 9, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 5, note: "（代价）" } ] } ] },
+      letter: null, audit: { extra: "（……）" } },
+    13: { todo: true, label: "第 13 天", searchGoal: 1, note: "第一具替身 U-101 的残留日志",
+      searchObjects: ["notebook", "contract"], objectsOverride: { notebook: { birthday: true } },
+      meeting: { who: "程 · 验证官", questions: [ { q: "（他已通过验证，但他还在）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 12, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 6, note: "（代价）" } ] } ] },
+      letter: null, audit: { extra: "第 1 幕即将结束。" } },
+    14: { todo: true, label: "第 14 天", searchGoal: 2, note: "第一幕结算 · 第三封长信（那封长的，写他怎么跑的）",
+      searchObjects: ["notebook", "cal", "drawing"], objectsOverride: { notebook: { birthday: true }, drawing: { birthday: true } },
+      meeting: { who: "程 · 验证官 · 月度小结", questions: [ { q: "（月度小结）", chips: [
+        { t: "（安全）", safe: true, note: "（为什么）" },
+        { t: "（风险）", safe: false, drift: 10, note: "（为什么）" },
+        { t: "（无记录）", safe: null, drift: 5, note: "（代价）" } ] } ] },
+      letter: { from: "一封长信 · 手写，纸上有雨水", paragraphs: ["（第三封长信的正文 —— 这条时间线上最重要的一封）"],
+        choices: [ { t: "烧掉", drift: 2, log: "（……）" }, { t: "收进抽屉", drift: 0, log: "（……）" } ] },
+      audit: { extra: "第一幕结算：漂移 %%DRIFT%%，档案缺口 %%GAPS%% 处。" } }
   }
 };

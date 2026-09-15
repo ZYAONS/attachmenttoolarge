@@ -12,7 +12,12 @@
 
 ---
 
-## 一条命令自查
+## 两条命令自查
+
+改完先跑 node tools/content-lint.mjs —— 它只查规则：哪几天还没写、哪一题少了安全选项、
+哪个物件 id 不存在、第一幕已写部分的最轻路径漂移合计是多少。它会指着行说话，不评价故事。
+
+然后把第 1-3 天真的玩一遍：node tools/game-check.mjs（42 项）。
 
 ```bash
 node tools/game-check.mjs

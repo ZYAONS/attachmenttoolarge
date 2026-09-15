@@ -32,6 +32,18 @@
       if (byN[n]) { byN[n].act = actOf(n); byN[n].milestone = (st.milestones || {})[n]; out.push(byN[n]); continue; }
       var act = actOf(n);
       var ms = (st.milestones || {})[n];
+      var stub = (C.pendingDays || {})[n];
+      if (stub && typeof stub === "object") {
+        var d2 = {};
+        for (var k in stub) d2[k] = stub[k];
+        d2.n = n; d2.act = act; d2.milestone = ms;
+        d2.label = stub.label || ("第 " + n + " 天");
+        d2.placeholder = !!stub.todo;
+        if (!d2.audit) d2.audit = {};
+        if (!d2.audit.extra) d2.audit.extra = "第 " + ((act && act.n) || "?") + " 幕「" + ((act && act.name) || "") + "」（待人工撰写）";
+        out.push(d2);
+        continue;
+      }
       var ph = st.placeholder || {};
       out.push({
         n: n, label: "第 " + n + " 天", clock: "07:40", placeholder: true,
@@ -404,6 +416,25 @@
   if ($("driftup")) $("driftup").addEventListener("click", function () {
     S.drift = Math.min(C.meta.purgeAt, S.drift + 20); renderLedger(); applyMusic();
   });
+  if ($("savefiles")) $("savefiles").addEventListener("click", function () {
+    var n = saveToFiles();
+    log("我把账本分成了 " + n + " 片，存到了磁盘上。", {});
+  });
+  if ($("savestore")) $("savestore").addEventListener("click", function () {
+    var n = saveToStorage();
+    log("我把账本分成了 " + n + " 片，存在这台机器上。", {});
+  });
+  if ($("loadfiles")) $("loadfiles").addEventListener("click", function () { if ($("shardfile")) $("shardfile").click(); });
+  if ($("shardfile")) $("shardfile").addEventListener("change", function (e) {
+    loadFromFiles(e.target.files).then(function (rep) { console.log("shards:", rep); });
+  });
+  /* 拖拽：把分片拖到窗口上就能载入 */
+  window.addEventListener("dragover", function (e) { e.preventDefault(); });
+  window.addEventListener("drop", function (e) {
+    e.preventDefault();
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) loadFromFiles(e.dataTransfer.files);
+  });
+
   $("repair").addEventListener("click", function () {
     if (S.budget <= 0 || !S.entries.length) return;
     var last = S.entries[S.entries.length - 1];
@@ -423,6 +454,145 @@
   renderLedger();
   $("crttext").textContent = crtLines(["检索中…"]);
 
+  /* ==========================================================================
+     存档 = 分片
+     --------------------------------------------------------------------------
+     存档不是一坨 JSON，是**六片**：
+
+       第 1 片  core    —— 天数、漂移、缺口、整理额度（档案的脊梁）
+       第 2–6 片 ledger —— 账本按顺序切成五份，每份带校验和
+
+     三条规则（和站点上的 att-split / att-join 是同一套世界观）：
+
+       · 每片自带校验和；坏片按"缺失"处理
+       · **少了账本片不会阻止载入** —— 它让那部分记忆消失，并在账本上留下缺口
+       · 少了 core 片则无法载入（脊梁没了，剩下的只是纸）
+     ========================================================================== */
+  var SHARD_COUNT = 6;
+  var shardChecksum = function (str) {
+    var h = 5381;
+    for (var i = 0; i < str.length; i++) h = (((h << 5) + h) + str.charCodeAt(i)) >>> 0;
+    return h.toString(36);
+  };
+
+  function coreState() {
+    return { v: 1, day: S.dayIndex, drift: S.drift, gaps: S.gaps, budget: S.budget };
+  }
+
+  function makeShards() {
+    var core = coreState();
+    var per = Math.ceil(S.entries.length / (SHARD_COUNT - 1)) || 1;
+    var out = [{ i: 0, n: SHARD_COUNT, kind: "core", sum: shardChecksum(JSON.stringify(core)), data: core }];
+    for (var k = 1; k < SHARD_COUNT; k++) {
+      var part = S.entries.slice((k - 1) * per, k * per);
+      out.push({ i: k, n: SHARD_COUNT, kind: "ledger", sum: shardChecksum(JSON.stringify(part)), data: part });
+    }
+    return out;
+  }
+
+  function shardFileName(i) { return "understudy-save-" + String(i + 1).padStart(3, "0") + ".attshard"; }
+
+  function saveToFiles() {
+    var shards = makeShards();
+    shards.forEach(function (sh) {
+      var blob = new Blob([JSON.stringify(sh)], { type: "application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = shardFileName(sh.i);
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    });
+    return shards.length;
+  }
+
+  function saveToStorage() {
+    var shards = makeShards();
+    shards.forEach(function (sh) { try { localStorage.setItem("att.understudy.shard." + sh.i, JSON.stringify(sh)); } catch (e) {} });
+    return shards.length;
+  }
+
+  /* 载入：返回一份报告，说明哪几片到了、哪几片丢了、丢的是哪一段记忆 */
+  function loadShards(shards) {
+    var report = { loaded: 0, corrupt: [], missing: [], lostEntries: 0, days: [] };
+    var byIndex = {};
+    (shards || []).forEach(function (sh) {
+      var o = sh;
+      if (typeof o === "string") { try { o = JSON.parse(o); } catch (e) { report.corrupt.push("无法解析的一片"); return; } }
+      if (!o || typeof o.i !== "number") { report.corrupt.push("不是分片"); return; }
+      var sum = shardChecksum(JSON.stringify(o.data));
+      if (sum !== o.sum) { report.corrupt.push("第 " + (o.i + 1) + " 片校验和不符"); return; }
+      byIndex[o.i] = o;
+    });
+
+    if (!byIndex[0]) { report.fatal = "缺少核心片（第 1 片）。残缺的纸拼不回一份档案。"; return report; }
+
+    var core = byIndex[0].data;
+    S.dayIndex = Math.max(0, Math.min(S.days.length - 1, core.day | 0));
+    S.drift = core.drift || 0;
+    S.gaps = core.gaps || 0;
+    S.budget = core.budget == null ? (C.meta.budgetPerNight || 3) : core.budget;
+    report.loaded++;
+
+    var entries = [], expected = (coreState().day | 0);
+    for (var k = 1; k < SHARD_COUNT; k++) {
+      if (byIndex[k]) {
+        entries = entries.concat(byIndex[k].data || []);
+        report.loaded++;
+      } else {
+        report.missing.push(k);
+        report.lostEntries += 1;
+      }
+    }
+    S.entries = entries;
+    report.days = S.entries.map(function (e) { return e.day; });
+
+    /* 缺片不是无声的：它是一段被抽走的记忆，账本上会留下缺口 */
+    if (report.missing.length) {
+      S.gaps += report.missing.length;
+      S.entries.push({
+        day: day() ? day().n : 0, repaired: false, voided: true,
+        text: "<b>（记忆缺失）</b>账本的 " + report.missing.map(function (i) { return "第 " + (i + 1) + " 片"; }).join("、") +
+              "没有找到。那几天的记录不见了 —— 档案缺口 +" + report.missing.length + "。"
+      });
+    }
+    if (report.corrupt.length) {
+      S.entries.push({
+        day: day() ? day().n : 0, repaired: false, voided: true,
+        text: "<b>（分片损坏）</b>" + report.corrupt.join("；") + "。按缺失处理。"
+      });
+    }
+
+    S.phase = "search"; S.found = []; S.qIndex = 0;
+    renderDesk(); renderLedger();
+    $("crttext").textContent = crtLines([
+      "存档载入：" + report.loaded + "/" + SHARD_COUNT + " 片",
+      report.missing.length ? "缺失 " + report.missing.length + " 片 · 记忆不完整" : "完整",
+      report.fatal ? report.fatal : ""
+    ]);
+    return report;
+  }
+
+  function loadFromStorage() {
+    var shards = [];
+    for (var i = 0; i < SHARD_COUNT; i++) {
+      var raw = null;
+      try { raw = localStorage.getItem("att.understudy.shard." + i); } catch (e) {}
+      if (raw) shards.push(raw);
+    }
+    if (!shards.length) return { fatal: "本机没有找到任何分片。" };
+    return loadShards(shards);
+  }
+
+  /* 从文件读（按钮或拖拽都会走到这里） */
+  function loadFromFiles(fileList) {
+    var files = Array.prototype.slice.call(fileList || []);
+    return Promise.all(files.map(function (f) {
+      return f.text().then(function (t) { return t; }).catch(function () { return null; });
+    })).then(function (texts) {
+      return loadShards(texts.filter(Boolean));
+    });
+  }
   /* ---------------- 自动化测试接口 ---------------- */
   window.__game = {
     state: function () {
@@ -438,6 +608,15 @@
     letter: letterChoice, audit: runAudit, closeAudit: closeAudit, nextDay: nextDay,
     repair: function () { $("repair").click(); },
     pushDrift: function (n) { S.drift = Math.min(C.meta.purgeAt, S.drift + (n || 20)); renderLedger(); applyMusic(); },
-    ledgerText: function () { return ($("pages") || {}).textContent || ""; }
+    ledgerText: function () { return ($("pages") || {}).textContent || ""; },
+    shards: {
+      make: makeShards,
+      count: SHARD_COUNT,
+      name: shardFileName,
+      toStorage: saveToStorage,
+      fromStorage: loadFromStorage,
+      load: loadShards,
+      loadFiles: loadFromFiles
+    }
   };
 })();

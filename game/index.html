@@ -336,6 +336,7 @@ body{
 
 <div class="corner" id="corner">第 <b id="daylabel">1</b> 天 · <span id="dayclock">07:40</span><br>书房 · 雨<br>检索：<b id="foundcount">0</b></div>
 <div class="open-ledger"><button id="openledger" type="button">账本 (L)</button></div>
+<input id="shardfile" type="file" multiple accept=".attshard,application/json" style="display:none">
 <div class="tools">
   <button id="sound" type="button">声音：关</button>
   <button id="driftup" type="button" title="原型用：手动推高漂移，看字迹怎么变">漂移 +20%</button>
@@ -373,9 +374,12 @@ body{
 <div class="ledger" id="ledger">
   <div class="head"><b>账 本</b><span id="driftlabel">漂移 0%</span></div>
   <div class="pages" id="pages"></div>
-  <div class="foot">
+  <div class="foot" title="把 6 个 .attshard 分片拖到窗口上也能载入">
     <span>整理额度 <b id="budget">3</b></span><span id="gaps">档案缺口 0</span>
     <button id="repair" type="button">加固最后一条</button>
+    <button id="savefiles" type="button">导出存档（6 片）</button>
+    <button id="savestore" type="button">存在本机</button>
+    <button id="loadfiles" type="button">导入分片</button>
     <button id="closeledger" type="button">合上</button>
   </div>
 </div>
