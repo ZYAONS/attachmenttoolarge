@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    rhodes.css — the terminal, replicated
    --------------------------------------------------------------------------
    Built from the published breakdown of the game's interface language rather
@@ -197,6 +197,12 @@ html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
 .card, .stat, .callout, .cta-band, .member-card, .table-wrap, .project-card, .quote {
   color: var(--rhodes-ink) !important;
 }
+
+/* The exception, measured rather than assumed: the quote plate is dark in every theme,
+   so it needs light text while the light plates above need dark text. One rule for all
+   of them is what made the manifesto invisible in the first place. */
+.quote { color: var(--text) !important; }
+.quote p, .quote li { color: var(--text) !important; opacity: 1; }
 .card :is(h1, h2, h3, h4), .callout :is(h1, h2, h3), .cta-band :is(h1, h2, h3),
 .stat :is(h1, h2, h3), .member-card :is(h1, h2, h3), .table-wrap :is(h1, h2, h3),
 .quote :is(h1, h2, h3), .project-card :is(h1, h2, h3) {
@@ -204,7 +210,7 @@ html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
   -webkit-text-fill-color: var(--rhodes-ink) !important;
   background-image: none !important;
 }
-.card p, .callout p, .cta-band p, .cta-band .lead, .quote p, .project-card p,
+.card p, .callout p, .cta-band p, .cta-band .lead, .project-card p,
 .card li, .callout li, .cta-band li { color: rgba(10, 11, 10, 0.78) !important; }
 .cta-band .eyebrow { color: var(--med-dim) !important; border-left-color: var(--med-dim) !important; }
 .cta-band .btn-ghost { color: var(--rhodes-ink) !important; border-color: rgba(10, 11, 10, 0.4) !important; }

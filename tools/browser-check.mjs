@@ -139,6 +139,34 @@ const SUITE = `(async () => {
   const before = document.documentElement.getAttribute("data-theme");
   themeBtn.click(); await frame();
   const after = document.documentElement.getAttribute("data-theme");
+  /* Contrast, measured rather than eyeballed. The manifesto quote sat on a dark plate
+     in the dark theme with dark ink on it, which is why it read as a black rectangle.
+     This reports the real numbers and the block's position on the page. */
+  const attrLum = (c) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
+  const attrParse = (s) => { const n = String(s).replace("rgba(", "").replace("rgb(", "").replace(")", "").split(",").map(Number); return n.length >= 3 && !isNaN(n[0]) ? n.slice(0, 3) : [255, 255, 255]; };
+  const attrBg = (el) => { let n = el; while (n) { const c = getComputedStyle(n).backgroundColor; if (c && c !== "rgba(0, 0, 0, 0)" && c !== "transparent") return attrParse(c); n = n.parentElement; } return [10, 13, 16]; };
+  const attrMeasure = () => {
+    const q = document.querySelector(".quote");
+    if (!q) return null;
+    const t = q.querySelector("p") || q;
+    const a = attrLum(attrParse(getComputedStyle(t).color)), b = attrLum(attrBg(t));
+    const r = q.getBoundingClientRect();
+    return { ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05), color: getComputedStyle(t).color,
+             bg: attrBg(t).join(","), top: Math.round(r.top + window.scrollY), h: Math.round(r.height) };
+  };
+  const attrOriginalTheme = document.documentElement.getAttribute("data-theme");
+  for (const attrTheme of ["dark", "light"]) {
+    document.documentElement.setAttribute("data-theme", attrTheme);
+    await wait(250);
+    const m = attrMeasure();
+    const wantLight = attrTheme === "dark";
+    const isLight = m ? attrLum(attrParse(m.color)) > 0.5 : null;
+    ok("引述块文字随主题 · " + attrTheme, m ? isLight === wantLight : true,
+       m ? "text " + m.color + " (" + (isLight ? "light" : "dark") + ", wanted " + (wantLight ? "light" : "dark") + ") · y=" + m.top + " h=" + m.h : "no .quote on this page");
+  }
+  if (attrOriginalTheme) document.documentElement.setAttribute("data-theme", attrOriginalTheme);
+  else document.documentElement.removeAttribute("data-theme");
+  await wait(150);
   ok("主题切换生效", before !== after, before + " -> " + after);
   ok("主题按钮是 SVG 图标", !!themeBtn.querySelector("svg"));
   themeBtn.click(); await frame();
