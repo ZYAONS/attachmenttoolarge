@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the extension, displayed in the web store.2",
+      "message": "즉시 연결되는 Chrome 용 간단하고 신뢰할 수있는 VPN."
+   },
+   "appName": {
+      "description": "The description of the extension, displayed in the web store.1",
+      "message": "ZoogVPN- Chrome & Proxy 용 무료 VPN"
+   }
+}

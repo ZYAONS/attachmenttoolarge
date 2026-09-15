@@ -1,0 +1,114 @@
+2026-09-15 09:51:58.735: [INFO] CurrentProfilePath: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:51:58.735: [INFO] Profiles total count: 1
+2026-09-15 09:51:58.735: [INFO] Profile: name=用户配置 1 path=C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default lastActive=null
+2026-09-15 09:51:58.735: [INFO] LastUsedProfileDir: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:51:58.735: [INFO] VisibilityChanged: 0
+2026-09-15 09:51:58.745: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.746: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.746: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.747: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.747: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.748: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.749: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.749: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.750: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.750: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:51:58.759: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:51:58.759: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:51:58.759: [INFO] OnDoneLoading sync enabled: 0
+2026-09-15 09:51:58.759: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-09-15 09:51:58.759: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-09-15 09:51:58.759: [INFO] BookmarksSnapshot Startup total=2 bar=2 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-15 09:51:58.761: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:52:00.535: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-09-15 09:52:00.537: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:00.540: [INFO] Primary account changed.
+2026-09-15 09:52:00.540: [INFO] OnPrimaryAccountChanged PrimaryAccountChangeEvent::Type::kSet
+2026-09-15 09:52:00.546: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:00.555: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:02.676: [INFO] CurrentProfilePath: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:52:02.676: [INFO] Profiles total count: 1
+2026-09-15 09:52:02.676: [INFO] Profile: name=用户配置 1 path=C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default lastActive=null
+2026-09-15 09:52:02.676: [INFO] LastUsedProfileDir: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:52:02.676: [INFO] VisibilityChanged: 0
+2026-09-15 09:52:02.692: [INFO] OnDoneLoading sync enabled: 0
+2026-09-15 09:52:02.692: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-09-15 09:52:02.692: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-09-15 09:52:02.692: [INFO] BookmarksSnapshot Startup total=2 bar=2 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-15 09:52:02.715: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:02.727: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:52:02.727: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:52:03.666: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:03.667: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:03.668: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:03.672: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:03.672: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:03.673: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:52:03.674: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:52:03.675: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:52:04.551: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:52:04.552: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:52:06.444: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:52:06.922: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:52:06.923: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:52:06.925: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:52:08.505: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:52:08.506: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:52:08.706: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:55:19.926: [INFO] CurrentProfilePath: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:55:19.926: [INFO] Profiles total count: 1
+2026-09-15 09:55:19.926: [INFO] Profile: name=用户配置 1 path=C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default lastActive=null
+2026-09-15 09:55:19.926: [INFO] LastUsedProfileDir: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:55:19.926: [INFO] VisibilityChanged: 0
+2026-09-15 09:55:19.946: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:55:19.946: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:55:19.946: [INFO] OnDoneLoading sync enabled: 0
+2026-09-15 09:55:19.946: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-09-15 09:55:19.946: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-09-15 09:55:19.946: [INFO] BookmarksSnapshot Startup total=6 bar=6 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-15 09:55:19.956: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:19.976: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:20.299: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:20.301: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:20.301: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:20.307: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:20.308: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:20.309: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:20.310: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:20.313: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:20.856: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:20.857: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:22.092: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:22.957: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:22.958: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:55:22.960: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:55:23.633: [INFO] CurrentProfilePath: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:55:23.633: [INFO] Profiles total count: 1
+2026-09-15 09:55:23.633: [INFO] Profile: name=用户配置 1 path=C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default lastActive=null
+2026-09-15 09:55:23.633: [INFO] LastUsedProfileDir: C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default
+2026-09-15 09:55:23.633: [INFO] VisibilityChanged: 0
+2026-09-15 09:55:23.654: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:55:23.654: [INFO] BookmarkNodeAdded, ABU: 0
+2026-09-15 09:55:23.654: [INFO] OnDoneLoading sync enabled: 0
+2026-09-15 09:55:23.654: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-09-15 09:55:23.654: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-09-15 09:55:23.654: [INFO] BookmarksSnapshot Startup total=8 bar=8 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-09-15 09:55:23.667: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:23.684: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:23.990: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:23.991: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:23.992: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:23.995: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:23.996: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:24.002: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-09-15 09:55:24.003: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:24.006: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:24.598: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:24.600: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:26.968: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:27.501: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-09-15 09:55:27.503: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:55:27.505: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:55:28.852: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:55:28.853: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-09-15 09:55:29.054: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6

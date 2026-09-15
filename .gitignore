@@ -31,3 +31,6 @@ att-tools/
 # Hugging Face 令牌（绝不入库）
 tools/music-ai/.hf-token
 .hf-token
+
+# 站内合成曲目的导出件（可用一条命令重新生成，不入库）
+assets/audio/*-export.wav

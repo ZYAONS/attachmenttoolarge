@@ -243,6 +243,12 @@ const SUITE = `(async () => {
        song. It must make sound, and it must sit in the spectrum differently again. */
     const fk = await music.renderOffline(14, "folk");
     ok("民谣曲有波形", fk.peak > 0.02 && fk.rms > 0.004, "peak=" + fk.peak + " rms=" + fk.rms);
+    /* the pluck used to ask a delay line for a shorter delay than Web Audio allows,
+       which clamped it to one render quantum and turned the feedback loop into a
+       comb filter - fingernails down a blackboard. Average band shares could not see
+       it; this can. */
+    ok("民谣曲不刺耳（无梳状尖啸）", fk.harshness < 0.35, "harshness " + fk.harshness + " (worst 20 ms window HF share; a clamped-delay screech reads about 2.3)");
+    ok("后摇的打击不刺耳", ark.harshness < 1.2, "postrock harshness " + ark.harshness);
     const folkVsArk = Math.abs(fk.centroidHz - ark.centroidHz) / Math.max(fk.centroidHz, ark.centroidHz, 1);
     ok("民谣与后摇又是两副骨架", folkVsArk >= 0.12 || fk.lowShare !== ark.lowShare,
        "folk centroid " + fk.centroidHz + "Hz vs postrock " + ark.centroidHz + "Hz · " +

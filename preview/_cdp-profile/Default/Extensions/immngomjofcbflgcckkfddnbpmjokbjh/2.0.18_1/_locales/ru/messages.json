@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the extension, displayed in the web store.2",
+      "message": "Простой и надежный VPN для Chrome, который подключается мгновенно."
+   },
+   "appName": {
+      "description": "The description of the extension, displayed in the web store.1",
+      "message": "ZoogVPN - бесплатный VPN для Chrome & Proxy"
+   }
+}

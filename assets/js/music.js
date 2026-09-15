@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    attachmenttoolarge — 主题音乐引擎
    浏览器实时合成（Web Audio），不加载任何音频文件、不联网、不上传数据。
 
@@ -630,15 +630,40 @@
   ];
 
   /* 拨弦：一段很短的噪声送进与音高等长的延迟线，反馈里带一阶衰减 —— 这就是弦 */
+  /* Karplus-Strong needs delayTime >= 128 samples (about 2.9 ms at 44.1 kHz,
+     so a fundamental no higher than ~344 Hz). Ask for less and Web Audio clamps
+     the delay to one render quantum, which turns the feedback loop into a large-Q
+     comb filter: that is a metallic screech, not a plucked string. Anything above
+     the limit therefore takes a different route - a few sine partials with a fast
+     decay, which is what a short plucked string actually does. */
+  var KS_MAX_HZ = 300;
+  function pluckHigh(ctx, b, fr, t, vel) {
+    var out = ctx.createGain();
+    out.gain.value = 0.5 * (vel || 1);
+    out.connect(b.master);
+    [[1, 1], [2, 0.30], [3, 0.12]].forEach(function (p) {
+      var o = ctx.createOscillator();
+      o.type = "sine";
+      o.frequency.value = fr * p[0];
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.5 * p[1], t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.42 / p[0]);
+      o.connect(g); g.connect(out);
+      o.start(t); o.stop(t + 0.5);
+    });
+  }
   function pluck(ctx, b, fr, t, vel) {
+    if (fr > KS_MAX_HZ) return pluckHigh(ctx, b, fr, t, vel);
     var out = ctx.createGain();
     out.gain.setValueAtTime(0.16 * (vel || 1), t);
     out.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
 
     var delay = ctx.createDelay(0.05);
-    delay.delayTime.value = 1 / fr;
+    /* never below the render-quantum floor, or the loop becomes a comb filter */
+    delay.delayTime.value = Math.max(1 / fr, 128 / ctx.sampleRate + 0.0005);
     var fb = ctx.createGain();
-    fb.gain.value = 0.965;                      // 弦的衰减
+    fb.gain.value = 0.93;                      // 弦的衰减
     var damp = ctx.createBiquadFilter();
     damp.type = "lowpass";
     damp.frequency.value = Math.min(4200, fr * 9);   // 高音衰减得比低音快，才有拨弦味
@@ -650,8 +675,11 @@
     bg.gain.exponentialRampToValueAtTime(0.001, t + 1 / fr);   // 只喂一个周期
 
     burst.connect(bg); bg.connect(delay);
-    delay.connect(damp); damp.connect(fb); fb.connect(delay);
-    delay.connect(out);
+    var dc = ctx.createBiquadFilter();          // a DC blocker in the loop: no rumble build-up
+    dc.type = "highpass";
+    dc.frequency.value = 70;
+    delay.connect(damp); damp.connect(dc); dc.connect(fb); fb.connect(delay);
+    damp.connect(out);
     out.connect(b.master);
     burst.start(t); burst.stop(t + 0.05);
   }
@@ -660,13 +688,13 @@
   function harmonica(ctx, b, fr, t, dur) {
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.linearRampToValueAtTime(0.07, t + 0.12);
-    g.gain.setValueAtTime(0.07, t + dur - 0.2);
+    g.gain.linearRampToValueAtTime(0.05, t + 0.12);
+    g.gain.setValueAtTime(0.05, t + dur - 0.2);
     g.gain.linearRampToValueAtTime(0.0001, t + dur);
     var f = ctx.createBiquadFilter();
     f.type = "bandpass";
-    f.frequency.value = fr * 2;
-    f.Q.value = 1.6;
+    f.frequency.value = fr * 1.5;
+    f.Q.value = 1.0;
     var o = ctx.createOscillator();
     o.type = "triangle";
     o.frequency.value = fr;
@@ -1289,6 +1317,50 @@
   }
 
   /* ======================= 离线渲染（自检用） ======================= */
+  /* --------------------------------------------------------------------------
+     导出：把渲染结果编成 16 位 WAV 并返回 data URL。
+     用途是把站内合成的曲子（07 的 porch loop 等）拿出来当素材 ——
+     它本来只活在浏览器里，要"留着做别的东西"就必须落成文件。
+     -------------------------------------------------------------------------- */
+  var lastBuffer = null;
+
+  function encodeWav(buffer) {
+    var ch = buffer.numberOfChannels;
+    var len = buffer.length;
+    var sr = buffer.sampleRate;
+    var bytes = 44 + len * ch * 2;
+    var ab = new ArrayBuffer(bytes);
+    var v = new DataView(ab);
+    function str(o, s) { for (var i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); }
+    str(0, "RIFF"); v.setUint32(4, bytes - 8, true); str(8, "WAVE");
+    str(12, "fmt "); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+    v.setUint16(22, ch, true); v.setUint32(24, sr, true);
+    v.setUint32(28, sr * ch * 2, true); v.setUint16(32, ch * 2, true); v.setUint16(34, 16, true);
+    str(36, "data"); v.setUint32(40, len * ch * 2, true);
+    var off = 44;
+    var chans = [];
+    for (var c2 = 0; c2 < ch; c2++) chans.push(buffer.getChannelData(c2));
+    for (var i2 = 0; i2 < len; i2++) {
+      for (var c3 = 0; c3 < ch; c3++) {
+        var s = Math.max(-1, Math.min(1, chans[c3][i2]));
+        v.setInt16(off, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+        off += 2;
+      }
+    }
+    var u8 = new Uint8Array(ab), bin = "";
+    for (var k = 0; k < u8.length; k += 8192) {
+      bin += String.fromCharCode.apply(null, u8.subarray(k, Math.min(k + 8192, u8.length)));
+    }
+    return "data:audio/wav;base64," + btoa(bin);
+  }
+
+  /** 渲染并导出：exportWav(秒数, 曲目 id) → Promise<data URL> */
+  function exportWav(seconds, track) {
+    return renderOffline(seconds, track).then(function () {
+      if (!lastBuffer) throw new Error("nothing was rendered");
+      return encodeWav(lastBuffer);
+    });
+  }
   function renderOffline(seconds, track) {
     var OC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
     if (!OC) return Promise.reject(new Error("no OfflineAudioContext"));
@@ -1308,6 +1380,7 @@
     if (which === "rap") { try { crackle(ctx, buses); } catch (e) { /* 忽略 */ } }
 
     return ctx.startRendering().then(function (buf) {
+      lastBuffer = buf;                       // 导出用：renderOffline 只回分析数值，样本留在这里
       var ch = buf.getChannelData(0);
       var peak = 0, sum = 0;
       var prev = 0, sumDiff = 0;
@@ -1397,6 +1470,25 @@
         };
       })();
 
+      /* Local high-frequency share: inside each 20 ms window, how much of that
+         window's own energy is high-frequency, and then the worst window of all.
+         Average band shares cannot see a screech - its share of the whole track is
+         tiny while the ear cannot stand it - and the first attempt here (worst
+         window over overall level) could not either, because a continuous screech
+         lifts the average along with the peak. tools/music-ai/harshness-selftest.mjs
+         proves this version separates a clean pluck from a clamped-delay feedback
+         loop by a factor of about 1200. */
+      var hw2 = Math.round(ctx.sampleRate * 0.02), hsum2 = 0, tsum2 = 0, hcnt2 = 0, worst2 = 0, prevH2 = ch[0] || 0;
+      for (var q2 = 0; q2 < ch.length; q2++) {
+        var dq = ch[q2] - prevH2; prevH2 = ch[q2];
+        hsum2 += dq * dq; tsum2 += ch[q2] * ch[q2]; hcnt2++;
+        if (hcnt2 === hw2) {
+          var share2 = hsum2 / Math.max(tsum2, 1e-12);
+          if (share2 > worst2) worst2 = share2;
+          hsum2 = 0; tsum2 = 0; hcnt2 = 0;
+        }
+      }
+      var harshness = Math.round(worst2 * 10000) / 10000;
       return {
         track: which,
         seconds: seconds,
@@ -1411,6 +1503,7 @@
         rmsFirstHalf: Math.round(rmsA * 10000) / 10000,
         rmsSecondHalf: Math.round(rmsB * 10000) / 10000,
         onsetsPerSecond: Math.round((onsets / seconds) * 100) / 100,
+        harshness: harshness,
         centroidHz: spec ? spec.centroidHz : 0,
         lowShare: spec ? spec.lowShare : 0,
         midShare: spec ? spec.midShare : 0,
@@ -1548,6 +1641,7 @@
     ttsSupported: ttsSupported,
     ttsBroken: function () { return state.ttsBroken; },
     renderOffline: renderOffline,
+    exportWav: exportWav,
     loopSeconds: function () { return LOOP_SECONDS; },
     state: function () {
       return { track: state.track, on: state.on, vol: state.vol, line: state.line, ttsBroken: state.ttsBroken, muted: hardMuted };

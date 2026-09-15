@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the extension, displayed in the web store.2",
+      "message": "Egyszerű és megbízható VPN a krómhoz, amely azonnal csatlakozik."
+   },
+   "appName": {
+      "description": "The description of the extension, displayed in the web store.1",
+      "message": "ZoogVPN - Ingyenes VPN Chrome & Proxy"
+   }
+}

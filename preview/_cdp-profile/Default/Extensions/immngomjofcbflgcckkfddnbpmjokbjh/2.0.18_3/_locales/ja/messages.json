@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the extension, displayed in the web store.2",
+      "message": "即座に接続するChrome用のシンプルで信頼性の高いVPN。"
+   },
+   "appName": {
+      "description": "The description of the extension, displayed in the web store.1",
+      "message": "ZoogVPN -Chrome＆Proxy用の無料VPN"
+   }
+}

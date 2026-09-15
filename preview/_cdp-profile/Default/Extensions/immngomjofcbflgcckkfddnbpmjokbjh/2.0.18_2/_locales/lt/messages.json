@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the extension, displayed in the web store.2",
+      "message": "Paprastas ir patikimas „Chrome“ VPN, kuris akimirksniu jungiasi."
+   },
+   "appName": {
+      "description": "The description of the extension, displayed in the web store.1",
+      "message": "„ZoogVPN“ - nemokamas „Chrome“ ir „Proxy“ VPN"
+   }
+}

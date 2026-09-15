@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the extension, displayed in the web store.2",
+      "message": "Vienkāršs un uzticams vpn hromam, kas uzreiz savienojas."
+   },
+   "appName": {
+      "description": "The description of the extension, displayed in the web store.1",
+      "message": "ZoogVPN - Ilmainen VPN & Proxy Chromelle"
+   }
+}

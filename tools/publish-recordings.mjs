@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /* ==========================================================================
    publish-recordings.mjs — put the recordings somewhere with a public URL
 
@@ -57,7 +57,9 @@ const TRACKS = [
 ];
 const EXTRA = [
   { file: "assets/img/emblem.svg", name: "cover-emblem.svg" },
-  { file: "assets/img/org-avatar.png", name: "cover-1024.png" }
+  { file: "assets/img/org-avatar.png", name: "cover-1024.png" },
+  { file: "assets/audio/folk-export.wav", name: "loop-porch-folk-60s.wav" },
+  { file: "assets/audio/postrock-export.wav", name: "loop-the-long-send-45s.wav" }
 ];
 
 /* the words, gathered into one text file so the release is self-contained */
@@ -113,20 +115,22 @@ if (args.includes("--release")) {
   const lyricPath = lyricsFile();
 
   const NOTES = [
-    "Three recordings of one complaint — a 24.7 MB file, a 20 MB wall, an evening at 19:59.",
+    "Recordings of one complaint — a 24.7 MB file, a 20 MB wall, an evening at 19:59.",
     "",
     "| # | Track | Kind | Length |",
     "|---|-------|------|--------|",
     "| 02 | Attachment Too Large | boom-bap rap, male vocal | 2:50 |",
     "| 03 | Wrong Side of the Wire | electric Memphis soul-blues, twelve-bar AAB | 2:48 |",
     "| 04 | Ninety-Nine Forever | 80s neon synth-pop | 2:48 |",
+    "| 06 | The Twenty-Megabyte Line | american folk, sung | 2:50 |",
+    "| 08 | What You Never Got | minor-key rap ballad | 2:52 |",
     "",
     "320 kbps, 48 kHz. The words are in `lyrics.txt`; the arrangement and the words are ours,",
     "and each recording was generated from those words by ACE-Step, an open-source model,",
     "running on a Hugging Face Space. The parameters are stored beside each mp3 in the",
     "repository as `<name>.generation.json`.",
     "",
-    "Track 01, *Failed at 19:59*, is not here: it is not a file at all. It is synthesised note by",
+    "Two of the tracks are not files at all — 01 *Failed at 19:59* and 07 *The Twenty-Megabyte Line (porch loop)* — It is synthesised note by",
     "note in the browser, has no percussion and no hiss, and loops forever. Hear the whole set at",
     "https://attachment-too-large.github.io/attachmenttoolarge/music.html"
   ].join("\n");
@@ -149,7 +153,7 @@ if (args.includes("--release")) {
 
   const existing = new Set(((relJson.assets) || []).map((a) => a.name));
   const uploads = TRACKS.map((t) => ({ path: join(ROOT, t.file), name: basename(t.file), type: "audio/mpeg" }))
-    .concat(EXTRA.map((e) => ({ path: join(ROOT, e.file), name: e.name, type: e.name.endsWith(".png") ? "image/png" : "image/svg+xml" })))
+    .concat(EXTRA.map((e) => ({ path: join(ROOT, e.file), name: e.name, type: e.name.endsWith(".png") ? "image/png" : e.name.endsWith(".wav") ? "audio/wav" : "image/svg+xml" })))
     .concat([{ path: lyricPath, name: "lyrics.txt", type: "text/plain" }]);
 
   for (const up of uploads) {
