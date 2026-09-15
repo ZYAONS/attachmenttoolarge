@@ -1,0 +1,10 @@
+{
+   "appDesc": {
+      "description": "The description of the extension, displayed in the web store.2",
+      "message": "立即连接的Chrome简单可靠的VPN。"
+   },
+   "appName": {
+      "description": "The description of the extension, displayed in the web store.1",
+      "message": "ZoogVPN-免费的Chrome＆Perxy的免费VPN"
+   }
+}
