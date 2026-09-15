@@ -211,5 +211,101 @@ window.ATTRECORDINGS = [
         "You never got it"
       ]}
     ]
+  },
+  {
+    id: "someday",
+    title: "Somewhere the File Arrived",
+    style: "dreamcore, 62 BPM, slowed and drenched in reverb, warped tape wow and flutter, muffled " +
+           "lo-fi drums, soft analog synth pads, distant vocal half-buried in the mix, nostalgic and " +
+           "faintly wrong, empty shopping-centre ambience, hiss and hum left in",
+    note: "The dreamcore one: not what happened, but the version of the evening where it worked. " +
+          "Half-remembered, slightly out of tune, and warmer than it has any right to be.",
+    sections: [
+      { label: "INTRO", lines: [
+        "(In the other version of tonight…)",
+        "(In the other version…)"
+      ]},
+      { label: "VERSE 1", lines: [
+        "Somewhere the file arrived and the buyer said thank you",
+        "Somewhere the bar went all the way and nothing was taken from you",
+        "Somewhere the little clock in the corner of the screen",
+        "Turned over to zero and I woke up from this dream"
+      ]},
+      { label: "CHORUS", lines: [
+        "Somewhere, somewhere — in the other version",
+        "Somewhere, somewhere — the one where it sent",
+        "I keep a light on in the office of my mind",
+        "And in that other version, you got it every time"
+      ]},
+      { label: "VERSE 2", lines: [
+        "I can hear the photocopier humming like a hymn",
+        "The corridor is longer now and all the lights are dim",
+        "A jingle from a shop I have never been inside",
+        "Plays twice, and then it plays again, and I do not mind"
+      ]},
+      { label: "CHORUS", lines: [
+        "Somewhere, somewhere — in the other version",
+        "Somewhere, somewhere — the one where it sent",
+        "I keep a light on in the office of my mind",
+        "And in that other version, you got it every time"
+      ]},
+      { label: "BRIDGE", lines: [
+        "(If I fall asleep before it finishes)",
+        "(If I fall asleep before it finishes)",
+        "Will it be waiting in the morning, warm and ordinary?",
+        "(If I fall asleep…)"
+      ]},
+      { label: "OUTRO", lines: [
+        "Somewhere the file arrived…",
+        "Somewhere the file arrived…",
+        "(In the other version of tonight)"
+      ]}
+    ]
+  },
+  {
+    id: "outbox",
+    title: "Ghost in the Outbox",
+    style: "atmospheric art rock, 100 BPM, falsetto male vocal, minor and major fighting each other, " +
+           "glitched electronic percussion over a warm analog bass, sparse detuned piano, uneasy " +
+           "strings, wide reverb, late-90s alternative, restrained until it is not",
+    note: "The art-rock one: alienation with a straight face. The outbox as a graveyard, the policy " +
+          "older than anyone in the room, and the chorus insisting everything is fine.",
+    sections: [
+      { label: "VERSE 1", lines: [
+        "I'm a ghost in the outbox, I never left the building",
+        "The fluorescent light is honest and it never says a thing",
+        "I bought the bigger mailbox, I paid them for the space",
+        "And the space is full of nothing, and the nothing has a face"
+      ]},
+      { label: "CHORUS", lines: [
+        "Everything is fine, everything is fine",
+        "The policy is older than the both of us combined",
+        "Everything is fine, everything is fine",
+        "Say it in a falsetto till the feeling is resigned"
+      ]},
+      { label: "VERSE 2", lines: [
+        "Somebody's decision, made before my name",
+        "Is sitting in a document and I will take the blame",
+        "I'll cut the file in pieces and I'll send it one by one",
+        "Like a nervous man explaining what he hasn't even done"
+      ]},
+      { label: "CHORUS", lines: [
+        "Everything is fine, everything is fine",
+        "The policy is older than the both of us combined",
+        "Everything is fine, everything is fine",
+        "Say it in a falsetto till the feeling is resigned"
+      ]},
+      { label: "BRIDGE", lines: [
+        "Slow down, slow down — it's only twenty megabytes",
+        "Slow down, slow down — it's only someone else's rules",
+        "Slow down, slow down — I am not angry, I am tired",
+        "Slow down, slow down"
+      ]},
+      { label: "OUTRO", lines: [
+        "Your message was not delivered.",
+        "Your message was not delivered.",
+        "Everything is fine."
+      ]}
+    ]
   }
 ];

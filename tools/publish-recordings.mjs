@@ -53,7 +53,9 @@ const TRACKS = [
   { file: "assets/audio/wire.mp3", title: "Wrong Side of the Wire", kind: "electric Memphis soul-blues", time: "2:48" },
   { file: "assets/audio/ninetynine.mp3", title: "Ninety-Nine Forever", kind: "80s neon synth-pop", time: "2:48" },
   { file: "assets/audio/folk.mp3", title: "The Twenty-Megabyte Line", kind: "american folk, sung", time: "2:50" },
-  { file: "assets/audio/wall.mp3", title: "What You Never Got", kind: "minor-key rap ballad", time: "2:52" }
+  { file: "assets/audio/wall.mp3", title: "What You Never Got", kind: "minor-key rap ballad", time: "2:52" },
+  { file: "assets/audio/someday.mp3", title: "Somewhere the File Arrived", kind: "dreamcore", time: "2:54" },
+  { file: "assets/audio/outbox.mp3", title: "Ghost in the Outbox", kind: "atmospheric art rock", time: "2:52" }
 ];
 const EXTRA = [
   { file: "assets/img/emblem.svg", name: "cover-emblem.svg" },
