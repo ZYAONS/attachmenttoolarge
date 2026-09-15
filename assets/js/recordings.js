@@ -215,50 +215,49 @@ window.ATTRECORDINGS = [
   {
     id: "someday",
     title: "Somewhere the File Arrived",
-    style: "dreamcore, 62 BPM, slowed and drenched in reverb, warped tape wow and flutter, muffled " +
-           "lo-fi drums, soft analog synth pads, distant vocal half-buried in the mix, nostalgic and " +
-           "faintly wrong, empty shopping-centre ambience, hiss and hum left in",
-    note: "The dreamcore one: not what happened, but the version of the evening where it worked. " +
-          "Half-remembered, slightly out of tune, and warmer than it has any right to be.",
+    style: "ethereal hymn, 58 BPM, wordless female vocal with choral harmonies, glassy bells and " +
+           "celesta, sustained strings and soft organ, cathedral reverb, minor key but consonant, " +
+           "lonely and celestial, almost liturgical, gentle heartbeat pulse, no distortion, no tape warble",
+    note: "The dreamcore one, retuned: the same idea as a hymn instead of a broken tape. Nothing " +
+          "dissonant, nothing buried - a voice, a bell, and a long room.",
     sections: [
       { label: "INTRO", lines: [
-        "(In the other version of tonight…)",
-        "(In the other version…)"
+        "(Ah — ah — ah)"
       ]},
       { label: "VERSE 1", lines: [
-        "Somewhere the file arrived and the buyer said thank you",
-        "Somewhere the bar went all the way and nothing was taken from you",
-        "Somewhere the little clock in the corner of the screen",
-        "Turned over to zero and I woke up from this dream"
+        "Somewhere the wire is quiet, somewhere the counting ends",
+        "Somewhere a door is open and the evening mends",
+        "I sent it into the dark, I sent it into the dark",
+        "And something on the other side said: I have it. Rest."
       ]},
       { label: "CHORUS", lines: [
-        "Somewhere, somewhere — in the other version",
-        "Somewhere, somewhere — the one where it sent",
-        "I keep a light on in the office of my mind",
-        "And in that other version, you got it every time"
+        "Ah — carry it over, carry it over",
+        "Ah — over the wall, over the wall",
+        "Nothing is lost in the quiet",
+        "Nothing is lost at all"
       ]},
       { label: "VERSE 2", lines: [
-        "I can hear the photocopier humming like a hymn",
-        "The corridor is longer now and all the lights are dim",
-        "A jingle from a shop I have never been inside",
-        "Plays twice, and then it plays again, and I do not mind"
+        "Somewhere the clock is gentle, somewhere the number bends",
+        "Somewhere the little light in the corner never ends",
+        "I laid it down in the water, I laid it down in the water",
+        "And the water took the weight of it and gave me back the dawn"
       ]},
       { label: "CHORUS", lines: [
-        "Somewhere, somewhere — in the other version",
-        "Somewhere, somewhere — the one where it sent",
-        "I keep a light on in the office of my mind",
-        "And in that other version, you got it every time"
+        "Ah — carry it over, carry it over",
+        "Ah — over the wall, over the wall",
+        "Nothing is lost in the quiet",
+        "Nothing is lost at all"
       ]},
       { label: "BRIDGE", lines: [
-        "(If I fall asleep before it finishes)",
-        "(If I fall asleep before it finishes)",
-        "Will it be waiting in the morning, warm and ordinary?",
-        "(If I fall asleep…)"
+        "(Ah — ah —) Let it go, let it go",
+        "(Ah — ah —) It is only twenty megabytes",
+        "(Ah — ah —) Let it go, let it go",
+        "(Ah — ah —)"
       ]},
       { label: "OUTRO", lines: [
         "Somewhere the file arrived…",
-        "Somewhere the file arrived…",
-        "(In the other version of tonight)"
+        "(Ah — ah — ah)",
+        "Nothing is lost at all"
       ]}
     ]
   },
