@@ -181,6 +181,15 @@ const SUITE = `(async () => {
   } else {
     ok("唱片画布无裁切（本页无画布，跳过）", true, "no canvas on this page");
   }
+  /* The entrance plate is a door, not part of the page: it covers everything and
+     swallows the first click, so close it before anything is measured. */
+  (function () {
+    try { sessionStorage.setItem("att.intro.seen", "1"); } catch (e) { /* private mode */ }
+    var plate = document.querySelector(".intro");
+    if (plate && plate.parentNode) plate.parentNode.removeChild(plate);
+    document.documentElement.classList.remove("intro-lock");
+  })();
+  await wait(200);
   ok("主题切换生效", before !== after, before + " -> " + after);
   ok("主题按钮是 SVG 图标", !!themeBtn.querySelector("svg"));
   themeBtn.click(); await frame();
