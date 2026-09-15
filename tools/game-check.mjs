@@ -10,9 +10,10 @@
    Usage: node tools/game-check.mjs
    ========================================================================== */
 import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { tmpdir } from "node:os";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const EDGE = [
@@ -26,11 +27,13 @@ if (!EDGE) { console.error("No Edge/Chrome found."); process.exit(1); }
 const PORT = 9413;
 const PAGE = pathToFileURL(join(ROOT, "game", "index.html")).href;
 
+/* The browser profile lives in the system temp directory, never in the repo: the first`n   version pointed at preview/ and committed thousands of files, including another`n   extension's assets. */
+const PROFILE_DIR = mkdtempSync(join(tmpdir(), "att-cdp-"));
 const edge = spawn(EDGE, [
   "--headless=new", "--disable-gpu", "--hide-scrollbars", "--mute-audio",
   "--no-first-run", "--no-default-browser-check",
   `--remote-debugging-port=${PORT}`,
-  `--user-data-dir=${join(ROOT, "preview", "_game-profile")}`,
+  `--user-data-dir=${PROFILE_DIR}`,
   PAGE
 ], { stdio: "ignore" });
 

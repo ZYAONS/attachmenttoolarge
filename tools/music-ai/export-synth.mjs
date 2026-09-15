@@ -16,9 +16,10 @@
      node tools/music-ai/export-synth.mjs postrock 45
    ========================================================================== */
 import { spawn } from "node:child_process";
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync, mkdtempSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { tmpdir } from "node:os";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const TRACK = process.argv[2] || "folk";
@@ -35,11 +36,13 @@ if (!EDGE) { console.error("No Edge/Chrome found."); process.exit(1); }
 const PORT = 9411;
 const PAGE = pathToFileURL(join(ROOT, "music.html")).href;
 
+/* The browser profile lives in the system temp directory, never in the repo: the first`n   version pointed at preview/ and committed thousands of files, including another`n   extension's assets. */
+const PROFILE_DIR = mkdtempSync(join(tmpdir(), "att-cdp-"));
 const edge = spawn(EDGE, [
   "--headless=new", "--disable-gpu", "--hide-scrollbars", "--mute-audio",
   "--no-first-run", "--no-default-browser-check",
   `--remote-debugging-port=${PORT}`,
-  `--user-data-dir=${join(ROOT, "preview", "_cdp-profile")}`,
+  `--user-data-dir=${PROFILE_DIR}`,
   PAGE
 ], { stdio: "ignore" });
 
@@ -118,4 +121,6 @@ try {
   cdp.close();
 } finally {
   edge.kill();
+  try { rmSync(PROFILE_DIR, { recursive: true, force: true }); } catch (e) { /* best effort */ }
+  try { rmSync(PROFILE_DIR, { recursive: true, force: true }); } catch (e) { /* best effort */ }
 }

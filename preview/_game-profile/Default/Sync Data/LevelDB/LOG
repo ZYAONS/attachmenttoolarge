@@ -1,6 +1,0 @@
-2026/09/15-18:22:05.715 55b0 Reusing MANIFEST C:\Users\qing1\Desktop\审查版\preview\_game-profile\Default\Sync Data\LevelDB/MANIFEST-000001
-2026/09/15-18:22:05.716 55b0 Recovering log #3
-2026/09/15-18:22:05.718 55b0 Reusing old log C:\Users\qing1\Desktop\审查版\preview\_game-profile\Default\Sync Data\LevelDB/000003.log 
-2026/09/15-18:22:08.290 55b0 Level-0 table #5: started
-2026/09/15-18:22:08.295 55b0 Level-0 table #5: 267860 bytes OK
-2026/09/15-18:22:08.297 55b0 Delete type=0 #3
