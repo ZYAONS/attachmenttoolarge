@@ -1,6 +1,0 @@
-2026/09/15-17:55:23.512 5c68 Reusing MANIFEST C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default\Sync Data\LevelDB/MANIFEST-000001
-2026/09/15-17:55:23.513 5c68 Recovering log #3
-2026/09/15-17:55:23.515 5c68 Reusing old log C:\Users\qing1\Desktop\审查版\preview\_cdp-profile\Default\Sync Data\LevelDB/000003.log 
-2026/09/15-17:55:27.492 3b6c Level-0 table #5: started
-2026/09/15-17:55:27.499 3b6c Level-0 table #5: 191917 bytes OK
-2026/09/15-17:55:27.501 3b6c Delete type=0 #3

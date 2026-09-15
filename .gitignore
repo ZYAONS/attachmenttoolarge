@@ -34,3 +34,6 @@ tools/music-ai/.hf-token
 
 # 站内合成曲目的导出件（可用一条命令重新生成，不入库）
 assets/audio/*-export.wav
+
+# CDP 调试用的浏览器配置目录（几千个文件，绝不该入库）
+preview/_cdp-profile/
