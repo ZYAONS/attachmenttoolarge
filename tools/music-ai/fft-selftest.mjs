@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /* ==========================================================================
    fft-selftest.mjs — is the spectrum measurement itself correct?
 
@@ -33,20 +33,21 @@ function spectrumCentroid(samples, sampleRate) {
       re[i] = samples[off + i] * w;
       im[i] = 0;
     }
-    for (let size = 2; size <= N; size <<= 1) {
-      const half = size >> 1, tbl = N / size;
-      for (let s0 = 0; s0 < N; s0 += size) {
-        for (let k2 = 0; k2 < half; k2++) {
-          const c = cosT[k2 * tbl], sn = sinT[k2 * tbl];
-          const a = s0 + k2, b = a + half;
-          const tr = re[b] * c - im[b] * sn;
-          const ti = re[b] * sn + im[b] * c;
-          re[b] = re[a] - tr; im[b] = im[a] - ti;
-          re[a] += tr; im[a] += ti;
-        }
+    /* Direct DFT — the same routine the site uses. This file previously carried a
+       copy of the broken iterative radix-2 FFT, so it kept reporting that the
+       measurement was wrong long after the app had been fixed. A self-test that
+       tests a different implementation than the one in use is worse than none. */
+    const binHz0 = sampleRate / N;
+    const kTop = Math.min(N / 2, Math.ceil(9000 / binHz0));
+    for (let k = 1; k < kTop; k++) {
+      let sr = 0, si = 0;
+      const th0 = 2 * Math.PI * k / N;
+      for (let i = 0; i < N; i++) {
+        sr += re[i] * Math.cos(th0 * i);
+        si += re[i] * Math.sin(th0 * i);
       }
+      acc[k] += sr * sr + si * si;
     }
-    for (let k = 0; k < N / 2; k++) acc[k] += re[k] * re[k] + im[k] * im[k];
   }
   const binHz = sampleRate / N;
   let total = 0, weighted = 0, low = 0, mid = 0, high = 0;

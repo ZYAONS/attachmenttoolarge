@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 /* ==========================================================================
    publish-recordings.mjs — put the recordings somewhere with a public URL
 
