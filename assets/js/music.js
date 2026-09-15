@@ -726,18 +726,112 @@
        4–5 小节  + 主旋律（十六分，重音在第一拍）
        6–7 小节  全奏：密集踩镲、末小节上升音把循环推回开头
      底鼓全在正拍、和弦全在反拍 —— 那个"吸一口气"的律动就是这么来的。 */
+  /* ---- 电音专用的三个声部 ----
+     不能拿第一版的 pad / bass / arp 来凑：那样只是给第一首套了副鼓组。
+     全部另写，波形与包络都不一样。 */
+
+  /* super-saw 和弦：每个音三层失谐锯齿，快速开合的低通，没有延迟尾巴 */
+  function sawPad(ctx, b, freqs, t, dur) {
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(1800, t);
+    f.frequency.linearRampToValueAtTime(3200, t + 0.25);
+    f.frequency.linearRampToValueAtTime(2000, t + dur);
+    f.Q.value = 1.4;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.075, t + 0.02);
+    g.gain.setValueAtTime(0.075, t + dur * 0.5);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    freqs.forEach(function (fr) {
+      [-9, 0, 9].forEach(function (cents) {
+        var o = ctx.createOscillator();
+        o.type = "sawtooth";
+        o.frequency.value = fr * Math.pow(2, cents / 1200);
+        var vg = ctx.createGain();
+        vg.gain.value = 0.34;
+        o.connect(vg);
+        vg.connect(f);
+        o.start(t);
+        o.stop(t + dur + 0.05);
+      });
+    });
+    f.connect(g);
+    g.connect(b.master);
+  }
+
+  /* club 贝斯：锯齿加低八度正弦，短促的滤波包络 —— 十六分走句靠它 */
+  function clubBass(ctx, b, fr, t, level) {
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(1100, t);
+    f.frequency.exponentialRampToValueAtTime(220, t + 0.13);
+    f.Q.value = 6;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.1 * level, t + 0.006);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+
+    [[1, "sawtooth", 0.7], [0.5, "sine", 0.9]].forEach(function (v) {
+      var o = ctx.createOscillator();
+      o.type = v[1];
+      o.frequency.value = fr * v[0];
+      var vg = ctx.createGain();
+      vg.gain.value = v[2];
+      o.connect(vg);
+      vg.connect(f);
+      o.start(t);
+      o.stop(t + 0.2);
+    });
+    f.connect(g);
+    g.connect(b.master);
+  }
+
+  /* 主音：明亮锯齿、快起音、上下八度跳，少量延迟 */
+  function clubLead(ctx, b, fr, t, level) {
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(6000, t);
+    f.frequency.exponentialRampToValueAtTime(2600, t + 0.18);
+    f.Q.value = 2;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.065 * level, t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+
+    [-6, 6].forEach(function (cents) {
+      var o = ctx.createOscillator();
+      o.type = "sawtooth";
+      o.frequency.value = fr * Math.pow(2, cents / 1200);
+      var vg = ctx.createGain();
+      vg.gain.value = 0.5;
+      o.connect(vg);
+      vg.connect(f);
+      o.start(t);
+      o.stop(t + 0.26);
+    });
+    f.connect(g);
+    g.connect(b.master);
+    g.connect(b.delay);
+  }
+
   var ELEC_BPM = 128;
   var ELEC_BEAT = 60 / ELEC_BPM;
   var ELEC_STEP = ELEC_BEAT / 4;
   var ELEC_BAR = 16;
   var ELEC_BARS = 8;
+  /* F 小调，不是第一版那个 A 小调 Am–F–C–G。和声本身就是两首不同的曲子。 */
   var ELEC_CHORDS = [
-    { root: 55.00, notes: [220.00, 261.63, 329.63, 440.00] },   // Am
-    { root: 43.65, notes: [174.61, 220.00, 261.63, 349.23] },   // F
-    { root: 65.41, notes: [261.63, 329.63, 392.00, 523.25] },   // C
-    { root: 49.00, notes: [196.00, 246.94, 293.66, 392.00] }    // G
+    { root: 43.65, notes: [174.61, 207.65, 261.63, 349.23] },   // Fm  : F3 Ab3 C4 F4
+    { root: 34.65, notes: [138.59, 174.61, 207.65, 277.18] },   // Db  : Db3 F3 Ab3 Db4
+    { root: 51.91, notes: [207.65, 261.63, 311.13, 415.30] },   // Ab  : Ab3 C4 Eb4 Ab4
+    { root: 38.89, notes: [155.56, 196.00, 233.08, 311.13] }    // Eb  : Eb3 G3 Bb3 Eb4
   ];
-  var ELEC_LEAD = [880.00, 659.25, 587.33, 659.25, 880.00, 1046.50, 987.77, 880.00];
+  var ELEC_LEAD = [698.46, 622.25, 523.25, 622.25, 698.46, 830.61, 784.88, 698.46];   // F5 Eb5 C5 … 回到 F5
 
   function scheduleElectroStep(ctx, b, step, t) {
     var bar = Math.floor(step / ELEC_BAR) % ELEC_BARS;
@@ -749,10 +843,14 @@
     if (section >= 1 && (local === 4 || local === 12)) snare(ctx, b, t);   // 2/4 拍手
     if (section >= 1) hat(ctx, b, t, local % 4 === 2 ? 1.6 : (section >= 3 ? 0.9 : 0.5));
     if (section >= 3 && local % 2 === 1) hat(ctx, b, t, 0.7);              // 末段加密
-    if (section >= 1) bass(ctx, b, chord.root, t, ELEC_STEP * 0.9, local % 4 === 0 ? 0.6 : 0.42);
-    if (section >= 1 && (local === 6 || local === 14)) stab(ctx, b, chord.notes, t);  // 反拍和弦
-    if (section >= 2) arp(ctx, b, ELEC_LEAD[(step + bar) % ELEC_LEAD.length], t, local % 2 === 0 ? 0.85 : 0.4);
-    if (local === 0) pad(ctx, b, chord.notes.slice(0, 3), t, ELEC_BAR * ELEC_STEP);
+    /* 十六分走句用 club 贝斯，不是第一版那条柔和低音 */
+    if (section >= 1) clubBass(ctx, b, chord.root, t, local % 4 === 0 ? 1 : 0.7);
+    /* 反拍 super-saw 和弦：电音专用的三层失谐锯齿 */
+    if (section >= 1 && (local === 6 || local === 14)) sawPad(ctx, b, chord.notes, t, ELEC_STEP * 3);
+    /* 主音是电音专用的 clubLead，不是第一版那个三角波琶音 */
+    if (section >= 2) clubLead(ctx, b, ELEC_LEAD[(step + bar) % ELEC_LEAD.length], t, local % 2 === 0 ? 1 : 0.45);
+    /* 铺底和弦每两小节一次，用同一套 super-saw 保证音色统一 */
+    if (local === 0) sawPad(ctx, b, chord.notes.slice(0, 3), t, ELEC_BAR * ELEC_STEP);
     if (bar === ELEC_BARS - 1 && local === 8) swell(ctx, b, t);            // 上升音
     if (bar === 0 && local === 0) crash(ctx, b, t);                        // 接缝镲片
   }
