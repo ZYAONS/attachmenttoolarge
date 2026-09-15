@@ -285,18 +285,38 @@ html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
    light, and it deliberately does not touch bare span/div, because chips and
    badges carry their own dark fills.
    ========================================================================== */
+/* ==========================================================================
+   Light plates carry ink — the narrow, correct version.
+   Two mistakes are guarded against here, both of which the audit caught:
+     · bare span/div must be included, because a child span inside a bone plate
+       otherwise keeps the light colour its parent was told to abandon;
+     · chips that carry their OWN dark fill (.tag) must NOT be forced to ink, or
+       dark text lands on a dark chip. They keep bone text instead.
+   Links on a light plate also need a darker green: the normal accent came out
+   at a contrast ratio of 2.30, which is not enough to read comfortably.
+   ========================================================================== */
 :is(.card, .stat, .callout, .cta-band, .member-card, .table-wrap, .project-card, .track-bar)
   :is(h1, h2, h3, h4, h5, h6, p, li, td, th, dt, dd, blockquote, small, strong, em, label,
-      .badge, .tag, .muted, .small, .project-meta, .project-name, .stat-label, .stat-num, .post-date) {
+      span, code, .muted, .small, .project-meta, .project-name, .stat-label, .stat-num, .post-date) {
   color: var(--rhodes-ink) !important;
   -webkit-text-fill-color: var(--rhodes-ink) !important;
 }
 :is(.card, .stat, .callout, .cta-band, .member-card, .table-wrap, .project-card, .track-bar) :is(h1, h2, h3, h4) {
   background-image: none !important;
 }
-/* accents that must survive on a light plate */
-:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) a { color: var(--med-dim) !important; }
-:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) .eyebrow {
-  color: var(--med-dim) !important; border-left-color: var(--med-dim) !important;
+/* links and inline code on a light plate */
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) a {
+  color: #3c5a0f !important; -webkit-text-fill-color: #3c5a0f !important;
 }
-.cta-band .btn-ghost { color: var(--rhodes-ink) !important; border-color: rgba(10, 11, 10, 0.4) !important; }
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) code {
+  color: #2c3a0c !important; -webkit-text-fill-color: #2c3a0c !important;
+}
+/* chips with their own dark fill keep light text */
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) .tag {
+  color: var(--bone) !important; -webkit-text-fill-color: var(--bone) !important;
+}
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) .eyebrow {
+  color: #3c5a0f !important; -webkit-text-fill-color: #3c5a0f !important;
+  border-left-color: #3c5a0f !important;
+}
+.cta-band .btn-ghost { color: var(--rhodes-ink) !important; border-color: rgba(10, 11, 10, 0.42) !important; }

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /* ==========================================================================
    fft-selftest.mjs — is the spectrum measurement itself correct?
 
@@ -63,6 +63,28 @@ function spectrumCentroid(samples, sampleRate) {
   };
 }
 
+/* print where the energy actually lands: the peak bin must be the tone's bin */
+function peakBins(samples, sampleRate, howMany = 5) {
+  const re = new Float64Array(N), im = new Float64Array(N);
+  for (let i = 0; i < N; i++) {
+    const w = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+    re[i] = samples[i] * w; im[i] = 0;
+  }
+  // direct DFT at a few candidate frequencies, as a reference measurement
+  const binHz = sampleRate / N;
+  const mags = [];
+  for (let k = 0; k < N / 2; k++) {
+    let sr = 0, si = 0;
+    for (let i = 0; i < N; i++) {
+      const th = -2 * Math.PI * k * i / N;
+      sr += re[i] * Math.cos(th);
+      si += re[i] * Math.sin(th);
+    }
+    mags.push({ k, hz: Math.round(k * binHz), p: sr * sr + si * si });
+  }
+  return mags.sort((a, b) => b.p - a.p).slice(0, howMany);
+}
+
 function tone(hz, seconds, amp = 0.5) {
   const n = Math.round(SR * seconds);
   const out = new Float64Array(n);
@@ -88,5 +110,10 @@ for (const [name, sig] of cases) {
   console.log(name.padEnd(26) + String(s.centroidHz).padStart(7) + " Hz   " +
               s.lowShare + " / " + s.midShare + " / " + s.highShare);
 }
+console.log("\n--- direct DFT reference: where the energy really is (440 Hz sine) ---");
+for (const b of peakBins(tone(440, 1), SR)) {
+  console.log("  bin " + String(b.k).padStart(5) + "  " + String(b.hz).padStart(7) + " Hz   power " + b.p.toExponential(3));
+}
+
 console.log("\nA 440 Hz sine must read about 440 Hz. If everything reads near 10 kHz,");
 console.log("the transform is wrong and every spectrum number taken from it is worthless.");

@@ -616,6 +616,101 @@
     o.start(t); o.stop(t + 1.0);
   }
 
+  /* ======================= 曲目六：The Twenty-Megabyte Line（美式民谣）=========
+     这是自己写的一首，不是把远程生成的碎片缝起来 —— 上一版把十二段五秒的
+     片段首尾相接，每段和声与速度都不同，那不是一首曲子。
+     Karplus-Strong 拨弦（噪声脉冲 + 延迟反馈）正是民谣吉他与五弦班卓的音色，
+     配走步低音、口琴式长音与三度和声。G–C–G–D 循环，四小节一句。 */
+  var FOLK_BPM = 104, FOLK_BEAT = 60 / FOLK_BPM, FOLK_STEP = FOLK_BEAT / 2, FOLK_BAR = 8;
+  var FOLK_CHORDS = [
+    { root: 196.00, third: 246.94, fifth: 293.66, harm: 493.88 },   // G
+    { root: 130.81, third: 164.81, fifth: 196.00, harm: 392.00 },   // C
+    { root: 196.00, third: 246.94, fifth: 293.66, harm: 493.88 },   // G
+    { root: 146.83, third: 185.00, fifth: 220.00, harm: 440.00 }    // D
+  ];
+
+  /* 拨弦：一段很短的噪声送进与音高等长的延迟线，反馈里带一阶衰减 —— 这就是弦 */
+  function pluck(ctx, b, fr, t, vel) {
+    var out = ctx.createGain();
+    out.gain.setValueAtTime(0.16 * (vel || 1), t);
+    out.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+
+    var delay = ctx.createDelay(0.05);
+    delay.delayTime.value = 1 / fr;
+    var fb = ctx.createGain();
+    fb.gain.value = 0.965;                      // 弦的衰减
+    var damp = ctx.createBiquadFilter();
+    damp.type = "lowpass";
+    damp.frequency.value = Math.min(4200, fr * 9);   // 高音衰减得比低音快，才有拨弦味
+
+    var burst = ctx.createBufferSource();
+    burst.buffer = b.noise;
+    var bg = ctx.createGain();
+    bg.gain.setValueAtTime(1, t);
+    bg.gain.exponentialRampToValueAtTime(0.001, t + 1 / fr);   // 只喂一个周期
+
+    burst.connect(bg); bg.connect(delay);
+    delay.connect(damp); damp.connect(fb); fb.connect(delay);
+    delay.connect(out);
+    out.connect(b.master);
+    burst.start(t); burst.stop(t + 0.05);
+  }
+
+  /* 口琴：三角波过带通，加一点颤音，长音拖住整句 */
+  function harmonica(ctx, b, fr, t, dur) {
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.07, t + 0.12);
+    g.gain.setValueAtTime(0.07, t + dur - 0.2);
+    g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    var f = ctx.createBiquadFilter();
+    f.type = "bandpass";
+    f.frequency.value = fr * 2;
+    f.Q.value = 1.6;
+    var o = ctx.createOscillator();
+    o.type = "triangle";
+    o.frequency.value = fr;
+    var vib = ctx.createOscillator();
+    vib.type = "sine";
+    vib.frequency.value = 5.2;                  // 手的颤音
+    var vg = ctx.createGain();
+    vg.gain.value = fr * 0.012;
+    vib.connect(vg); vg.connect(o.frequency);
+    o.connect(f); f.connect(g); g.connect(b.master);
+    o.start(t); vib.start(t);
+    o.stop(t + dur + 0.05); vib.stop(t + dur + 0.05);
+  }
+
+  function scheduleFolkStep(ctx, b, step, t) {
+    var bar = Math.floor(step / FOLK_BAR);
+    var local = step % FOLK_BAR;
+    var c = FOLK_CHORDS[bar % FOLK_CHORDS.length];
+    var phrase = bar % 4;
+
+    /* 指弹：根-三-五-三 的八分音型，每小节两遍，力度起伏像手在动 */
+    var fig = [c.root, c.third, c.fifth, c.third];
+    var note = fig[local % 4];
+    if (local % 2 === 0) {
+      var oct = (local === 4 || local === 6) ? 2 : 1;
+      pluck(ctx, b, note * oct, t, 0.75 + (local % 4 === 0 ? 0.25 : 0));
+    }
+    /* 班卓：反拍上的高八度短拨 */
+    if (local % 2 === 1) pluck(ctx, b, c.fifth * 2, t, 0.35);
+
+    /* 走步低音：一小节两下，根音与五度 */
+    if (local === 0 || local === 4) {
+      bass(ctx, b, (local === 0 ? c.root : c.fifth) / 2, t, FOLK_STEP * 3.2, 0.34);
+    }
+
+    /* 口琴：每四小节进来一次，吹一整句 */
+    if (local === 0 && (phrase === 0 || phrase === 2)) {
+      harmonica(ctx, b, c.harm / 2, t, FOLK_BAR * FOLK_STEP);
+    }
+
+    /* 三度和声：句尾两小节，副歌感 */
+    if (phrase >= 2 && local === 2) pluck(ctx, b, c.third * 2, t, 0.45);
+    if (phrase >= 2 && local === 6) pluck(ctx, b, c.root * 2, t, 0.45);
+  }
   function schedulePostStep(ctx, b, step, t) {
     var bar = Math.floor(step / POST_BAR) % POST_BARS;
     var local = step % POST_BAR;
@@ -783,12 +878,14 @@
   function stepDur() {
     if (state.track === "rap") return RAP_STEP;
     if (state.track === "postrock") return POST_STEP;
+    if (state.track === "folk") return FOLK_STEP;
     return STEP;
   }
 
   function scheduleStep(ctx, b, step, t) {
     if (state.track === "rap") scheduleRapStep(ctx, b, step, t);
     else if (state.track === "postrock") schedulePostStep(ctx, b, step, t);
+    else if (state.track === "folk") scheduleFolkStep(ctx, b, step, t);
     else scheduleLofiStep(ctx, b, step, t);
   }
 
@@ -1104,7 +1201,7 @@
   }
 
   function selectTrack(id) {
-    if (id !== "rap" && id !== "postrock") id = "lofi";
+    if (id !== "rap" && id !== "postrock" && id !== "folk") id = "lofi";
     if (id === state.track) return state.track;
     var wasOn = state.on;
     if (wasOn) stop();
@@ -1129,7 +1226,7 @@
       id: state.track,
       name: state.track === "rap"
         ? ((data && data.title) || "Attachment Too Large") + " (Rap)"
-        : state.track === "postrock" ? "The Long Send" : "Failed at 19:59",
+        : state.track === "postrock" ? "The Long Send" : state.track === "folk" ? "The Twenty-Megabyte Line" : "Failed at 19:59",
       kind: state.track
     };
   }
@@ -1267,21 +1364,20 @@
             re[i2] = ch[off + i2] * w;
             im[i2] = 0;
           }
-          // 迭代 radix-2 FFT
-          for (var size = 2; size <= N; size <<= 1) {
-            var half = size >> 1, tbl = N / size;
-            for (var s0 = 0; s0 < N; s0 += size) {
-              for (var k2 = 0; k2 < half; k2++) {
-                var c = cosT[k2 * tbl], sn = sinT[k2 * tbl];
-                var a = s0 + k2, bIdx = a + half;
-                var tr = re[bIdx] * c - im[bIdx] * sn;
-                var ti = re[bIdx] * sn + im[bIdx] * c;
-                re[bIdx] = re[a] - tr; im[bIdx] = im[a] - ti;
-                re[a] += tr; im[a] += ti;
-              }
+          /* 直接 DFT。这里以前是一版手写的迭代 radix-2 FFT，它有 bug：440 Hz 的
+             正弦会被读成 7.8 kHz，能量被抹到整个频谱上，于是频谱质心永远是
+             9–11 kHz —— 我曾拿这个坏数字当作"两首曲子很像"的证据，那是错的。
+             直接算慢一些，但正确：量具错了比没有量具更糟。 */
+          var binHz0 = ctx.sampleRate / N;
+          var kTop = Math.min(N / 2, Math.ceil(9000 / binHz0));       // 9 kHz 以上不再逐 bin 统计
+          for (var k3 = 1; k3 < kTop; k3++) {
+            var sr2 = 0, si2 = 0, th0 = 2 * Math.PI * k3 / N;
+            for (var i3 = 0; i3 < N; i3++) {
+              sr2 += re[i3] * Math.cos(th0 * i3);
+              si2 += re[i3] * Math.sin(th0 * i3);
             }
+            acc[k3] += sr2 * sr2 + si2 * si2;
           }
-          for (var k3 = 0; k3 < N / 2; k3++) acc[k3] += re[k3] * re[k3] + im[k3] * im[k3];
           frames++;
         }
         if (!frames) return null;

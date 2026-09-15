@@ -238,6 +238,16 @@ const SUITE = `(async () => {
        "centroid " + rl.centroidHz + "Hz vs " + ark.centroidHz + "Hz (gap " + (centroidGap * 100).toFixed(0) + "%) · " +
        "low/mid/high " + rl.lowShare + "/" + rl.midShare + "/" + rl.highShare + " vs " +
        ark.lowShare + "/" + ark.midShare + "/" + ark.highShare + " (max band gap " + (bandGap * 100).toFixed(0) + "%)");
+    /* the folk piece is composed in-house too — it used to be twelve five-second
+       fragments from a remote model joined end to end, which is a patchwork, not a
+       song. It must make sound, and it must sit in the spectrum differently again. */
+    const fk = await music.renderOffline(14, "folk");
+    ok("民谣曲有波形", fk.peak > 0.02 && fk.rms > 0.004, "peak=" + fk.peak + " rms=" + fk.rms);
+    const folkVsArk = Math.abs(fk.centroidHz - ark.centroidHz) / Math.max(fk.centroidHz, ark.centroidHz, 1);
+    ok("民谣与后摇又是两副骨架", folkVsArk >= 0.12 || fk.lowShare !== ark.lowShare,
+       "folk centroid " + fk.centroidHz + "Hz vs postrock " + ark.centroidHz + "Hz · " +
+       "bands " + fk.lowShare + "/" + fk.midShare + "/" + fk.highShare);
+
     const arkRow = document.querySelector('[data-track="postrock"]');
     if (arkRow) {
       arkRow.click(); await wait(400);
