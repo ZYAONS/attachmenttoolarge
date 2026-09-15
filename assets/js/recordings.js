@@ -152,5 +152,64 @@ window.ATTRECORDINGS = [
         "For a file is not a fortune, and a limit's not a crime"
       ]}
     ]
+  },
+  {
+    id: "wall",
+    title: "What You Never Got",
+    style: "dramatic minor-key rap ballad, 87 BPM, sparse grand piano and sub bass, hard 808 kick, " +
+           "tense dense verses from a raspy male rapper answered by a soaring female sung chorus, " +
+           "cinematic strings that build, emotional duet, wide reverb, one key lift on the last chorus",
+    note: "The same complaint as a confession rather than a joke: the verses accuse, the chorus " +
+          "mourns, and the file never arrives either way. Written in-house; nothing borrowed.",
+    sections: [
+      { label: "INTRO", lines: [
+        "You want to know what twenty megabytes feels like?",
+        "Let me tell you what twenty megabytes feels like."
+      ]},
+      { label: "VERSE 1", lines: [
+        "I wrote it at midnight, I rewrote it at four",
+        "A quarter of a year in a single little folder",
+        "The buyer's in a hurry and the deadline is a door",
+        "And the door is twenty megabytes — I can't give him more",
+        "I hit send like a prayer, watched the little bar crawl",
+        "Ninety-nine percent and then it didn't move at all",
+        "Postmaster replied, and he was polite as a knife",
+        "Put it in a shared location — that's the shape of my life"
+      ]},
+      { label: "CHORUS", lines: [
+        "And you never got it, you never got it",
+        "Every word I wrote you, the wire wouldn't hold it",
+        "I could cut it into pieces, I could carry it alone",
+        "But you never got it — and I'm still here on my own"
+      ]},
+      { label: "VERSE 2", lines: [
+        "Now the sun's coming up and the office is a tomb",
+        "Six little shards of it and a screen full of gloom",
+        "Every name I ever saved says final, final-two",
+        "Every promise in a filename is a lie I told to you",
+        "I don't want a bigger cloud, I don't want a link that dies",
+        "I want the man who built the wall to look me in the eyes",
+        "Tell me who decided twenty and then walked away",
+        "Tell me why the number never moves, and I'm the one who pays"
+      ]},
+      { label: "CHORUS", lines: [
+        "And you never got it, you never got it",
+        "Every word I wrote you, the wire wouldn't hold it",
+        "I could cut it into pieces, I could carry it alone",
+        "But you never got it — and I'm still here on my own"
+      ]},
+      { label: "BRIDGE", lines: [
+        "If I break it, will you take it?",
+        "If I break it, will you take it?",
+        "Every shard is a sentence that I couldn't say out loud",
+        "If I break it, will you take it?",
+        "I'll send it one piece at a time until it's all the way"
+      ]},
+      { label: "OUTRO", lines: [
+        "You never got it",
+        "Twenty megabytes. That's all it ever was.",
+        "You never got it"
+      ]}
+    ]
   }
 ];
