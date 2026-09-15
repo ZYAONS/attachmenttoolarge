@@ -266,6 +266,19 @@ const SUITE = `(async () => {
        "centroid " + rl.centroidHz + "Hz vs " + ark.centroidHz + "Hz (gap " + (centroidGap * 100).toFixed(0) + "%) · " +
        "low/mid/high " + rl.lowShare + "/" + rl.midShare + "/" + rl.highShare + " vs " +
        ark.lowShare + "/" + ark.midShare + "/" + ark.highShare + " (max band gap " + (bandGap * 100).toFixed(0) + "%)");
+    /* the electronic version, and the fact that track 01 now carries a long melody */
+    const el = await music.renderOffline(8, "electro");
+    ok("电音版有波形", el.peak > 0.02 && el.rms > 0.004, "peak=" + el.peak + " rms=" + el.rms);
+    ok("电音版是鼓组驱动（起音密集）", el.onsetsPerSecond > rl.onsetsPerSecond * 3,
+       "electro " + el.onsetsPerSecond + "/s vs ambient " + rl.onsetsPerSecond + "/s");
+    ok("第一首的循环已延长", music.loopSeconds() > 40, music.loopSeconds() + "s per pass");
+    const elRow = document.querySelector('[data-track="electro"]');
+    if (elRow) {
+      elRow.click(); await wait(400);
+      ok("选到电音版", /Rejected/.test(music.currentTrack().name), music.currentTrack().id + " · " + music.currentTrack().name);
+      ok("电音版在播", music.isOn() === true, "playing");
+      elRow.click(); await wait(200);
+    }
     const arkRow = document.querySelector('[data-track="postrock"]');
     if (arkRow) {
       arkRow.click(); await wait(400);

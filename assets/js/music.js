@@ -78,11 +78,29 @@
   var BEAT = 60 / TEMPO;
   var STEP = BEAT / 2;          // 八分音符
   var STEPS_PER_CHORD = 16;     // 每个和弦两小节
+  /* 第一首原本是四个和弦的短循环（约 23 秒就重复一次），听久了像卡住。
+     现在扩成八个和弦、十六小节，并给它一条真正的主旋律：每小节两个长音，
+     前半段陈述、后半段上抬再落回 —— 循环一次约 46 秒，旋律才走完一轮。 */
   var CHORDS = [
-    { pad: [220.00, 261.63, 329.63], bass: 110.00, arp: [220.00, 261.63, 329.63, 440.00] },
-    { pad: [174.61, 220.00, 261.63], bass: 87.31,  arp: [174.61, 220.00, 261.63, 349.23] },
-    { pad: [196.00, 261.63, 329.63], bass: 130.81, arp: [261.63, 329.63, 392.00, 523.25] },
-    { pad: [196.00, 246.94, 293.66], bass: 98.00,  arp: [196.00, 246.94, 293.66, 392.00] }
+    { pad: [220.00, 261.63, 329.63], bass: 110.00, arp: [220.00, 261.63, 329.63, 440.00] },  // Am
+    { pad: [174.61, 220.00, 261.63], bass: 87.31,  arp: [174.61, 220.00, 261.63, 349.23] },  // F
+    { pad: [196.00, 261.63, 329.63], bass: 130.81, arp: [261.63, 329.63, 392.00, 523.25] },  // C
+    { pad: [196.00, 246.94, 293.66], bass: 98.00,  arp: [196.00, 246.94, 293.66, 392.00] },  // G
+    { pad: [220.00, 261.63, 329.63], bass: 110.00, arp: [220.00, 329.63, 440.00, 523.25] },  // Am
+    { pad: [174.61, 220.00, 261.63], bass: 87.31,  arp: [349.23, 261.63, 220.00, 174.61] },  // F
+    { pad: [146.83, 174.61, 220.00], bass: 73.42,  arp: [293.66, 349.23, 440.00, 587.33] },  // Dm
+    { pad: [164.81, 207.65, 246.94], bass: 82.41,  arp: [329.63, 246.94, 207.65, 164.81] }   // E
+  ];
+  /* 每个和弦四个长音：陈述 → 上抬 → 落回。第八个（E）是回 Am 之前的张力。 */
+  var MELODY = [
+    [440.00, 523.25, 493.88, 659.25],   // A4 C5 B4 E5
+    [349.23, 440.00, 392.00, 523.25],   // F4 A4 G4 C5
+    [523.25, 493.88, 392.00, 440.00],   // C5 B4 G4 A4
+    [392.00, 493.88, 587.33, 493.88],   // G4 B4 D5 B4
+    [440.00, 523.25, 659.25, 880.00],   // A4 C5 E5 A5  ← 上抬
+    [698.46, 523.25, 440.00, 392.00],   // F5 C5 A4 G4
+    [587.33, 698.46, 587.33, 440.00],   // D5 F5 D5 A4
+    [659.25, 493.88, 415.30, 329.63]    // E5 B4 G#4 E4  ← 张力，落回主和弦
   ];
   var TOTAL_STEPS = CHORDS.length * STEPS_PER_CHORD;
   var LOOP_SECONDS = TOTAL_STEPS * STEP;
@@ -215,6 +233,37 @@
     o2.start(t); o2.stop(t + dur + 0.06);
   }
 
+  /* 主旋律声部：三角波为主、低八度正弦垫厚，慢起音、带延迟余响，
+     比琶音更"唱"，这样长旋律才有线条感而不是一串音。 */
+  function lead(ctx, b, fr, t, dur) {
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.value = 2400;
+    f.Q.value = 0.8;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.085, t + 0.14);
+    g.gain.setValueAtTime(0.085, t + dur * 0.62);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+
+    [[1, "triangle", 0.8], [1.004, "triangle", 0.35], [0.5, "sine", 0.4]].forEach(function (v) {
+      var o = ctx.createOscillator();
+      o.type = v[1];
+      o.frequency.value = fr * v[0];
+      var vg = ctx.createGain();
+      vg.gain.value = v[2];
+      o.connect(vg);
+      vg.connect(f);
+      o.start(t);
+      o.stop(t + dur + 0.1);
+    });
+
+    f.connect(g);
+    g.connect(b.master);
+    g.connect(b.delay);
+  }
+
   function arp(ctx, b, fr, t, vel) {
     var o = ctx.createOscillator();
     o.type = "triangle";
@@ -319,14 +368,18 @@
 
   /* ======================= 排程 ======================= */
   function scheduleLofiStep(ctx, b, step, t) {
-    var chord = CHORDS[Math.floor(step / STEPS_PER_CHORD) % CHORDS.length];
+    var ci = Math.floor(step / STEPS_PER_CHORD) % CHORDS.length;
+    var chord = CHORDS[ci];
     var local = step % STEPS_PER_CHORD;
+    var melody = MELODY[ci];
 
     if (local === 0) pad(ctx, b, chord.pad, t, STEPS_PER_CHORD * STEP);
     if (local === 0 || local === 8) bass(ctx, b, chord.bass, t, STEP * 7);
-    if (local % 2 === 0) arp(ctx, b, chord.arp[(local / 2) % chord.arp.length], t, 0.6 + Math.random() * 0.25);
+    /* 主旋律：每小节两个长音，盖在琶音之上 */
+    if (local % 4 === 0) lead(ctx, b, melody[(local / 4) % melody.length], t, STEP * 3.4);
+    if (local % 2 === 0) arp(ctx, b, chord.arp[(local / 2) % chord.arp.length], t, 0.4);
     /* 刻意不放鼓：没有重音、没有噪声打击乐。
-       这是一条可以一直循环下去的背景铺底：和声垫 + 低音 + 琶音。 */
+       这是一条可以一直循环下去的背景铺底：和声垫 + 低音 + 琶音 + 主旋律。 */
   }
 
   function scheduleRapStep(ctx, b, step, t) {
@@ -665,6 +718,45 @@
     if (bar === 0 && local === 0) crash(ctx, b, t);                // 缝住 loop 接点
   }
 
+  /* ======================= 曲目四：Rejected（Club Edit）========================
+     同一件事的电音版本。规矩和前几首一样：自己写、不打任何外部服务。
+     128 BPM，十六分音符步进，八小节一循环，四层推进：
+       0–1 小节  四拍底鼓 + 滤波垫，只有骨架
+       2–3 小节  + 反拍 super-saw 和弦、2/4 拍手、十六分走句贝斯
+       4–5 小节  + 主旋律（十六分，重音在第一拍）
+       6–7 小节  全奏：密集踩镲、末小节上升音把循环推回开头
+     底鼓全在正拍、和弦全在反拍 —— 那个"吸一口气"的律动就是这么来的。 */
+  var ELEC_BPM = 128;
+  var ELEC_BEAT = 60 / ELEC_BPM;
+  var ELEC_STEP = ELEC_BEAT / 4;
+  var ELEC_BAR = 16;
+  var ELEC_BARS = 8;
+  var ELEC_CHORDS = [
+    { root: 55.00, notes: [220.00, 261.63, 329.63, 440.00] },   // Am
+    { root: 43.65, notes: [174.61, 220.00, 261.63, 349.23] },   // F
+    { root: 65.41, notes: [261.63, 329.63, 392.00, 523.25] },   // C
+    { root: 49.00, notes: [196.00, 246.94, 293.66, 392.00] }    // G
+  ];
+  var ELEC_LEAD = [880.00, 659.25, 587.33, 659.25, 880.00, 1046.50, 987.77, 880.00];
+
+  function scheduleElectroStep(ctx, b, step, t) {
+    var bar = Math.floor(step / ELEC_BAR) % ELEC_BARS;
+    var local = step % ELEC_BAR;
+    var chord = ELEC_CHORDS[Math.floor(bar / 2) % ELEC_CHORDS.length];
+    var section = bar < 2 ? 0 : bar < 4 ? 1 : bar < 6 ? 2 : 3;
+
+    if (local % 4 === 0) kick(ctx, b, t);                                  // 四拍底鼓
+    if (section >= 1 && (local === 4 || local === 12)) snare(ctx, b, t);   // 2/4 拍手
+    if (section >= 1) hat(ctx, b, t, local % 4 === 2 ? 1.6 : (section >= 3 ? 0.9 : 0.5));
+    if (section >= 3 && local % 2 === 1) hat(ctx, b, t, 0.7);              // 末段加密
+    if (section >= 1) bass(ctx, b, chord.root, t, ELEC_STEP * 0.9, local % 4 === 0 ? 0.6 : 0.42);
+    if (section >= 1 && (local === 6 || local === 14)) stab(ctx, b, chord.notes, t);  // 反拍和弦
+    if (section >= 2) arp(ctx, b, ELEC_LEAD[(step + bar) % ELEC_LEAD.length], t, local % 2 === 0 ? 0.85 : 0.4);
+    if (local === 0) pad(ctx, b, chord.notes.slice(0, 3), t, ELEC_BAR * ELEC_STEP);
+    if (bar === ELEC_BARS - 1 && local === 8) swell(ctx, b, t);            // 上升音
+    if (bar === 0 && local === 0) crash(ctx, b, t);                        // 接缝镲片
+  }
+
   /* ======================= 音效 ======================= */
   function sfxError(ctx, b) {
     var t = ctx.currentTime + 0.01;
@@ -788,12 +880,14 @@
   function stepDur() {
     if (state.track === "rap") return RAP_STEP;
     if (state.track === "postrock") return POST_STEP;
+    if (state.track === "electro") return ELEC_STEP;
     return STEP;
   }
 
   function scheduleStep(ctx, b, step, t) {
     if (state.track === "rap") scheduleRapStep(ctx, b, step, t);
     else if (state.track === "postrock") schedulePostStep(ctx, b, step, t);
+    else if (state.track === "electro") scheduleElectroStep(ctx, b, step, t);
     else scheduleLofiStep(ctx, b, step, t);
   }
 
@@ -1109,7 +1203,7 @@
   }
 
   function selectTrack(id) {
-    if (id !== "rap" && id !== "postrock") id = "lofi";
+    if (id !== "rap" && id !== "postrock" && id !== "electro") id = "lofi";
     if (id === state.track) return state.track;
     var wasOn = state.on;
     if (wasOn) stop();
@@ -1134,7 +1228,9 @@
       id: state.track,
       name: state.track === "rap"
         ? ((data && data.title) || "Attachment Too Large") + " (Rap)"
-        : state.track === "postrock" ? "The Long Send" : "Failed at 19:59",
+        : state.track === "postrock" ? "The Long Send"
+        : state.track === "electro" ? "Rejected (Club Edit)"
+        : "Failed at 19:59",
       kind: state.track
     };
   }
@@ -1250,11 +1346,13 @@
     var buses = createBuses(ctx, ctx.destination);
     buses.master.gain.value = 0.3;
 
-    var dur = which === "rap" ? RAP_STEP : which === "postrock" ? POST_STEP : STEP;
+    var dur = which === "rap" ? RAP_STEP : which === "postrock" ? POST_STEP
+            : which === "electro" ? ELEC_STEP : STEP;
     var steps = Math.ceil(seconds / dur);
     for (var i = 0; i < steps; i++) {
       if (which === "rap") scheduleRapStep(ctx, buses, i, i * dur);
       else if (which === "postrock") schedulePostStep(ctx, buses, i, i * dur);
+      else if (which === "electro") scheduleElectroStep(ctx, buses, i, i * dur);
       else scheduleLofiStep(ctx, buses, i % TOTAL_STEPS, i * dur);
     }
     if (which === "rap") { try { crackle(ctx, buses); } catch (e) { /* 忽略 */ } }
