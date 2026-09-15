@@ -167,6 +167,20 @@ const SUITE = `(async () => {
   if (attrOriginalTheme) document.documentElement.setAttribute("data-theme", attrOriginalTheme);
   else document.documentElement.removeAttribute("data-theme");
   await wait(150);
+  /* The platter appearing to spin around the wrong point was not a 3D problem: the
+     scene forced a 3:2 drawing buffer while the element's CSS box was a different
+     shape, so the canvas was cropped and the disc's centre left the middle of the
+     panel. Buffer and CSS box must agree, or the render is a crop rather than a fit. */
+  const recordCanvas = document.querySelector("[data-record-scene] canvas");
+  if (recordCanvas && recordCanvas.clientWidth) {
+    const ratioW = recordCanvas.width / (recordCanvas.clientWidth * (window.devicePixelRatio || 1));
+    const ratioH = recordCanvas.height / (recordCanvas.clientHeight * (window.devicePixelRatio || 1));
+    ok("唱片画布无裁切（缓冲与显示尺寸一致）", Math.abs(ratioW - 1) < 0.03 && Math.abs(ratioH - 1) < 0.03,
+       "buffer " + recordCanvas.width + "x" + recordCanvas.height + " vs box " + recordCanvas.clientWidth + "x" + recordCanvas.clientHeight +
+       " · ratios " + ratioW.toFixed(3) + " / " + ratioH.toFixed(3));
+  } else {
+    ok("唱片画布无裁切（本页无画布，跳过）", true, "no canvas on this page");
+  }
   ok("主题切换生效", before !== after, before + " -> " + after);
   ok("主题按钮是 SVG 图标", !!themeBtn.querySelector("svg"));
   themeBtn.click(); await frame();

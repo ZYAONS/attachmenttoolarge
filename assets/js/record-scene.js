@@ -306,15 +306,39 @@
   plus(11.4, -3.4, 1.0);
   plus(-11.2, -5.6, 0.85);
 
-  /* ---------------- draw ---------------- */
+  /* ---------------- draw ----------------
+     This used to force the render to a 3:2 box (h = w * 2 / 3) and call setSize with
+     updateStyle = false, so the drawing buffer and the element's CSS box disagreed:
+     the canvas was cropped and the disc's centre drifted away from the middle of the
+     panel, which reads as the platter spinning around the wrong point. Render at the
+     host's real size, keep the CSS box in step, and pull the camera back far enough
+     that a 20-unit platter fits whatever shape the panel happens to be. */
+  var LOOK = new THREE.Vector3(0, TOP, 0);              // the middle of the platter, not a point above it
+  var VIEW = new THREE.Vector3(0, 62, 20).normalize();  // the high three-quarter view, kept
+
   function resize() {
-    var w = host.clientWidth || 1200;
-    var h = Math.round(w * 2 / 3);
-    canvas.width = Math.round(w * renderer.getPixelRatio());
-    canvas.height = Math.round(h * renderer.getPixelRatio());
+    var w = Math.max(1, host.clientWidth || 1200);
+    var h = Math.max(1, host.clientHeight || Math.round(w * 2 / 3));
+    var pr = renderer.getPixelRatio();
+
+    canvas.width = Math.round(w * pr);
+    canvas.height = Math.round(h * pr);
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
     renderer.setSize(w, h, false);
+
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+
+    /* fit the platter (20 units across, plus a margin) in both directions */
+    var need = 22;
+    var vFov = camera.fov * Math.PI / 180;
+    var distV = (need / 2) / Math.tan(vFov / 2);
+    var distH = distV / camera.aspect;
+    var dist = Math.max(distV, distH);
+    camera.position.copy(VIEW).multiplyScalar(dist).add(LOOK);
+    camera.lookAt(LOOK);
+
     renderer.render(scene, camera);
   }
 
