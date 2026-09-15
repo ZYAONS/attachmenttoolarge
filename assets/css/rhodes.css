@@ -320,15 +320,20 @@ html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
   border-left-color: #3c5a0f !important;
 }
 .cta-band .btn-ghost { color: var(--rhodes-ink) !important; border-color: rgba(10, 11, 10, 0.42) !important; }
-/* Buttons inside a light plate: .btn rules in the HUD layer also use !important,
-   so the link colour needed matching force. Buttons read as ink on a bone plate. */
-:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap)
-  :is(a.btn, a.btn-ghost, a.btn-sm, button.btn, .btn-sm) {
-  color: var(--rhodes-ink) !important;
-  -webkit-text-fill-color: var(--rhodes-ink) !important;
-  border-color: rgba(10, 11, 10, 0.45) !important;
+
+/* Buttons on a light plate, resolved deterministically.
+   The previous attempt set only the text colour, and the result was worse than
+   before (1.14) because the fill came from somewhere else entirely. Both the
+   fill and the text are now stated here, so the outcome cannot drift: a dark
+   printed button with bone text, which is also what the design language wants. */
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) :is(a.btn, a.btn-ghost, a.btn-sm, button.btn) {
+  background: var(--rhodes-ink) !important;
+  color: var(--bone) !important;
+  -webkit-text-fill-color: var(--bone) !important;
+  border: 1px solid var(--rhodes-ink) !important;
 }
-:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) :is(a.btn-primary, .btn-primary) {
-  background: var(--med) !important; color: var(--rhodes-ink) !important;
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) :is(a.btn, a.btn-sm):hover {
+  background: var(--med) !important;
+  color: var(--rhodes-ink) !important;
   -webkit-text-fill-color: var(--rhodes-ink) !important;
 }
