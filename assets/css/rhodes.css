@@ -277,26 +277,26 @@ html[data-theme="light"] .hud-rail .ic { color: var(--rhodes-ink); }
   .bg-fx .sweep, .bg-fx .rings, .bg-fx .dust, .bg-fx .scan, .bg-fx .ticks { animation: none !important; }
 }
 /* ==========================================================================
-   The audit found this, not the eye: every light panel on the site was still
-   carrying the light text colour that hud.css set for dark panels, so headings
-   and body copy sat on bone plates at a contrast ratio of 1.01 — white on white.
-   The fix has to be broad, because the panels are not all one class.
+   Light plates carry ink — but only the plates that are actually light.
+   The first attempt at this listed .post, .faq, .rule and .principle, which are
+   NOT painted bone: they sit on the dark field, so forcing ink into them made
+   dark text on a dark background and the audit reported ratios of 1.01 and 1.14,
+   i.e. invisible. The rule now covers exactly the classes this stylesheet paints
+   light, and it deliberately does not touch bare span/div, because chips and
+   badges carry their own dark fills.
    ========================================================================== */
-:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
-    .quote, .faq, .faq details, .rule, .principle, .timeline li, .post, .box, .panel)
-  :is(h1, h2, h3, h4, h5, h6, p, li, td, th, span, strong, em, small, label, dt, dd, blockquote, div) {
+:is(.card, .stat, .callout, .cta-band, .member-card, .table-wrap, .project-card, .track-bar)
+  :is(h1, h2, h3, h4, h5, h6, p, li, td, th, dt, dd, blockquote, small, strong, em, label,
+      .badge, .tag, .muted, .small, .project-meta, .project-name, .stat-label, .stat-num, .post-date) {
   color: var(--rhodes-ink) !important;
   -webkit-text-fill-color: var(--rhodes-ink) !important;
 }
-:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
-    .quote, .faq, .rule, .principle, .timeline li, .post, .box, .panel) h1,
-:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
-    .quote, .faq, .rule, .principle, .timeline li, .post, .box, .panel) h2,
-:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap,
-    .quote, .faq, .rule, .principle, .timeline li, .post, .box, .panel) h3 {
+:is(.card, .stat, .callout, .cta-band, .member-card, .table-wrap, .project-card, .track-bar) :is(h1, h2, h3, h4) {
   background-image: none !important;
 }
-/* accents that must survive on light plates */
-:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap, .quote, .rule, .principle) a { color: var(--med-dim) !important; }
-:is(.card, .stat, .callout, .cta-band, .project-card, .member-card, .table-wrap, .quote, .rule, .principle) .eyebrow { color: var(--med-dim) !important; border-left-color: var(--med-dim) !important; }
-:is(.card, .stat) .stat-num, :is(.card) .project-name, :is(.card) .card-num { color: var(--rhodes-ink) !important; }
+/* accents that must survive on a light plate */
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) a { color: var(--med-dim) !important; }
+:is(.card, .callout, .cta-band, .project-card, .member-card, .table-wrap) .eyebrow {
+  color: var(--med-dim) !important; border-left-color: var(--med-dim) !important;
+}
+.cta-band .btn-ghost { color: var(--rhodes-ink) !important; border-color: rgba(10, 11, 10, 0.4) !important; }

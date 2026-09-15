@@ -447,6 +447,71 @@
     s.stop(t + 1.5);
   }
 
+  /* ---- 怪奇物语语汇：低音脉冲琶音 + 失谐长鸣 + 滴答脉冲 ----
+     那部剧的招牌就是这三样：八分音符的合成器脉冲在低音区不停走、
+     两层微微失谐的长鸣制造不安、以及像倒计时一样的高频滴答。 */
+
+  /* 脉冲：八分音符，低通随小节慢慢打开，带一点下滑 */
+  function stPulse(ctx, b, fr, t, level) {
+    var o = ctx.createOscillator();
+    o.type = "sawtooth";
+    o.frequency.setValueAtTime(fr * 1.012, t);
+    o.frequency.exponentialRampToValueAtTime(fr, t + 0.16);
+
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(700, t);
+    f.frequency.linearRampToValueAtTime(1800, t + 0.05);
+    f.frequency.exponentialRampToValueAtTime(520, t + 0.22);
+    f.Q.value = 5;                        // 高 Q 才有那种"哨"味
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.085 * level, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.24);
+
+    o.connect(f); f.connect(g); g.connect(b.master);
+    o.start(t); o.stop(t + 0.3);
+  }
+
+  /* 失谐长鸣：两个锯齿差 7 音分，慢慢进来，不收尾（靠下一层盖掉） */
+  function stDrone(ctx, b, fr, t, dur) {
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.value = 900;
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.035, t + 1.2);
+    g.gain.setValueAtTime(0.035, t + dur - 0.8);
+    g.gain.linearRampToValueAtTime(0.0001, t + dur);
+    [0, 7].forEach(function (cents) {
+      var o = ctx.createOscillator();
+      o.type = "sawtooth";
+      o.frequency.value = fr * Math.pow(2, cents / 1200);
+      var vg = ctx.createGain();
+      vg.gain.value = 0.5;
+      o.connect(vg); vg.connect(f);
+      o.start(t); o.stop(t + dur + 0.1);
+    });
+    f.connect(g); g.connect(b.master);
+  }
+
+  /* 滴答：窄带高频短促脉冲，像倒计时 */
+  function stTick(ctx, b, t, level) {
+    var o = ctx.createOscillator();
+    o.type = "square";
+    o.frequency.value = 1864.66;          // 升 A6，故意和 E 小调不协和
+    var f = ctx.createBiquadFilter();
+    f.type = "bandpass";
+    f.frequency.value = 1864.66;
+    f.Q.value = 12;
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.03 * level, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+    o.connect(f); f.connect(g); g.connect(b.master);
+    o.start(t); o.stop(t + 0.12);
+  }
   /* 失真高频层：两层锯齿过扫频低通，做全奏段的那层"墙" */
   function stab(ctx, b, freqs, t) {
     var f = ctx.createBiquadFilter();
@@ -478,6 +543,79 @@
     g.connect(b.master);
   }
 
+  /* --------------------------------------------------------------------------
+     The Long Send 自己的三个声部。它以前直接调用第一首的 pad()/bass()/arp()，
+     所以频谱和第一首几乎重合 —— 加再多的鼓也只是在同一副骨架上盖层。这三个
+     函数是它独有的：低通弦乐墙、纯正弦超低音、三角拨弦，能量分布落在完全
+     不同的位置。
+     -------------------------------------------------------------------------- */
+  function postBed(ctx, b, freqs, t, dur) {
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.11, t + dur * 0.35);      // 慢慢涨，这是"墙"
+    g.gain.setValueAtTime(0.11, t + dur - 1.2);
+    g.gain.linearRampToValueAtTime(0.0001, t + dur);
+
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.value = 620;                                   // 关键：把能量压到中低频
+    f.Q.value = 0.7;
+
+    var lfo = ctx.createOscillator();
+    lfo.type = "sine";
+    lfo.frequency.value = 0.12;                                // 极慢的呼吸
+    var lfoGain = ctx.createGain();
+    lfoGain.gain.value = 140;
+    lfo.connect(lfoGain);
+    lfoGain.connect(f.frequency);
+    lfo.start(t); lfo.stop(t + dur + 0.2);
+
+    freqs.forEach(function (fr) {
+      [0, 9].forEach(function (cents) {                        // 差 9 音分：厚而不颤
+        var o = ctx.createOscillator();
+        o.type = "sawtooth";
+        o.frequency.value = fr * Math.pow(2, cents / 1200);
+        var vg = ctx.createGain();
+        vg.gain.value = 0.5;
+        o.connect(vg); vg.connect(f);
+        o.start(t); o.stop(t + dur + 0.2);
+      });
+    });
+    f.connect(g);
+    g.connect(b.master);
+  }
+
+  function postSub(ctx, b, fr, t, dur) {
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.30, t + 0.03);            // 纯正弦：低频段的支柱
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    var o = ctx.createOscillator();
+    o.type = "sine";
+    o.frequency.setValueAtTime(fr * 0.985, t);                 // 轻微下滑，像弓弦落定
+    o.frequency.linearRampToValueAtTime(fr, t + 0.25);
+    o.connect(g);
+    g.connect(b.master);
+    o.start(t); o.stop(t + dur + 0.1);
+  }
+
+  function postPluck(ctx, b, fr, t, vel) {
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(0.10 * (vel || 1), t + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+    var f = ctx.createBiquadFilter();
+    f.type = "lowpass";
+    f.frequency.value = 2400;                                  // 比颤音吉他暗一档
+    var o = ctx.createOscillator();
+    o.type = "triangle";
+    o.frequency.value = fr;
+    o.connect(f); f.connect(g);
+    g.connect(b.master);
+    g.connect(b.delay);
+    o.start(t); o.stop(t + 1.0);
+  }
+
   function schedulePostStep(ctx, b, step, t) {
     var bar = Math.floor(step / POST_BAR) % POST_BARS;
     var local = step % POST_BAR;
@@ -485,15 +623,20 @@
     var section = bar < 2 ? 0 : bar < 4 ? 1 : bar < 6 ? 2 : 3;   // 渐强的四层
 
     /* 垫只在低层铺；全奏段让位给吉他，改用一个高八度的小垫增加亮度而不是重量 */
-    if (local === 0 && (bar === 0 || bar === 2)) pad(ctx, b, chord, t, POST_BAR * POST_STEP * 2);
-    if (local === 0 && bar === 6) pad(ctx, b, [chord[0] * 2, chord[1] * 2, chord[2] * 2], t, POST_BAR * POST_STEP);
+    if (local === 0 && (bar === 0 || bar === 2)) postBed(ctx, b, chord, t, POST_BAR * POST_STEP * 2);
+    if (local === 0 && bar === 6) postBed(ctx, b, [chord[0] * 2, chord[1] * 2, chord[2] * 2], t, POST_BAR * POST_STEP);
+
+    /* 怪奇物语三层：脉冲从第一小节就走，长鸣在第二层进来，滴答只在后半段 */
+    if (local % 2 === 0) stPulse(ctx, b, POST_ARP[((local / 2) + bar * 2) % POST_ARP.length] / 4, t, section >= 2 ? 1 : 0.62);
+    if (local === 0 && (bar === 2 || bar === 4)) stDrone(ctx, b, chord[0], t, POST_BAR * POST_STEP * 2);
+    if (section >= 2 && local % 4 === 2) stTick(ctx, b, t, section >= 3 ? 1 : 0.6);
 
     /* 干净的延迟琶音：从第一小节就在，是这条曲子的线索 */
-    if (local % 2 === 0) arp(ctx, b, POST_ARP[((local / 2) + bar) % POST_ARP.length], t, 0.65);
+    if (local % 2 === 0) postPluck(ctx, b, POST_ARP[((local / 2) + bar) % POST_ARP.length], t, 0.65);
 
     if (section >= 1) {
       if (local === 0 || local === 8) {
-        bass(ctx, b, chord[0] / 2, t, POST_STEP * 7, 0.5);
+        postSub(ctx, b, chord[0] / 2, t, POST_STEP * 7, 0.5);
         kick(ctx, b, t);
       }
       if (local === 4 || local === 10) bell(ctx, b, POST_ARP[(bar + local) % POST_ARP.length] * 2, t);
@@ -503,7 +646,7 @@
       if (local === 4 || local === 12) snare(ctx, b, t);
       if (local % 4 === 0) hat(ctx, b, t, 1.8);
       /* 颤音吉他十六分不停 —— 后摇的"推进"就是它 */
-      tremolo(ctx, b, POST_TREMS[(step * 3 + bar) % POST_TREMS.length], t, 0.55);
+      tremolo(ctx, b, POST_TREMS[(step * 3 + bar) % POST_TREMS.length], t, 0.30);
     }
 
     if (section >= 3) {
@@ -1102,6 +1245,62 @@
           lastOnset = q;
         }
       }
+      /* ------------------------------------------------------------------
+         频谱分析：这才是「两首曲子像不像」该看的东西。取若干窗做 FFT，
+         求频谱质心与低/中/高频段的能量占比 —— 一个曲子换了骨架（和声垫、
+         低音、琶音全部不同）必然体现在这里，而打击乐只是在同一骨架上加层，
+         频谱质心几乎不动。
+         ------------------------------------------------------------------ */
+      var N = 2048;
+      var spec = (function () {
+        var re = new Float64Array(N), im = new Float64Array(N);
+        var cosT = new Float64Array(N / 2), sinT = new Float64Array(N / 2);
+        for (var k = 0; k < N / 2; k++) {
+          cosT[k] = Math.cos(-2 * Math.PI * k / N);
+          sinT[k] = Math.sin(-2 * Math.PI * k / N);
+        }
+        var acc = new Float64Array(N / 2), frames = 0;
+        var step = Math.floor((ch.length - N) / 8) || 1;
+        for (var off = 0; off + N < ch.length; off += step) {
+          for (var i2 = 0; i2 < N; i2++) {
+            var w = 0.5 - 0.5 * Math.cos(2 * Math.PI * i2 / (N - 1));   // Hann
+            re[i2] = ch[off + i2] * w;
+            im[i2] = 0;
+          }
+          // 迭代 radix-2 FFT
+          for (var size = 2; size <= N; size <<= 1) {
+            var half = size >> 1, tbl = N / size;
+            for (var s0 = 0; s0 < N; s0 += size) {
+              for (var k2 = 0; k2 < half; k2++) {
+                var c = cosT[k2 * tbl], sn = sinT[k2 * tbl];
+                var a = s0 + k2, bIdx = a + half;
+                var tr = re[bIdx] * c - im[bIdx] * sn;
+                var ti = re[bIdx] * sn + im[bIdx] * c;
+                re[bIdx] = re[a] - tr; im[bIdx] = im[a] - ti;
+                re[a] += tr; im[a] += ti;
+              }
+            }
+          }
+          for (var k3 = 0; k3 < N / 2; k3++) acc[k3] += re[k3] * re[k3] + im[k3] * im[k3];
+          frames++;
+        }
+        if (!frames) return null;
+        var sr = ctx.sampleRate, binHz = sr / N;
+        var total = 0, weighted = 0, low = 0, mid = 0, high = 0;
+        for (var k4 = 1; k4 < N / 2; k4++) {
+          var power = acc[k4] / frames, f = k4 * binHz;
+          total += power; weighted += power * f;
+          if (f < 300) low += power; else if (f < 2000) mid += power; else high += power;
+        }
+        if (!total) return null;
+        return {
+          centroidHz: Math.round(weighted / total),
+          lowShare: Math.round((low / total) * 1000) / 1000,
+          midShare: Math.round((mid / total) * 1000) / 1000,
+          highShare: Math.round((high / total) * 1000) / 1000
+        };
+      })();
+
       return {
         track: which,
         seconds: seconds,
@@ -1116,6 +1315,10 @@
         rmsFirstHalf: Math.round(rmsA * 10000) / 10000,
         rmsSecondHalf: Math.round(rmsB * 10000) / 10000,
         onsetsPerSecond: Math.round((onsets / seconds) * 100) / 100,
+        centroidHz: spec ? spec.centroidHz : 0,
+        lowShare: spec ? spec.lowShare : 0,
+        midShare: spec ? spec.midShare : 0,
+        highShare: spec ? spec.highShare : 0,
         loopSeconds: Math.round((which === "rap" ? RAP_BAR * RAP_STEP * 4 : LOOP_SECONDS) * 100) / 100
       };
     });

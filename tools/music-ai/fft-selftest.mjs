@@ -1,0 +1,92 @@
+#!/usr/bin/env node
+/* ==========================================================================
+   fft-selftest.mjs — is the spectrum measurement itself correct?
+
+   The band shares it reported said 92% of the energy in both pieces sat above
+   2 kHz, with a centroid near 11 kHz. That is not what music looks like; it is
+   what a broken transform looks like. This feeds the identical routine known
+   signals and prints what it makes of them:
+
+     440 Hz sine          → centroid should be ~440 Hz
+     4 kHz sine           → centroid should be ~4 kHz
+     sine + quiet noise   → centroid should move, but stay in the same region
+
+   Usage: node tools/music-ai/fft-selftest.mjs
+   ========================================================================== */
+
+const N = 2048;
+const SR = 44100;
+
+function spectrumCentroid(samples, sampleRate) {
+  const re = new Float64Array(N), im = new Float64Array(N);
+  const cosT = new Float64Array(N / 2), sinT = new Float64Array(N / 2);
+  for (let k = 0; k < N / 2; k++) {
+    cosT[k] = Math.cos(-2 * Math.PI * k / N);
+    sinT[k] = Math.sin(-2 * Math.PI * k / N);
+  }
+  const frames = Math.max(1, Math.floor(samples.length / N));
+  const acc = new Float64Array(N / 2);
+  for (let f = 0; f < frames; f++) {
+    const off = f * N;
+    for (let i = 0; i < N; i++) {
+      const w = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+      re[i] = samples[off + i] * w;
+      im[i] = 0;
+    }
+    for (let size = 2; size <= N; size <<= 1) {
+      const half = size >> 1, tbl = N / size;
+      for (let s0 = 0; s0 < N; s0 += size) {
+        for (let k2 = 0; k2 < half; k2++) {
+          const c = cosT[k2 * tbl], sn = sinT[k2 * tbl];
+          const a = s0 + k2, b = a + half;
+          const tr = re[b] * c - im[b] * sn;
+          const ti = re[b] * sn + im[b] * c;
+          re[b] = re[a] - tr; im[b] = im[a] - ti;
+          re[a] += tr; im[a] += ti;
+        }
+      }
+    }
+    for (let k = 0; k < N / 2; k++) acc[k] += re[k] * re[k] + im[k] * im[k];
+  }
+  const binHz = sampleRate / N;
+  let total = 0, weighted = 0, low = 0, mid = 0, high = 0;
+  for (let k = 1; k < N / 2; k++) {
+    const power = acc[k] / frames, hz = k * binHz;
+    total += power; weighted += power * hz;
+    if (hz < 300) low += power; else if (hz < 2000) mid += power; else high += power;
+  }
+  return {
+    centroidHz: Math.round(weighted / total),
+    lowShare: +(low / total).toFixed(3),
+    midShare: +(mid / total).toFixed(3),
+    highShare: +(high / total).toFixed(3)
+  };
+}
+
+function tone(hz, seconds, amp = 0.5) {
+  const n = Math.round(SR * seconds);
+  const out = new Float64Array(n);
+  for (let i = 0; i < n; i++) out[i] = amp * Math.sin(2 * Math.PI * hz * i / SR);
+  return out;
+}
+function addNoise(sig, level) {
+  for (let i = 0; i < sig.length; i++) sig[i] += (Math.random() * 2 - 1) * level;
+  return sig;
+}
+
+const cases = [
+  ["440 Hz sine", tone(440, 1)],
+  ["4 kHz sine", tone(4000, 1)],
+  ["440 Hz + quiet noise", addNoise(tone(440, 1), 0.02)],
+  ["110 Hz sine (a bass note)", tone(110, 1)],
+  ["two sines, 110 + 4k", (() => { const a = tone(110, 1, 0.5), b = tone(4000, 1, 0.5); for (let i = 0; i < a.length; i++) a[i] += b[i]; return a; })()]
+];
+
+console.log("signal                     centroid    low / mid / high");
+for (const [name, sig] of cases) {
+  const s = spectrumCentroid(sig, SR);
+  console.log(name.padEnd(26) + String(s.centroidHz).padStart(7) + " Hz   " +
+              s.lowShare + " / " + s.midShare + " / " + s.highShare);
+}
+console.log("\nA 440 Hz sine must read about 440 Hz. If everything reads near 10 kHz,");
+console.log("the transform is wrong and every spectrum number taken from it is worthless.");

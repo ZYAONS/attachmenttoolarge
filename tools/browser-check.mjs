@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    attachmenttoolarge — 浏览器端自检（CDP 驱动，零依赖）
 
    用法：
@@ -221,22 +221,23 @@ const SUITE = `(async () => {
     /* the in-house Ark-flavoured score: composed here, not fetched from anywhere */
     const ark = await music.renderOffline(22, "postrock");   // a whole eight-bar build, not just the intro
     ok("后摇曲有波形", ark.peak > 0.02 && ark.rms > 0.004, "peak=" + ark.peak + " rms=" + ark.rms);
-    /* comparative, not a bare threshold: the score must be far more percussive
-       than the ambient loop, which is the actual musical difference between them */
-    /* Two of the three original tests could never pass whatever the score sounded like:
-       both engines normalise loudness, so their RMS will always be within a whisker, and
-       posting the delay, the pad and the tremolo through one low-pass leaves the
-       high-frequency share nearly equal too. Direction-locked comparisons ("twice as
-       bright") then fail by construction. What actually separates these pieces is
-       percussive density — one is drum-driven, the other has no drums at all — so that
-       is the primary test, with a second feature required only to move noticeably. */
-    const rel = (a, b) => Math.abs(a - b) / Math.max(a, b, 1e-9);
-    const onsetGap = rel(ark.onsetsPerSecond, rl.onsetsPerSecond);
-    const secondGap = Math.max(rel(ark.hf, rl.hf), rel(ark.rms, rl.rms));
-    const differs = (onsetGap >= 0.40 ? 1 : 0) + (secondGap >= 0.15 ? 1 : 0);
-    ok("后摇与铺底是两首不同的曲子", differs >= 2,
-       "onsets " + ark.onsetsPerSecond + " vs " + rl.onsetsPerSecond + " · hf " + ark.hf + " vs " + rl.hf +
-       " · rms " + ark.rms + " vs " + rl.rms + " · " + differs + "/3 differ");
+    /* The comparison that was actually asked for: the two pieces by their spectrum.
+       Percussion is a layer on top of whatever bed is underneath, so counting hits
+       per second cannot tell "a different piece" from "the same piece with drums" —
+       which is exactly the mistake this test used to make. The spectral centroid and
+       the low/mid/high energy shares can tell: a piece with its own pad, bass and
+       arpeggio sits elsewhere in the spectrum before a single drum plays. */
+    const centroidGap = Math.abs(ark.centroidHz - rl.centroidHz) / Math.max(ark.centroidHz, rl.centroidHz, 1);
+    const bandGap = Math.max(
+      Math.abs(ark.lowShare - rl.lowShare),
+      Math.abs(ark.midShare - rl.midShare),
+      Math.abs(ark.highShare - rl.highShare)
+    );
+    const differs = (centroidGap >= 0.15 ? 1 : 0) + (bandGap >= 0.10 ? 1 : 0);
+    ok("后摇与铺底是两首不同的曲子（按频谱）", differs >= 2,
+       "centroid " + rl.centroidHz + "Hz vs " + ark.centroidHz + "Hz (gap " + (centroidGap * 100).toFixed(0) + "%) · " +
+       "low/mid/high " + rl.lowShare + "/" + rl.midShare + "/" + rl.highShare + " vs " +
+       ark.lowShare + "/" + ark.midShare + "/" + ark.highShare + " (max band gap " + (bandGap * 100).toFixed(0) + "%)");
     const arkRow = document.querySelector('[data-track="postrock"]');
     if (arkRow) {
       arkRow.click(); await wait(400);
