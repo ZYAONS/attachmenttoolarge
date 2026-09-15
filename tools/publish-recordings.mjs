@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /* ==========================================================================
    publish-recordings.mjs — put the recordings somewhere with a public URL
 
@@ -51,7 +51,8 @@ const H = { Authorization: "Bearer " + TOKEN, "User-Agent": "att-tools", Accept:
 const TRACKS = [
   { file: "assets/audio/rap.mp3", title: "Attachment Too Large", kind: "boom-bap rap", time: "2:50" },
   { file: "assets/audio/wire.mp3", title: "Wrong Side of the Wire", kind: "electric Memphis soul-blues", time: "2:48" },
-  { file: "assets/audio/ninetynine.mp3", title: "Ninety-Nine Forever", kind: "80s neon synth-pop", time: "2:48" }
+  { file: "assets/audio/ninetynine.mp3", title: "Ninety-Nine Forever", kind: "80s neon synth-pop", time: "2:48" },
+  { file: "assets/audio/folk.mp3", title: "The Twenty-Megabyte Line", kind: "american folk, sung", time: "2:50" }
 ];
 const EXTRA = [
   { file: "assets/img/emblem.svg", name: "cover-emblem.svg" },
