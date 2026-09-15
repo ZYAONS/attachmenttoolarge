@@ -14,6 +14,37 @@
   if (!C) { console.error("content.js 没有加载"); return; }
   var $ = function (id) { return document.getElementById(id); };
 
+  /* ---------------- 九十天的日程 ----------------
+     写好的日子用正式内容；没写的按 content.structure 生成占位 ——
+     这样整条时间线是走得通的，审计里会告诉你这一天属于哪一幕、有什么里程碑。 */
+  function actOf(n) {
+    var acts = (C.structure && C.structure.acts) || [];
+    for (var i = 0; i < acts.length; i++) if (n >= acts[i].from && n <= acts[i].to) return acts[i];
+    return null;
+  }
+  function buildSchedule() {
+    var st = C.structure || {};
+    var total = st.totalDays || 90;
+    var byN = {};
+    (C.days || []).forEach(function (d) { byN[d.n] = d; });
+    var out = [];
+    for (var n = 1; n <= total; n++) {
+      if (byN[n]) { byN[n].act = actOf(n); byN[n].milestone = (st.milestones || {})[n]; out.push(byN[n]); continue; }
+      var act = actOf(n);
+      var ms = (st.milestones || {})[n];
+      var ph = st.placeholder || {};
+      out.push({
+        n: n, label: "第 " + n + " 天", clock: "07:40", placeholder: true,
+        act: act, milestone: ms,
+        searchGoal: 0, searchObjects: [],
+        meeting: { who: "（这一天还没有写）", questions: [ph.question || { q: "（待撰写）", chips: [] }] },
+        letter: null,
+        audit: { extra: "第 " + ((act && act.n) || "?") + " 幕「" + ((act && act.name) || "未命名") + "」"
+          + (ms ? " · 里程碑：" + ms : "") + "　（待人工撰写）" }
+      });
+    }
+    return out;
+  }
   /* ---------------- 状态 ---------------- */
   var S = {
     dayIndex: 0,
@@ -26,9 +57,10 @@
     qIndex: 0,
     sound: false,
     track: null,
-    days: C.days.slice()
+    days: null
   };
 
+  S.days = buildSchedule();
   function day() { return S.days[S.dayIndex]; }
   function bands() { return C.meta.driftBands || { mixed: 30, yours: 65 }; }
   function handFor() {
@@ -142,7 +174,7 @@
 
   function closeLoupe() {
     $("loupe").classList.remove("on");
-    if (S.phase === "search" && S.found.length >= (day().searchGoal || 1)) {
+    if (S.phase === "search" && (day().searchGoal || 0) > 0 && S.found.length >= day().searchGoal) {
       S.phase = "meet";
       setTimeout(startMeet, 450);
     }
@@ -272,9 +304,12 @@
       if (i < lines.length) { out.innerHTML += lines[i] + "<br>"; i++; setTimeout(tick, 170); }
       else {
         var hasNext = S.dayIndex + 1 < S.days.length;
-        out.innerHTML += "<div class='next'><button id='nextbtn' type='button'>" +
-          (hasNext ? (C.ui.nextDay || "进入第 %N 天").replace("%N", S.days[S.dayIndex + 1].n)
-                   : "（待人工撰写）") + "</button></div>";
+        var nd = hasNext ? S.days[S.dayIndex + 1] : null;
+        var nlabel = nd
+          ? (C.ui.nextDay || "进入第 %N 天").replace("%N", nd.n)
+            + (nd.act ? "（第 " + nd.act.n + " 幕 · " + nd.act.name + (nd.milestone ? " · " + nd.milestone : "") + "）" : "")
+          : "（已到最后一天）";
+        out.innerHTML += "<div class='next'><button id='nextbtn' type='button'>" + nlabel + "</button></div>";
         var b = $("nextbtn");
         if (b) b.addEventListener("click", function () { hasNext ? nextDay() : closeAudit(); });
       }
